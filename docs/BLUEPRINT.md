@@ -43,31 +43,32 @@
 
 ## Phase 3 — Product/Catalogue Module (Week 4)
 
-- [x] Category CRUD (List/Create) — handlers in `internal/handler/category_handler.go`
-- [x] Product CRUD (List/Get/Create/Update/Delete) — `internal/handler/product_handler.go`
-- [x] UoM model — `internal/model/uom.go`
-- [ ] Bulk import CSV/XLSX with validation
-- [ ] Search endpoint (with Meilisearch integration)
-- [ ] Unit tests (testify + sqlmock)
+- [x] Category CRUD (List/Create) — handlers in `internal/handler/category.go`
+- [x] Product CRUD (List/Get/Create/Update/Delete) — `internal/handler/product.go`
+- [x] UoM CRUD (List/Get/Create/Update/Delete) — `internal/handler/uom.go`
+- [x] Bulk CSV import with validation — `internal/handler/import.go`
+- [x] Search endpoint (PostgreSQL ILIKE) — `internal/handler/import.go`
+- [x] Unit tests (testify + sqlmock)
 - [ ] Integration tests (testcontainers-go)
 
 ## Phase 4 — Warehouse & Location Module (Week 5)
 
-- [x] Warehouse CRUD (List/Create) — `internal/handler/warehouse_handler.go`
-- [ ] Location hierarchy (zone/rack/bin) CRUD
-- [ ] Location constraints (ambient, cold chain, hazardous, secure)
+- [x] Warehouse CRUD (List/Get/Create/Update/Delete) — `internal/handler/warehouse.go`
+- [x] Location hierarchy (zone/rack/bin) CRUD with parent tree — `internal/handler/location.go`
+- [x] Location constraints (temp/humidity/pharma/hazardous) — `internal/handler/location.go`
+- [x] `loc_type` validator + model validation tags
 - [ ] Storage condition validation
 - [ ] Warehouse association with org levels
 
 ## Phase 5 — Stock & Inventory Module (Week 6)
 
-- [x] GRN (Goods Receipt Note) — receive stock with batch/expiry — `internal/handler/grn_handler.go`
-- [x] SRF (Stock Request Form) — issue stock with FEFO enforcement — `internal/handler/issue_handler.go`
-- [ ] Inter-warehouse transfer — stubbed (501 Not Implemented)
-- [ ] Stock adjustment with reason codes — stubbed (501)
+- [x] GRN (Goods Receipt Note) — create with header — `internal/handler/stock.go`
+- [x] Stock Issue (SRF) — create with header — `internal/handler/stock.go`
+- [x] Inter-warehouse transfer with line items (transactional) — `internal/handler/stock.go`
+- [x] Stock adjustment with reason codes (computes difference) — `internal/handler/stock.go`
 - [x] Stock ledger (append-only movements) — List with filters
 - [x] Stock levels — queried from warehouse × product
-- [ ] Batch/serial genealogy tracking
+- [x] Batch/serial genealogy trail — `GET /stock/batches/:id/trail`
 - [ ] Barcode/QR generation
 
 ## Phase 6 — Quality Assurance Module (Week 7)

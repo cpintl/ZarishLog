@@ -71,41 +71,64 @@
 ## 4. API Design
 
 ```
+# Public
 GET    /api/v1/health                    # No auth required
-                                         # All other routes require JWT via Keycloak
-GET    /api/v1/products                  # List products (paginated, RBAC enforced)
+GET    /api/v1/version                   # Version info
+
+# All routes below require JWT via Keycloak + RBAC
+
+# Products & Catalogue
+GET    /api/v1/products                  # List products (paginated)
 POST   /api/v1/products                  # Create product
+POST   /api/v1/products/import           # Bulk import CSV
+GET    /api/v1/products/search           # Full-text search (?q=)
 GET    /api/v1/products/:id              # Get product
 PUT    /api/v1/products/:id              # Update product
-DELETE /api/v1/products/:id              # Soft-delete product
-POST   /api/v1/products/import           # Bulk import CSV [STUB]
+DELETE /api/v1/products/:id              # Delete product
 
 GET    /api/v1/categories                # List categories
 POST   /api/v1/categories                # Create category
 
+GET    /api/v1/uoms                      # List units of measure
+POST   /api/v1/uoms                      # Create UoM
+GET    /api/v1/uoms/:id                  # Get UoM
+PUT    /api/v1/uoms/:id                  # Update UoM
+DELETE /api/v1/uoms/:id                  # Delete UoM
+
+# Warehouses & Locations
 GET    /api/v1/warehouses                # List warehouses
 POST   /api/v1/warehouses                # Create warehouse
-GET    /api/v1/warehouses/:id/locations  # Location hierarchy [STUB]
+GET    /api/v1/warehouses/:id            # Get warehouse
+PUT    /api/v1/warehouses/:id            # Update warehouse
+DELETE /api/v1/warehouses/:id            # Delete warehouse
+GET    /api/v1/warehouses/:id/locations              # List locations
+GET    /api/v1/warehouses/:id/locations/tree         # Location hierarchy tree
+GET    /api/v1/warehouses/:wh_id/locations/:id       # Get location
+POST   /api/v1/warehouses/:wh_id/locations           # Create location
+PUT    /api/v1/warehouses/:wh_id/locations/:id       # Update location
+DELETE /api/v1/warehouses/:wh_id/locations/:id       # Delete location
+GET    /api/v1/warehouses/:wh_id/locations/:id/constraints  # Get constraints
+PUT    /api/v1/warehouses/:wh_id/locations/:id/constraints  # Upsert constraints
 
+# Stock & Inventory
 POST   /api/v1/stock/grn                 # Goods Receipt Note
 POST   /api/v1/stock/issue               # Stock Issue (SRF)
-POST   /api/v1/stock/transfer            # Inter-warehouse transfer [STUB — returns 501]
-POST   /api/v1/stock/adjust              # Stock adjustment [STUB — returns 501]
+POST   /api/v1/stock/transfer            # Inter-warehouse transfer
+POST   /api/v1/stock/adjust              # Stock adjustment
 GET    /api/v1/stock/levels              # Current stock levels
 GET    /api/v1/stock/movements           # Stock movement ledger
+GET    /api/v1/stock/batches/:id/trail   # Batch genealogy
 
-GET    /api/v1/qa/inspections            # QA inspections [STUB]
-POST   /api/v1/qa/inspect                # Perform inspection [STUB]
-
-GET    /api/v1/assets                    # Asset register [STUB]
-POST   /api/v1/assets/transfer           # Asset custody transfer [STUB]
-
+# Future — stubbed
+GET    /api/v1/qa/inspections            # [STUB]
+POST   /api/v1/qa/inspect                # [STUB]
+GET    /api/v1/assets                    # [STUB]
+POST   /api/v1/assets/transfer           # [STUB]
 GET    /api/v1/reports/stock-status      # [STUB]
 GET    /api/v1/reports/valuation         # [STUB]
 GET    /api/v1/reports/expiry            # [STUB]
-
-POST   /api/v1/sync/push                # Push offline events [STUB]
-GET    /api/v1/sync/pull                # Pull latest state [STUB]
+POST   /api/v1/sync/push                # [STUB]
+GET    /api/v1/sync/pull                # [STUB]
 ```
 
 ## 5. Data Model Overview
