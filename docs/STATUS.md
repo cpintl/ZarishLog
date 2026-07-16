@@ -383,8 +383,16 @@
 |---|---|---|
 | `warehouse.json` | 145 | 4 warehouses with 17 locations, geo-coordinates, maps URLs |
 
----*Document automatically generated from source code analysis. Update as the project progresses through Phases 3-12.*
+---
+
+## 5. Technical Debt & Future Enhancements
+
+| Item | Priority | Notes |
+|---|---|---|
+| Meilisearch full-text search integration | Medium | Replace PostgreSQL ILIKE in `GET /products/search` with dedicated Meilisearch endpoint for faster fuzzy/typo-tolerant search across product catalogue. Interface (`?q=`) stays the same. Requires Meilisearch service running (already in docker-compose). |
+| Integration tests (testcontainers-go) | Medium | End-to-end API tests with real PostgreSQL container for handler integration coverage. |
+| Batch genealogy (lot tracking lineage) | Low | Trace batches through receipt → storage → issue → transfer chain. |
 
 ---
 
-*Document automatically generated from source code analysis. Update as the project progresses through Phases 2-12.*
+*Document automatically generated from source code analysis. Update as the project progresses through Phases 3-12.*
