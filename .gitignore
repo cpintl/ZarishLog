@@ -44,6 +44,9 @@ __pycache__/
 # Downloads
 *.tar.gz
 
+# Local archives
+.archive/
+
 # Session artifacts
 session-*.md
 

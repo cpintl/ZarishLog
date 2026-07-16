@@ -61,16 +61,7 @@ echo "Bootstrap complete. Use 'bash scripts/sandbox-start.sh' to start the local
 # Add a convenience flag for non-interactive auto mode
 if [[ "${1:-}" == "--auto" || "${1:-}" == "--yes" ]]; then
   echo "Auto mode: installing optional tools non-interactively (if missing)."
-  # Minimal safe checks: docker, docker compose, psql
-  if ! command -v docker &>/dev/null; then
-    echo "docker not found. Please install Docker and re-run this script in auto mode."
-  fi
-  if ! command -v docker-compose &>/dev/null && ! docker compose version &>/dev/null; then
-    echo "docker compose not found. Please install Docker Compose."
-  fi
-  if ! command -v psql &>/dev/null; then
-    echo "psql client not found. Installing postgresql-client is recommended." 
-  fi
+  AUTO_YES=true
 fi
 
 # ─── Parse arguments ─────────────────────────────────────────────────────
@@ -85,6 +76,13 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown option: $1"; show_help ;;
   esac
 done
+
+# If user opted into auto/yes, enable installation of core components non-interactively
+if [[ "$AUTO_YES" == "true" ]]; then
+  INSTALL_GO=true
+  INSTALL_NODE=true
+  INSTALL_DOCKER=true
+fi
 
 # ─── Utility Functions ───────────────────────────────────────────────────
 
