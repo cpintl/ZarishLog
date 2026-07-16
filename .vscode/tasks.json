@@ -25,7 +25,7 @@
     {
       "label": "DB: Run Migrations",
       "type": "shell",
-      "command": "psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/schema.sql",
+      "command": "for f in packages/data-models/sql/migrations/*.sql; do psql -h localhost -U zarishlog -d zarishlog -f \"$$f\"; done",
       "group": "none",
       "problemMatcher": []
     },

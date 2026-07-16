@@ -87,9 +87,12 @@ db-down:
 
 db-migrate:
 	@echo "Running database migrations..."
-	@psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/migrations/001_initial_schema.sql 2>/dev/null || \
-	 PGPASSWORD=zarishlog_dev_password psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/migrations/001_initial_schema.sql
-	@echo "✓ Migrations applied"
+	@for f in packages/data-models/sql/migrations/*.sql; do \
+		echo "  Applying $$(basename $$f)..."; \
+		psql -h localhost -U zarishlog -d zarishlog -f "$$f" 2>/dev/null || \
+		PGPASSWORD=zarishlog_dev_password psql -h localhost -U zarishlog -d zarishlog -f "$$f"; \
+	done
+	@echo "✓ All migrations applied"
 
 db-seed:
 	@echo "Seeding master data..."

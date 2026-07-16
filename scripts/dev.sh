@@ -36,8 +36,11 @@ cd ../..
 # Run migrations
 echo ""
 echo "Running migrations..."
-psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/schema.sql 2>/dev/null || \
-  PGPASSWORD=zarishlog_dev_password psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/schema.sql
+for f in packages/data-models/sql/migrations/*.sql; do
+  echo "  Applying $f ..."
+  psql -h localhost -U zarishlog -d zarishlog -f "$f" 2>/dev/null || \
+    PGPASSWORD=zarishlog_dev_password psql -h localhost -U zarishlog -d zarishlog -f "$f"
+done
 
 # Seed data
 echo ""

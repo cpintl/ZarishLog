@@ -1009,7 +1009,6 @@ UPDATE products SET
   min_stock = 100,
   max_stock = 1000,
   reorder_point = 200,
-  safety_stock = 75,
   lead_time_days = 30,
   unit_cost = 4.50
 WHERE sku = 'NUT-RUTF' AND org_id = '00000000-0000-0000-0000-000000000001';
@@ -1018,7 +1017,6 @@ UPDATE products SET
   min_stock = 50,
   max_stock = 500,
   reorder_point = 100,
-  safety_stock = 30,
   lead_time_days = 45,
   unit_cost = 3.50
 WHERE sku = 'SUP-LTX-MED' AND org_id = '00000000-0000-0000-0000-000000000001';
@@ -1027,7 +1025,6 @@ UPDATE products SET
   min_stock = 200,
   max_stock = 5000,
   reorder_point = 500,
-  safety_stock = 200,
   lead_time_days = 60,
   unit_cost = 0.15
 WHERE sku = 'MED-AMOX-500' AND org_id = '00000000-0000-0000-0000-000000000001';

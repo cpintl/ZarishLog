@@ -134,7 +134,7 @@
         "geo_coordinates": {
           "latitude": 21.44091571,
           "longitude": 91.97660079
-        }
+        },
         "description": "CPI Supported Tertiary Health Facility running Health System Strengthening (HSS) operations.",
         "contact_details": {
           "phone_mobile": null,
@@ -142,5 +142,5 @@
         }
       }
     ]
-  
+  }
 }

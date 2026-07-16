@@ -7,12 +7,18 @@
   "sslRequired": "none",
   "roles": {
     "realm": [
-      { "name": "GLOBAL_ADMIN", "description": "Full system administration" },
-      { "name": "COUNTRY_REP", "description": "View-all, reporting" },
-      { "name": "WAREHOUSE_OFFICER", "description": "Full warehouse operations" },
-      { "name": "WAREHOUSE_STOREKEEPER", "description": "Stock operations" },
-      { "name": "DEPT_MANAGER", "description": "Department manager" },
-      { "name": "DEPT_OFFICER", "description": "Department officer" }
+      { "name": "GLOBAL_ADMIN", "description": "Full system administration, all tenants" },
+      { "name": "COUNTRY_REP", "description": "Country representative — read-only, reporting, no ops" },
+      { "name": "THEME_MANAGER", "description": "Thematic program manager — read + reports within scope" },
+      { "name": "WAREHOUSE_OFFICER", "description": "Full central warehouse operations — procure, QA, count" },
+      { "name": "WAREHOUSE_STOREKEEPER", "description": "Stock operations — receive, issue, count, read" },
+      { "name": "ADMIN_LOG_OFFICER", "description": "Office asset & logistics stock management" },
+      { "name": "DEPT_MANAGER", "description": "Department head — stock read, reports, approval authority" },
+      { "name": "DEPT_COORDINATOR", "description": "Sub-warehouse stock flow validation" },
+      { "name": "DEPT_OFFICER", "description": "Day-to-day sub-warehouse operations" },
+      { "name": "FIELD_WORKER", "description": "Field distribution staff — distributions CR" },
+      { "name": "QUALITY_OFFICER", "description": "QA inspection staff — full QA, stock read" },
+      { "name": "AUDITOR", "description": "Read-only audit access — read + audit + reports" }
     ]
   },
   "clients": [
@@ -41,19 +47,73 @@
       "username": "admin",
       "enabled": true,
       "email": "admin@zarishlog.org",
-      "firstName": "Global",
+      "firstName": "System",
       "lastName": "Admin",
       "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
       "realmRoles": ["GLOBAL_ADMIN"]
     },
     {
-      "username": "warehouse_officer",
+      "username": "countryrep.bd",
       "enabled": true,
-      "email": "warehouse@zarishlog.org",
-      "firstName": "Warehouse",
-      "lastName": "Officer",
-      "credentials": [{ "type": "password", "value": "warehouse123", "temporary": false }],
+      "email": "countryrep.bd@zarishlog.org",
+      "firstName": "Fatima",
+      "lastName": "Rahman",
+      "credentials": [{ "type": "password", "value": "countryrep123", "temporary": false }],
+      "realmRoles": ["COUNTRY_REP"]
+    },
+    {
+      "username": "wh.manager",
+      "enabled": true,
+      "email": "wh.manager@zarishlog.org",
+      "firstName": "Mohammad",
+      "lastName": "Ali",
+      "credentials": [{ "type": "password", "value": "whmanager123", "temporary": false }],
       "realmRoles": ["WAREHOUSE_OFFICER"]
+    },
+    {
+      "username": "storekeeper",
+      "enabled": true,
+      "email": "storekeeper@zarishlog.org",
+      "firstName": "Ayesha",
+      "lastName": "Begum",
+      "credentials": [{ "type": "password", "value": "storekeeper123", "temporary": false }],
+      "realmRoles": ["WAREHOUSE_STOREKEEPER"]
+    },
+    {
+      "username": "dept.manager",
+      "enabled": true,
+      "email": "dept.manager@zarishlog.org",
+      "firstName": "Kamal",
+      "lastName": "Hossain",
+      "credentials": [{ "type": "password", "value": "deptmanager123", "temporary": false }],
+      "realmRoles": ["DEPT_MANAGER"]
+    },
+    {
+      "username": "field.worker",
+      "enabled": true,
+      "email": "field.worker@zarishlog.org",
+      "firstName": "Nurul",
+      "lastName": "Islam",
+      "credentials": [{ "type": "password", "value": "fieldworker123", "temporary": false }],
+      "realmRoles": ["FIELD_WORKER"]
+    },
+    {
+      "username": "qa.officer",
+      "enabled": true,
+      "email": "qa.officer@zarishlog.org",
+      "firstName": "Shahina",
+      "lastName": "Akhter",
+      "credentials": [{ "type": "password", "value": "qaofficer123", "temporary": false }],
+      "realmRoles": ["QUALITY_OFFICER"]
+    },
+    {
+      "username": "logistics.admin",
+      "enabled": true,
+      "email": "logistics.admin@zarishlog.org",
+      "firstName": "Tariq",
+      "lastName": "Mahmud",
+      "credentials": [{ "type": "password", "value": "logistics123", "temporary": false }],
+      "realmRoles": ["ADMIN_LOG_OFFICER"]
     }
   ]
 }

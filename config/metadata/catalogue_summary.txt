@@ -1,0 +1,105 @@
+ZarishLog — Master Product Catalogues Summary
+==================================================
+
+Catalogue A: master_product_catalogue.csv (1912 products)
+Full catalogue of drugs, medical supplies, equipment, and humanitarian items.
+Sourced from medex.com.bd drug registry, asset inventory, and logistics catalogue.
+
+Total entries: 1912
+  Drugs: 827
+  Assets: 197
+  Humanitarian/Technical: 888
+
+By Item Type:
+  drug: 827
+  supply: 662
+  equipment: 228
+  asset: 195
+
+By Category:
+  Vehicle Parts: 504
+  General Assets: 120
+  General Supplies: 102
+  Energy & Power: 93
+  IT & Communications: 81
+  Antibiotics: 77
+  Oncology: 70
+  Vitamins & Minerals: 62
+  CNS & Psychotropics: 61
+  Dermatologicals: 60
+  Cardiovascular: 58
+  Respiratory: 41
+  Furniture & Fixtures: 39
+  Hormones & Corticosteroids: 38
+  Gastrointestinal: 37
+  IT Equipment: 33
+  Antidiabetics: 28
+  Ophthalmologicals: 26
+  Musculoskeletal: 24
+  WASH: 24
+  Electrical: 22
+  Anesthetics: 21
+  Analgesics & Anti-inflammatory: 20
+  Warehouse & Logistics: 20
+  Vaccines & Immunoglobulins: 19
+  IV Fluids & Electrolytes: 19
+  Shelter & NFI: 18
+  Systemic Antifungals: 17
+  Unclassified Medicines: 17
+  Immunosuppressants: 15
+  Antivirals: 13
+  Antihistamines & Allergy: 13
+  Urologicals: 12
+  ENT Preparations: 10
+  Renal & Dialysis: 9
+  Appliances: 9
+  Safety & PPE: 8
+  Tools & Hardware: 8
+  Antidotes & Antivenoms: 7
+  Hemostatics: 7
+  Obstetrics & Gynecology: 7
+  Diagnostic Contrast Media: 7
+  Contraceptives: 7
+  Antimalarials: 5
+  Antiretrovirals: 5
+  Anticoagulants: 4
+  Anti-Tuberculosis & Leprosy: 3
+  Immunostimulants: 3
+  Medical Devices: 2
+  Antihelminthics: 2
+  Transport & Vehicles: 2
+  Thyroid Therapy: 1
+  Telecommunications: 1
+  Instruments & Test Equipment: 1
+
+---
+
+Catalogue B: master_product_list.csv (40 products)
+Curated humanitarian logistics product list for field operations.
+Covers drugs, medical supplies, equipment, nutrition, WASH, and office items.
+
+Total entries: 40
+
+By Category:
+  Office & Admin: 14
+  Medical Supplies: 6
+  Medical Equipment: 5
+  WASH Supplies: 5
+  Medicines & Drugs: 5
+  Nutrition: 3
+  (includes RUTF, F100, LNS)
+
+By Item Type:
+  material: 9
+  asset: 5
+  medical_supply: 5
+  drug: 5
+  equipment: 5
+  consumable: 2
+  nutrition: 3
+  instrument: 2
+  supply: 4
+
+Note: Catalogue A is the comprehensive master reference (1912 items).
+Catalogue B is a curated subset (40 items) for rapid field deployment.
+Both use the same 19-column schema for compatibility.

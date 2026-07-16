@@ -1,5 +1,5 @@
 {
-  "formId": "DISP",
+  "formId": "DSP",
   "title": "Dispense Form",
   "description": "Patient-level medicine dispensing record for pharmacy",
   "fields": [

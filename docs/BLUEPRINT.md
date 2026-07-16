@@ -6,7 +6,7 @@
 
 ## Phase 0 — Foundation (Week 1)
 
-- [x] Master Catalogue design (200+ entities, 12 domains)
+- [x] Master Catalogue design (1912 products across 65+ categories, 12 domains)
 - [x] Architecture decisions (Go/Gin over NestJS, sqlc over Prisma)
 - [x] Monorepo structure scaffold
 - [x] AGENTS.md and sandbox environment
@@ -17,7 +17,7 @@
 
 ## Phase 1 — Database & Data Models (Week 2)
 
-- [x] SQL schema — 69 tables across 16 domains with:
+- [x] SQL schema — 76 tables across 16 domains with:
   - UUIDv7 primary keys
   - `org_id` for multi-tenancy
   - Audit columns (`created_by`, `updated_by`, `created_at`, `updated_at`)
@@ -27,6 +27,7 @@
 - [x] Sample org hierarchy seed (L1–L4 from CSV, 8 org levels)
 - [x] Sample product catalogue seed (40 items from master_product_list.csv)
 - [x] Indexes for performance-critical queries (stock_levels, movements, batches, alerts)
+- [x] Expanded pharmaceutical catalogue (1912 products across 65+ categories from Bangladesh national drug database, medical supplies, equipment, and assets)
 
 ## Phase 2 — Go API Core (Week 3)
 

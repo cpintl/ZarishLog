@@ -36,6 +36,10 @@ out/
 *.log
 coverage/
 
+# Python
+__pycache__/
+*.pyc
+
 # Docker
 pgdata/
 redisdata/

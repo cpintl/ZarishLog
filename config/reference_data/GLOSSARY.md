@@ -1,5 +1,80 @@
 # ZarishLog — Standardized Terminology Glossary
 
+## Abbreviations
+
+### Organizational
+
+| Abbreviation | Expansion |
+|---|---|
+| CPI | Center for Peace and Integrity |
+| CPI-BD | CPI Bangladesh Country Office |
+| CPI-CXB | CPI Cox's Bazar Project Office |
+| CPI-DHK | CPI Dhaka Project Office |
+| CPI-MM | CPI Myanmar Country Office |
+| CPI-YGN | CPI Yangon Project Office |
+
+### Technical & Database
+
+| Abbreviation | Expansion |
+|---|---|
+| AMC | Average Monthly Consumption |
+| CRM | Customer/Constituent Relationship Management |
+| FEFO | First Expiry First Out |
+| GRN | Goods Receipt Note |
+| GTIN | Global Trade Item Number |
+| MCB | Miniature Circuit Breaker |
+| MPPT | Maximum Power Point Tracking (solar) |
+| PO | Purchase Order |
+| QA | Quality Assurance |
+| RCCB | Residual Current Circuit Breaker |
+| RLS | Row-Level Security |
+| SKU | Stock Keeping Unit |
+| UNSPSC | United Nations Standard Products and Services Code |
+| UoM | Unit of Measure |
+| UUID | Universally Unique Identifier |
+
+### Logistics & Supply Chain
+
+| Abbreviation | Expansion |
+|---|---|
+| EA | Each (unit count) |
+| BX | Box |
+| CTN | Carton |
+| PL | Pallet |
+| KG | Kilogram |
+| G | Gram |
+| L | Liter |
+| ML | Milliliter |
+| M | Meter |
+| M2 | Square Meter |
+| DZ | Dozen |
+| PR | Pair |
+| ST | Set |
+| PK | Packet |
+| DR | Drum |
+| SA | Sachet |
+
+### Health & Nutrition
+
+| Abbreviation | Expansion |
+|---|---|
+| CNS | Central Nervous System |
+| ENT | Ear, Nose, and Throat |
+| ITN | Insecticide-Treated Net |
+| IV | Intravenous |
+| LLIN | Long-Lasting Insecticidal Net |
+| LNS | Lipid-based Nutrient Supplement |
+| MUAC | Mid-Upper Arm Circumference |
+| NaDCC | Sodium Dichloroisocyanurate (water purification) |
+| NFI | Non-Food Items |
+| ORS | Oral Rehydration Salts |
+| PPE | Personal Protective Equipment |
+| RUTF | Ready-to-Use Therapeutic Food |
+| TPN | Total Parenteral Nutrition |
+| WASH | Water, Sanitation, and Hygiene |
+
+---
+
 ## Canonical Term Mappings
 
 | Master Catalogue Term | Also Known As / Synonym | Standardized To |

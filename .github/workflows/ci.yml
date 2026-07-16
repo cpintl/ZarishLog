@@ -37,8 +37,12 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           cache-dependency-path: apps/api/go.sum
 
-      - name: Run schema migration
-        run: psql -h localhost -U zarishlog -d zarishlog_test -f packages/data-models/sql/migrations/001_initial_schema.sql
+      - name: Run schema migrations
+        run: |
+          for f in packages/data-models/sql/migrations/*.sql; do
+            echo "Applying $$(basename $$f)..."
+            psql -h localhost -U zarishlog -d zarishlog_test -f "$$f"
+          done
         env:
           PGPASSWORD: zarishlog_ci_password
 

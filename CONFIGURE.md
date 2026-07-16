@@ -223,7 +223,12 @@ For visual configuration, edit `docs/org-chart.md`:
 
 ## 6. Product Catalogue (CSV)
 
-The master product catalogue is the heart of ZarishLog. Edit `config/metadata/master_product_list.csv`:
+The master product catalogue is the heart of ZarishLog. Two catalogue files are provided:
+
+- **`config/metadata/master_product_list.csv`** — Sample catalogue with 40 products for testing/demo.
+- **`config/metadata/master_product_catalogue.csv`** — Expanded 1912-product catalogue (pharmaceuticals, medical supplies, equipment, assets across 65+ categories). Generated from the Bangladesh national drug database and humanitarian supply catalogues via `scripts/process_catalogue_csvs.py`.
+
+To use your own data, edit either file (or replace it) and run `make db-seed`.
 
 ### Required Fields
 

@@ -11,7 +11,7 @@
 | Phase | Status | Key Deliverables |
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
-| Phase 1 — Database & Data Models | ✅ Complete | 78 tables, 137 sqlc queries, 4 migrations, 1690-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogue v1 |
+| Phase 1 — Database & Data Models | ✅ Complete | 79 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
 | Phase 2 — Go API Core | ❌ Not started | Go module init, config layer, DB pool, middleware (auth/RBAC/audit/tenant), health check, error handling, pagination |
 | Phase 3 — Product/Catalogue Module | ❌ Not started | Category CRUD, Product CRUD, UoM CRUD, bulk CSV import, Meilisearch search, unit/integration tests |
 | Phase 4 — Warehouse & Location Module | ❌ Not started | Warehouse CRUD, location hierarchy, location constraints, storage validation |
@@ -36,8 +36,9 @@
 | `002_extended_schema.sql` | 46 | 816 | Extended: packaging, procurement, QA checklists, distribution, returns, disposals, physical count, replenishment, alerts, audit, sync, reports |
 | `003_product_icons_warehouse_maps.sql` | 1 | 195 | Dosage forms lookup (22 icon types), extended product/warehouse/user/org fields, QA scoring, stock movement audit fields |
 | `004_finer_grained_rls_isolation.sql` | — | 161 | Program/org-level/department scoped RLS, `app.set_isolation_context()` middleware helper |
-| `005_master_catalogue_extension.sql` | 5 | — | Master Catalogue fields: `strength`, `is_asset`, `replenishment_type`, `valuation_method`, `alternate_codes` (JSONB), `unspsc_commodity`, `eclass_code`, `is_kitting`, `temp_min_c`/`max_c`, `is_essential`, `is_controlled`; enums `aisle`, `committed`, `backordered`; `justification_codes` table; `entities` + `entity_attributes` tables; `conversion_factor` on UoM and packaging |
-| **Total** | **78** | **1887** | — |
+| `005_master_catalogue_extension.sql` | 3 | 198 | Master Catalogue fields: `strength`, `is_asset`, `replenishment_type`, `valuation_method`, `alternate_codes` (JSONB), `unspsc_commodity`, `eclass_code`, `is_kitting`, `temp_min_c`/`max_c`, `is_essential`, `is_controlled`; enums `aisle`, `committed`, `backordered`; new tables: `justification_codes`, `entities`, `entity_attributes`; `conversion_factor` on UoM and packaging |
+| `006_add_safety_stock.sql` | 0 (alteration) | 13 | Adds `safety_stock` numeric column and index to `products` table for reorder planning |
+| **Total** | **79** | **~1,903** | — |
 
 ### 2.2 Seed Data Inventory
 
@@ -70,7 +71,7 @@
 | QA Checklist Items | 14 | 7 general + 4 cold chain + 3 hazardous items |
 | Alert Configurations | 6 | Expiry (30/60/90d), low stock, overstock, sleeping stock, QA hold, approval pending |
 | Reorder Recommendations | 2 | Sample recommendations |
-| **Total seed SQL** | **~1690 lines** | 120+ INSERT statements across 32 tables |
+| **Total seed SQL** | **~1410 lines** | 120+ INSERT statements across 32 tables |
 
 ### 2.3 sqlc Query Inventory
 
@@ -107,7 +108,9 @@
 
 | File | Format | Content |
 |---|---|---|
-| `master_product_list.csv` | CSV | 40-product master catalogue with SKU, category, UoM, type, tracking flags |
+| `master_product_list.csv` | CSV | 40-product sample catalogue with SKU, category, UoM, type, tracking flags |
+| `master_product_catalogue.csv` | CSV | Expanded 1912-product pharmaceutical/humanitarian catalogue across 65+ categories (generated via `scripts/process_catalogue_csvs.py`) |
+| `catalogue_summary.txt` | Text | Summary breakdown of the expanded catalogue (1912 items by type and category) |
 | `organization.csv` | CSV | 8-entry L1-L4 org hierarchy |
 | `programs.csv` | CSV | 6 thematic program areas |
 | `uom.csv` | CSV | 23 units of measure across 6 categories |
@@ -142,7 +145,7 @@
 
 ---
 
-## 3. All Database Tables (78 tables, 16 domains)
+## 3. All Database Tables (79 tables, 16 domains)
 
 ### Domain 1: Organization & Users (14 tables)
 
@@ -304,11 +307,11 @@
 
 | Metric | Count |
 |---|---|
-| Tables | 78 (26 initial + 46 extended + 1 dosage forms + 5 master catalogue) |
+| Tables | 79 (26 initial + 46 extended + 1 dosage forms + 3 master catalogue + 1 safety_stock alteration) |
 | Tenant-scoped (RLS) | 39 with `org_id` enforced |
 | Reference/lookup | 10 shared across tenants (incl. justification_codes, dosage_forms, disposal_methods) |
 | Junction/child | 28 inherited via FK |
-| Rows of seed data | ~1,690 lines of SQL, 120+ INSERT statements |
+| Rows of seed data | ~1,410 lines of SQL, 120+ INSERT statements |
 | Custom ENUM types | 8 (`uom_category`, `item_type`, `entity_status`, `warehouse_type`, `location_type`, `movement_type`, `doc_type`, `stock_status`) |
 | Database functions | 7 (`uuid_generate_v7`, `app.current_org_id`, `app.current_user_id`, `app.current_program_id`, `app.current_org_level_id`, `app.current_department_id`, `app.set_isolation_context`) |
 
@@ -316,7 +319,7 @@
 
 ## 4. File Inventory
 
-### `packages/data-models/sql/migrations/` (5 files)
+### `packages/data-models/sql/migrations/` (6 files)
 
 | File | Tables | Lines |
 |---|---|---|
@@ -324,8 +327,9 @@
 | `002_extended_schema.sql` | 46 | 816 |
 | `003_product_icons_warehouse_maps.sql` | 1 (alterations) | 195 |
 | `004_finer_grained_rls_isolation.sql` | — | 161 |
-| `005_master_catalogue_extension.sql` | 5 (alterations) | ~180 |
-| **Total** | **78** | **~1,872** |
+| `005_master_catalogue_extension.sql` | 3 (new tables) | 198 |
+| `006_add_safety_stock.sql` | 0 (alteration) | 13 |
+| **Total** | **79** | **~1,903** |
 
 ### `packages/data-models/sql/queries/` (16 files, 137 queries)
 
@@ -360,11 +364,13 @@
 **Documentation (1):**
 - `README.md` (284 lines — form field reference)
 
-### `config/metadata/` (4 CSV files)
+### `config/metadata/` (6 files)
 
 | File | Rows | Content |
 |---|---|---|
-| `master_product_list.csv` | 40 products | SKU, name, category, UoM, item type, tracking flags |
+| `master_product_list.csv` | 40 products | Sample catalogue with SKU, name, category, UoM, item type, tracking flags |
+| `master_product_catalogue.csv` | 1,912 products | Expanded pharmaceutical/humanitarian catalogue (65+ categories, generated via `scripts/process_catalogue_csvs.py`) |
+| `catalogue_summary.txt` | 69 lines | Summary breakdown of expanded catalogue by type and category |
 | `organization.csv` | 8 org levels | L1-L4 hierarchy with parent codes |
 | `programs.csv` | 6 programs | Thematic area codes and descriptions |
 | `uom.csv` | 23 units | Name, abbreviation, category |
