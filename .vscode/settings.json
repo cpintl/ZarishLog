@@ -108,7 +108,7 @@
   "terminal.integrated.env.linux": {
     "PATH": "${workspaceFolder}/scripts:${env:PATH}"
   },
-  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Dark Modern",
   "workbench.iconTheme": "material-icon-theme",
   "window.title": "${dirty}${activeEditorMedium}${separator}ZarishLog"
 }

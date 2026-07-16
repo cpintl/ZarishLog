@@ -2,6 +2,10 @@
 -- PostgreSQL 18 — Adds session-level dimension scoping on top of org_id RLS
 -- Migration 004: Idempotent, production-quality
 
+-- ─── 0. ENSURE APP SCHEMA ─────────────────────────────────────────────────
+
+CREATE SCHEMA IF NOT EXISTS app;
+
 -- ─── 1. NEW SESSION-LEVEL SETTING FUNCTIONS ───────────────────────────────
 
 CREATE OR REPLACE FUNCTION app.current_program_id() RETURNS text

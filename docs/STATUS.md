@@ -12,10 +12,10 @@
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
 | Phase 1 — Database & Data Models | ✅ Complete | 79 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
-| Phase 2 — Go API Core | ❌ Not started | Go module init, config layer, DB pool, middleware (auth/RBAC/audit/tenant), health check, error handling, pagination |
-| Phase 3 — Product/Catalogue Module | ❌ Not started | Category CRUD, Product CRUD, UoM CRUD, bulk CSV import, Meilisearch search, unit/integration tests |
-| Phase 4 — Warehouse & Location Module | ❌ Not started | Warehouse CRUD, location hierarchy, location constraints, storage validation |
-| Phase 5 — Stock & Inventory Module | ❌ Not started | GRN, SRF (FEFO), inter-warehouse transfer, adjustments, stock ledger, batch genealogy, barcode/QR |
+| Phase 2 — Go API Core | ✅ Partial | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints; missing: pagination, audit middleware, structured error handling |
+| Phase 3 — Product/Catalogue Module | ✅ Partial | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM model; missing: bulk CSV import, Meilisearch search, unit/integration tests |
+| Phase 4 — Warehouse & Location Module | ✅ Partial | Warehouse CRUD (List/Create); missing: location hierarchy, constraints, storage validation |
+| Phase 5 — Stock & Inventory Module | ✅ Partial | GRN, Issue, stock levels, stock movements (List with filters); missing: inter-warehouse transfer, adjustments (both stubbed 501), batch genealogy, barcode/QR |
 | Phase 6 — Quality Assurance | ❌ Not started | QA inspection on receipt, pass/fail/quarantine, expiry monitoring, corrective action |
 | Phase 7 — Distribution & Asset Management | ❌ Not started | Distribution forms, multi-program allocation, returns/disposal, asset lifecycle, depreciation |
 | Phase 8 — Replenishment & Forecasting | ❌ Not started | AMC (3/6/12-month), buffer stock, reorder points, ML forecasting microservice (Prophet) |

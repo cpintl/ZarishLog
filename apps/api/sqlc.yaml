@@ -5,11 +5,15 @@ sql:
     schema:
       - "../../packages/data-models/sql/migrations/001_initial_schema.sql"
       - "../../packages/data-models/sql/migrations/002_extended_schema.sql"
+      - "../../packages/data-models/sql/migrations/003_product_icons_warehouse_maps.sql"
+      - "../../packages/data-models/sql/migrations/004_finer_grained_rls_isolation.sql"
+      - "../../packages/data-models/sql/migrations/005_master_catalogue_extension.sql"
+      - "../../packages/data-models/sql/migrations/006_add_safety_stock.sql"
     gen:
       go:
         package: "db"
         out: "internal/db"
-        sql_package: "sqlx"
+        sql_package: "database/sql"
         emit_json_tags: true
         emit_prepared_queries: true
         emit_interface: true

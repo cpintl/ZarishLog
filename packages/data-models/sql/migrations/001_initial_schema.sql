@@ -29,6 +29,9 @@ BEGIN
 END;
 $$;
 
+-- Ensure app schema for RLS context functions
+CREATE SCHEMA IF NOT EXISTS app;
+
 -- Set session-level org_id for RLS
 CREATE OR REPLACE FUNCTION app.current_org_id() RETURNS text
 LANGUAGE plpgsql STABLE PARALLEL SAFE

@@ -51,39 +51,44 @@ func main() {
 		api.GET("/version", handler.Version(Version, CommitHash, BuildTime))
 		api.GET("/health", handler.Health(db))
 
-		products := api.Group("/products")
-		products.Use(middleware.Auth(cfg))
-		{
-			products.GET("", handler.ListProducts(db))
-			products.POST("", handler.CreateProduct(db))
-			products.GET("/:id", handler.GetProduct(db))
-			products.PUT("/:id", handler.UpdateProduct(db))
-			products.DELETE("/:id", handler.DeleteProduct(db))
-		}
+		protected := api.Group("")
+		protected.Use(middleware.Auth(cfg))
 
-		categories := api.Group("/categories")
-		categories.Use(middleware.Auth(cfg))
 		{
-			categories.GET("", handler.ListCategories(db))
-			categories.POST("", handler.CreateCategory(db))
-		}
+			products := protected.Group("/products")
+			products.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "logistics_officer"))
+			{
+				products.GET("", handler.ListProducts(db))
+				products.POST("", handler.CreateProduct(db))
+				products.GET("/:id", handler.GetProduct(db))
+				products.PUT("/:id", handler.UpdateProduct(db))
+				products.DELETE("/:id", handler.DeleteProduct(db))
+			}
 
-		warehouses := api.Group("/warehouses")
-		warehouses.Use(middleware.Auth(cfg))
-		{
-			warehouses.GET("", handler.ListWarehouses(db))
-			warehouses.POST("", handler.CreateWarehouse(db))
-		}
+			categories := protected.Group("/categories")
+			categories.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist"))
+			{
+				categories.GET("", handler.ListCategories(db))
+				categories.POST("", handler.CreateCategory(db))
+			}
 
-		stock := api.Group("/stock")
-		stock.Use(middleware.Auth(cfg))
-		{
-			stock.POST("/grn", handler.CreateGRN(db))
-			stock.POST("/issue", handler.CreateIssue(db))
-			stock.POST("/transfer", handler.CreateTransfer(db))
-			stock.POST("/adjust", handler.CreateAdjustment(db))
-			stock.GET("/levels", handler.GetStockLevels(db))
-			stock.GET("/movements", handler.GetStockMovements(db))
+			warehouses := protected.Group("/warehouses")
+			warehouses.Use(middleware.RequireRole("admin", "warehouse_manager"))
+			{
+				warehouses.GET("", handler.ListWarehouses(db))
+				warehouses.POST("", handler.CreateWarehouse(db))
+			}
+
+			stock := protected.Group("/stock")
+			stock.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "logistics_officer"))
+			{
+				stock.POST("/grn", handler.CreateGRN(db))
+				stock.POST("/issue", handler.CreateIssue(db))
+				stock.POST("/transfer", handler.CreateTransfer(db))
+				stock.POST("/adjust", handler.CreateAdjustment(db))
+				stock.GET("/levels", handler.GetStockLevels(db))
+				stock.GET("/movements", handler.GetStockMovements(db))
+			}
 		}
 	}
 
