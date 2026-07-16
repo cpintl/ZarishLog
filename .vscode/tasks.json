@@ -2,6 +2,38 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Sandbox: Start",
+      "type": "shell",
+      "command": "bash scripts/sandbox.sh start",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Sandbox: Stop",
+      "type": "shell",
+      "command": "bash scripts/sandbox.sh stop",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Sandbox: Reset",
+      "type": "shell",
+      "command": "bash scripts/sandbox.sh reset",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Sandbox: Health",
+      "type": "shell",
+      "command": "bash scripts/sandbox.sh health",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
       "label": "Docker: Start All Services",
       "type": "shell",
       "command": "docker compose up -d",

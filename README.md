@@ -1,4 +1,5 @@
 # ZarishLog
+
 ## Unified Humanitarian Logistics, Supply Chain & Asset Management Platform
 
 [![CI Pipeline](https://github.com/cpintl/zarishlog/actions/workflows/ci.yml/badge.svg)](https://github.com/cpintl/zarishlog/actions)
@@ -24,30 +25,30 @@ ZarishLog solves this with one canonical master catalogue, one multi-tenant data
 
 ## 2. Core Objectives
 
-| Objective | What it means in practice |
-|---|---|
-| **Unification** | One platform for medical, non-medical, consumable, and fixed-asset inventory |
-| **Visibility** | Real-time stock, location, and movement across all L1–L4 levels |
-| **Compliance** | FEFO/FIFO enforcement, expiry management, QA workflows, full audit trail |
-| **Efficiency** | Automated GRN, issue, transfer, adjustment, and AMC/FMC-based replenishment |
-| **Integration** | Clean APIs into Finance, Procurement, and MEAL systems |
-| **Resilience** | Works fully offline at field/camp level and syncs when connectivity returns |
-| **Zero/low cost** | Built entirely on open-source software |
+| Objective         | What it means in practice                                                    |
+| ----------------- | ---------------------------------------------------------------------------- |
+| **Unification**   | One platform for medical, non-medical, consumable, and fixed-asset inventory |
+| **Visibility**    | Real-time stock, location, and movement across all L1–L4 levels              |
+| **Compliance**    | FEFO/FIFO enforcement, expiry management, QA workflows, full audit trail     |
+| **Efficiency**    | Automated GRN, issue, transfer, adjustment, and AMC/FMC-based replenishment  |
+| **Integration**   | Clean APIs into Finance, Procurement, and MEAL systems                       |
+| **Resilience**    | Works fully offline at field/camp level and syncs when connectivity returns  |
+| **Zero/low cost** | Built entirely on open-source software                                       |
 
 ## 3. Tech Stack
 
-| Layer | Choice |
-|---|---|
-| **Backend** | Go 1.26 + Gin 1.12 (REST API) |
-| **Frontend** | Next.js 15 + React 19 PWA (Workbox + Dexie.js) |
-| **Mobile** | Expo/React Native |
-| **Database** | PostgreSQL 18 (sqlc + sqlx, RLS multi-tenant) |
-| **Auth** | Keycloak 26 (OIDC/OAuth2) |
-| **Search** | Meilisearch |
-| **Analytics** | Metabase (CE) |
-| **Object Storage** | MinIO (S3-compatible) |
-| **Infrastructure** | Docker Compose → k3s, Terraform |
-| **CI/CD** | GitHub Actions |
+| Layer              | Choice                                         |
+| ------------------ | ---------------------------------------------- |
+| **Backend**        | Go 1.26 + Gin 1.12 (REST API)                  |
+| **Frontend**       | Next.js 15 + React 19 PWA (Workbox + Dexie.js) |
+| **Mobile**         | Expo/React Native                              |
+| **Database**       | PostgreSQL 18 (sqlc + sqlx, RLS multi-tenant)  |
+| **Auth**           | Keycloak 26 (OIDC/OAuth2)                      |
+| **Search**         | Meilisearch                                    |
+| **Analytics**      | Metabase (CE)                                  |
+| **Object Storage** | MinIO (S3-compatible)                          |
+| **Infrastructure** | Docker Compose → k3s, Terraform                |
+| **CI/CD**          | GitHub Actions                                 |
 
 ## 4. Monorepo Structure
 
@@ -73,13 +74,14 @@ zarishlog/
 
 ## 5. Getting Started
 
-### Quick Start (semi-automated)
+### Quick Start (one-click sandbox)
 
 ```bash
 ./scripts/zarishlog-setup.sh --check-only   # verify prerequisites
-./scripts/zarishlog-setup.sh --yes           # full bootstrap
-make dev                                     # start API + Web
+./scripts/sandbox.sh start                  # start Docker, DB, API, and Web
 ```
+
+Use the VS Code tasks named "Sandbox: Start", "Sandbox: Stop", and "Sandbox: Reset" for the same flow from the editor.
 
 ### Manual Steps
 

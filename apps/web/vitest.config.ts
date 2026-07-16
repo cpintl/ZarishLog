@@ -9,6 +9,12 @@ export default defineConfig({
     globals: true,
     setupFiles: [],
     include: ["lib/**/*.test.ts", "lib/**/*.test.tsx", "hooks/**/*.test.ts", "hooks/**/*.test.tsx"],
+    clearMocks: true,
+    fakeTimers: {
+      toFake: [],
+      doNotFake: ["setTimeout", "setInterval", "requestAnimationFrame"],
+    },
+    testTimeout: 5000,
   },
   resolve: {
     alias: {

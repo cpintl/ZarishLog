@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from "dexie";
+import "fake-indexeddb/auto";
 
 export interface OfflineProduct {
   id: string;

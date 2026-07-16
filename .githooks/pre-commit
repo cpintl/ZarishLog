@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running pre-commit checks..."
+
+# Go vet
+if command -v go &>/dev/null && [[ -f apps/api/go.mod ]]; then
+  echo "  → Go vet..."
+  cd apps/api
+  go vet ./... 2>&1 | sed 's/^/    /' || exit 1
+  cd "$OLDPWD"
+fi
+
+# Check for merge conflicts
+if grep -r "^<<<<<<< " --include="*.go" --include="*.ts" --include="*.tsx" --include="*.md" --include="*.sql" . 2>/dev/null; then
+  echo "ERROR: Merge conflict markers found!"
+  exit 1
+fi
+
+echo "  ✓ All checks passed"

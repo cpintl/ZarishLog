@@ -1,5 +1,6 @@
 .PHONY: help dev build test lint setup docker-up docker-down db-up db-down \
-        db-migrate db-seed validate-config clean publish version
+        db-migrate db-seed validate-config clean publish version \
+        sandbox-start sandbox-stop sandbox-reset sandbox-health
 
 VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT_HASH := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
@@ -145,6 +146,18 @@ dev:
 	@echo "Starting Web server on :3000..."
 	@cd apps/web && pnpm dev &
 	@wait
+
+sandbox-start:
+	@bash scripts/sandbox.sh start
+
+sandbox-stop:
+	@bash scripts/sandbox.sh stop
+
+sandbox-reset:
+	@bash scripts/sandbox.sh reset
+
+sandbox-health:
+	@bash scripts/sandbox.sh health
 
 # ─── Test ───────────────────────────────────────────────────────────────
 

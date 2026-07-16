@@ -12,7 +12,19 @@ cd zarishlog
 bash scripts/zarishlog-setup.sh --yes
 ```
 
-The bootstrap script auto-detects your machine, installs missing prerequisites, configures Git, pulls Docker images, installs VS Code extensions, and sets up the project environment.
+The bootstrap script auto-detects your machine, installs missing prerequisites, configures Git, pulls Docker images, installs VS Code extensions, and sets up the project environment. After that, you can start the full local sandbox with:
+
+```bash
+./scripts/sandbox.sh start
+```
+
+The same flow is available from VS Code via the Sandbox tasks in the Tasks menu.
+
+```bash
+bash scripts/sandbox.sh start
+```
+
+The same flow is available from VS Code via the "Sandbox: Start" task.
 
 ---
 
@@ -22,14 +34,14 @@ If you prefer to install tools manually or the bootstrap script doesn't support 
 
 ### 1.1 Essential Tools
 
-| Tool | Version | Install Command (Linux) | Install Command (macOS) |
-|------|---------|------------------------|-------------------------|
-| **Go** | `1.26.4` | [Download](https://go.dev/dl/go1.26.4.linux-amd64.tar.gz) + extract to `/usr/local/go` | `brew install go@1.26` |
-| **Node.js** | `22.x LTS` | `curl -fsSL https://deb.nodesource.com/setup_22.x \| sudo -E bash - && sudo apt install -y nodejs` | `brew install node@22` |
-| **pnpm** | `11.x` | `corepack enable && corepack prepare pnpm@11 --activate` | `corepack enable && corepack prepare pnpm@11 --activate` |
-| **Docker** | Latest CE | [Docker Desktop for Linux](https://docs.docker.com/engine/install/) | [Docker Desktop for Mac](https://docs.docker.com/desktop/mac/install/) |
-| **Docker Compose** | `v2.32+` | Included with Docker Desktop | Included with Docker Desktop |
-| **psql** | `18` | `sudo apt install postgresql-client-18` (or `postgresql-client-16` if 18 unavailable) | `brew install postgresql@18` |
+| Tool               | Version    | Install Command (Linux)                                                                            | Install Command (macOS)                                                |
+| ------------------ | ---------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Go**             | `1.26.4`   | [Download](https://go.dev/dl/go1.26.4.linux-amd64.tar.gz) + extract to `/usr/local/go`             | `brew install go@1.26`                                                 |
+| **Node.js**        | `22.x LTS` | `curl -fsSL https://deb.nodesource.com/setup_22.x \| sudo -E bash - && sudo apt install -y nodejs` | `brew install node@22`                                                 |
+| **pnpm**           | `11.x`     | `corepack enable && corepack prepare pnpm@11 --activate`                                           | `corepack enable && corepack prepare pnpm@11 --activate`               |
+| **Docker**         | Latest CE  | [Docker Desktop for Linux](https://docs.docker.com/engine/install/)                                | [Docker Desktop for Mac](https://docs.docker.com/desktop/mac/install/) |
+| **Docker Compose** | `v2.32+`   | Included with Docker Desktop                                                                       | Included with Docker Desktop                                           |
+| **psql**           | `18`       | `sudo apt install postgresql-client-18` (or `postgresql-client-16` if 18 unavailable)              | `brew install postgresql@18`                                           |
 
 ### 1.2 Optional Go Tools
 
@@ -165,40 +177,40 @@ make test
 
 ## 5. Access Management Consoles
 
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| **Keycloak Admin** | http://localhost:8080/admin | `admin` / `zarishlog_dev_password` |
-| **MinIO Console** | http://localhost:9001 | `zarishlog` / `zarishlog_dev_password` |
-| **Meilisearch** | http://localhost:7700 | Key: `zarishlog_search_key` |
+| Service            | URL                         | Credentials                            |
+| ------------------ | --------------------------- | -------------------------------------- |
+| **Keycloak Admin** | http://localhost:8080/admin | `admin` / `zarishlog_dev_password`     |
+| **MinIO Console**  | http://localhost:9001       | `zarishlog` / `zarishlog_dev_password` |
+| **Meilisearch**    | http://localhost:7700       | Key: `zarishlog_search_key`            |
 
 ---
 
 ## 6. Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `.env` | Environment variables (local overrides) |
-| `.env.example` | Template with all variables documented |
-| `docker-compose.yml` | Infrastructure service definitions |
-| `apps/api/sqlc.yaml` | SQL code generation config |
-| `Makefile` | Common development tasks |
-| `go.work` | Go workspace (multi-module) |
-| `apps/api/internal/db/` | sqlc-generated Go code (19 files, ~9,600 lines) |
-| `.vscode/settings.json` | VS Code settings (Go, SQL, formatting) |
-| `.vscode/tasks.json` | VS Code build/test/deploy tasks |
-| `.vscode/launch.json` | Debug configurations |
-| `.vscode/extensions.json` | Recommended extensions |
+| File                      | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `.env`                    | Environment variables (local overrides)         |
+| `.env.example`            | Template with all variables documented          |
+| `docker-compose.yml`      | Infrastructure service definitions              |
+| `apps/api/sqlc.yaml`      | SQL code generation config                      |
+| `Makefile`                | Common development tasks                        |
+| `go.work`                 | Go workspace (multi-module)                     |
+| `apps/api/internal/db/`   | sqlc-generated Go code (19 files, ~9,600 lines) |
+| `.vscode/settings.json`   | VS Code settings (Go, SQL, formatting)          |
+| `.vscode/tasks.json`      | VS Code build/test/deploy tasks                 |
+| `.vscode/launch.json`     | Debug configurations                            |
+| `.vscode/extensions.json` | Recommended extensions                          |
 
 ---
 
 ## 7. Troubleshooting
 
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| `psql: connection refused` | Docker not running | `make docker-up` |
-| `go: command not found` | Go not in PATH | Add `export PATH=$PATH:/usr/local/go/bin` to `~/.profile` |
-| `pnpm: command not found` | corepack not enabled | `corepack enable && corepack prepare pnpm@11 --activate` |
-| Docker permission denied | User not in docker group | `sudo usermod -aG docker $USER && newgrp docker` |
-| Go build fails | Missing dependencies | `cd apps/api && go mod tidy` |
-| Database migration fails | PostgreSQL not ready | Wait 5s after `docker compose up -d` and retry |
-| Port already in use | Conflict with existing service | Change port in `.env` and `docker-compose.yml` |
+| Symptom                    | Cause                          | Fix                                                       |
+| -------------------------- | ------------------------------ | --------------------------------------------------------- |
+| `psql: connection refused` | Docker not running             | `make docker-up`                                          |
+| `go: command not found`    | Go not in PATH                 | Add `export PATH=$PATH:/usr/local/go/bin` to `~/.profile` |
+| `pnpm: command not found`  | corepack not enabled           | `corepack enable && corepack prepare pnpm@11 --activate`  |
+| Docker permission denied   | User not in docker group       | `sudo usermod -aG docker $USER && newgrp docker`          |
+| Go build fails             | Missing dependencies           | `cd apps/api && go mod tidy`                              |
+| Database migration fails   | PostgreSQL not ready           | Wait 5s after `docker compose up -d` and retry            |
+| Port already in use        | Conflict with existing service | Change port in `.env` and `docker-compose.yml`            |

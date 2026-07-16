@@ -5,8 +5,8 @@ export async function queueMutation(
   action: OfflineMutation["action"],
   recordId: string,
   payload: Record<string, unknown>
-): Promise<void> {
-  await db.mutations.add({
+): Promise<number> {
+  const id = await db.mutations.add({
     table,
     action,
     recordId,
@@ -14,11 +14,10 @@ export async function queueMutation(
     createdAt: new Date().toISOString(),
     retryCount: 0,
   });
-
-  if ("serviceWorker" in navigator && "SyncManager" in window) {
-    const registration = await navigator.serviceWorker.ready;
-    await registration.sync.register("zarishlog-sync");
+  if (id === undefined) {
+    throw new Error("Failed to generate mutation ID");
   }
+  return id;
 }
 
 export async function processQueue(

@@ -1,7 +1,6 @@
 {
   "version": "0.2.0",
   "configurations": [
-    
     {
       "name": "Attach to Chrome",
       "port": 9222,
@@ -10,6 +9,34 @@
       "webRoot": "${workspaceFolder}"
     },
 
+    {
+      "name": "Sandbox: Start",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "bash scripts/sandbox.sh start",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Sandbox: Stop",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "bash scripts/sandbox.sh stop",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Sandbox: Reset",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "bash scripts/sandbox.sh reset",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Sandbox: Start",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "bash ./scripts/sandbox.sh start",
+      "cwd": "${workspaceFolder}"
+    },
     {
       "name": "API Server (Go)",
       "type": "go",

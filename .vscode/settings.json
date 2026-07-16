@@ -109,6 +109,6 @@
     "PATH": "${workspaceFolder}/scripts:${env:PATH}"
   },
   "workbench.colorTheme": "Dark Modern",
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "vs-seti",
   "window.title": "${dirty}${activeEditorMedium}${separator}ZarishLog"
 }
