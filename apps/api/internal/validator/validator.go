@@ -22,6 +22,7 @@ func init() {
 	validate.RegisterValidation("item_type", validateItemType)
 	validate.RegisterValidation("movement_type", validateMovementType)
 	validate.RegisterValidation("wh_type", validateWarehouseType)
+	validate.RegisterValidation("loc_type", validateLocationType)
 	validate.RegisterValidation("uom_category", validateUoMCategory)
 
 	validate.RegisterAlias("opt_uuid7", "omitempty,uuid7")
@@ -55,6 +56,11 @@ func validateMovementType(fl validator.FieldLevel) bool {
 
 func validateWarehouseType(fl validator.FieldLevel) bool {
 	valid := map[string]bool{"central": true, "sub_warehouse": true, "transit": true, "quarantine": true}
+	return valid[fl.Field().String()]
+}
+
+func validateLocationType(fl validator.FieldLevel) bool {
+	valid := map[string]bool{"zone": true, "aisle": true, "rack": true, "bin": true, "shelf": true, "area": true}
 	return valid[fl.Field().String()]
 }
 
@@ -120,6 +126,8 @@ func messageForTag(tag, param, field string) string {
 		return field + " is not a valid movement type"
 	case "wh_type":
 		return field + " is not a valid warehouse type"
+	case "loc_type":
+		return field + " is not a valid location type (zone, aisle, rack, bin, shelf, area)"
 	case "uom_category":
 		return field + " is not a valid UoM category"
 	case "min":
