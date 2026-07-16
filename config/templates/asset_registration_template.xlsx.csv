@@ -1,0 +1,11 @@
+# ZarishLog Asset Registration Template
+# Instructions: One row per asset.
+# asset_tag: Unique identifier (e.g., CPI-LAP-001, CPI-VHF-001)
+# status: in_use, in_storage, under_maintenance, disposed, lost
+asset_tag,name,description,product_sku,serial_number,custodian_email,location_code,acquisition_date,purchase_cost,useful_life_years,status
+CPI-LAP-001,Dell Latitude 5540,Business laptop i7 16GB,ADMN-LAPTOP,SN-LAP-001,admin@zarishlog.org,CXB-CWH,2026-01-15,1200.00,5,in_use
+CPI-VHF-001,Motorola DP4400,Handheld VHF radio,ADMN-VHF,SN-VHF-001,admin@zarishlog.org,CXB-CWH,2026-01-15,450.00,7,in_use
+CPI-DSK-001,Office Desk 120x60cm,Standard office desk,ADMN-DESK,,admin@zarishlog.org,CXB-CWH,2026-02-01,250.00,10,in_use
+CPI-LAP-002,Dell Latitude 5540,Business laptop i7 16GB,ADMN-LAPTOP,SN-LAP-002,john@zarishlog.org,CXB-CWH,2026-03-01,1200.00,5,in_use
+CPI-VHF-002,Motorola DP4400,Handheld VHF radio,ADMN-VHF,SN-VHF-002,mariam@zarishlog.org,CXB-C5,2026-03-15,450.00,7,in_storage
+CPI-GEN-001,Generator Honda EU22i,2.2kVA portable inverter generator,ADMN-GEN,SN-GEN-001,admin@zarishlog.org,CXB-CWH,2026-04-01,1800.00,10,under_maintenance

@@ -1,0 +1,10 @@
+# ZarishLog Stock Issue Note (SRF) Template
+# Instructions: One row per product issued.
+# Issue Number: _______________    Date: _______________    Requested By: _______________
+# Approved By: _______________    Program: _______________    Department: _______________
+sku,product_name,quantity_requested,uom,quantity_issued,batch_number,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,500,EA,,,
+SUP-LTX-MED,Latex Examination Gloves,20,BX,,,
+WASH-SOAP-BAR,Soap Bar 200g,100,EA,,,
+NUT-RUTF,RUTF Sachet 92g,300,SA,,,
+MED-PCM-500,Paracetamol 500mg Tablets,1000,EA,,,

@@ -1,0 +1,14 @@
+# ZarishLog QA Inspection Template
+# Instructions: Answer Yes/No for each question. Add notes for any failures.
+# Inspection Date: _______________    Inspector: _______________    Product SKU: _______________
+# Batch Number: _______________    GRN Number (if applicable): _______________
+question,expected_answer,answer,is_critical,notes
+Is packaging intact and undamaged?,Yes,,Yes,
+Does product match PO/documentation?,Yes,,Yes,
+Is batch/lot number visible?,Yes,,No,
+Is expiry date > 6 months from today?,Yes,,Yes,
+Is cold chain maintained (if applicable)?,Yes,,Yes,
+Are quantity and UoM correct?,Yes,,Yes,
+Are sealing/labeling regulations met?,Yes,,No,
+Is the product free from contamination?,Yes,,Yes,
+Are storage conditions appropriate?,Yes,,Yes,

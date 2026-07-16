@@ -17,16 +17,16 @@
 
 ## Phase 1 — Database & Data Models (Week 2)
 
-- [ ] SQL schema — all 200+ tables with:
+- [x] SQL schema — 69 tables across 16 domains with:
   - UUIDv7 primary keys
   - `org_id` for multi-tenancy
   - Audit columns (`created_by`, `updated_by`, `created_at`, `updated_at`)
   - RLS policies on every tenant table
-- [ ] sqlc configuration + type-safe Go query generation
-- [ ] Master data seeding (UoM, categories, statuses, roles, permissions)
-- [ ] Sample org hierarchy seed (L1–L4)
-- [ ] Sample product catalogue seed (18+ items from CSV)
-- [ ] Indexes for performance-critical queries (stock_levels, movements)
+- [x] sqlc configuration (137 queries, 16 query files) — type-safe Go query generation
+- [x] Master data seeding (23 UoM, 13 categories, 12 roles, 63 permissions, 40 products)
+- [x] Sample org hierarchy seed (L1–L4 from CSV, 8 org levels)
+- [x] Sample product catalogue seed (40 items from master_product_list.csv)
+- [x] Indexes for performance-critical queries (stock_levels, movements, batches, alerts)
 
 ## Phase 2 — Go API Core (Week 3)
 

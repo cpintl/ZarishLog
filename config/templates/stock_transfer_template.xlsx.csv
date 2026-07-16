@@ -1,0 +1,11 @@
+# ZarishLog Stock Transfer Template
+# Instructions: One row per product being transferred between warehouses.
+# Transfer Number: _______________    Date: _______________
+# From Warehouse: _______________    To Warehouse: _______________
+# Authorized By: _______________
+sku,product_name,quantity,uom,batch_number,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,500,EA,AMOX-2026-A,Transfer to sub-warehouse
+SUP-LTX-MED,Latex Examination Gloves,30,BX,LTX-2026-A,
+WASH-SOAP-BAR,Soap Bar 200g,200,EA,BATCH-001,Movement to distribution point
+MED-PCM-500,Paracetamol 500mg Tablets,1000,EA,PCM-2026-A,
+NUT-RUTF,RUTF Sachet 92g,500,SA,RUTF-2026-A,

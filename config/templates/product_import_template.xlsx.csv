@@ -1,0 +1,12 @@
+# ZarishLog Master Product Import Template
+# Instructions: Fill in one row per product. Required fields: sku, name, category_name, uom_abbreviation, item_type
+# category_name must match existing categories
+# uom_abbreviation must match existing UoMs
+# item_type must be one of: drug, medical_supply, equipment, instrument, material, vaccine, nutrition, lab_reagent, asset, consumable
+sku,name,description,category_name,uom_abbreviation,item_type,is_batch_tracked,is_expiry_tracked,is_cold_chain,is_hazardous,gtin,brand,manufacturer,min_stock,max_stock,reorder_point,lead_time_days,unit_cost
+EXAMPLE-001,Example Product,A sample product for import,Medicines & Drugs,EA,drug,TRUE,TRUE,FALSE,FALSE,,,10,100,20,30,0.50
+MED-AMOX-500,Amoxicillin 500mg Capsules,Antibiotic capsules for respiratory infections,Medicines & Drugs,EA,drug,TRUE,TRUE,FALSE,FALSE,12345678901234,Generic,Beximco Pharma,500,10000,2000,45,0.12
+SUP-LTX-MED,Latex Examination Gloves,Powder-free latex gloves pair,Supplies & Sundries,BX,medical_supply,TRUE,FALSE,FALSE,FALSE,,Ansell,Ansell,100,500,200,30,3.50
+WASH-SOAP-BAR,Soap Bar 200g,Standard hygiene soap bar,Wash & Dignity,EA,consumable,FALSE,FALSE,FALSE,FALSE,,Unilever,Unilever,500,5000,1000,60,0.80
+NUT-RUTF,RUTF Sachet 92g,Ready-to-use therapeutic food peanut paste,Nutrition,SA,nutrition,TRUE,TRUE,FALSE,FALSE,,Plumpy'Nut,Nutriset,1000,10000,3000,90,0.55
+ADMN-LAPTOP,Dell Latitude 5540,Business laptop i7 16GB 256GB SSD,IT Equipment,EA,equipment,TRUE,FALSE,FALSE,FALSE,,Dell,Dell,2,20,5,30,1200.00

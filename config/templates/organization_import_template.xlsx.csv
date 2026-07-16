@@ -1,0 +1,13 @@
+# ZarishLog Organization Hierarchy Import Template
+# Instructions: Fill in one row per organizational unit.
+# level: 1=Global HQ, 2=Country Office, 3=Project Office, 4=Program Site
+# parent_code: Leave blank for L1. For others, use the code of the parent unit.
+name,code,level,parent_code
+Center for Peace and Integrity,CPI,1,
+Country Office - Bangladesh,CPI-BD,2,CPI
+Country Office - Tanzania,CPI-TZ,2,CPI
+Project Office - Cox Bazar,CPI-CXB,3,CPI-BD
+Project Office - Dar es Salaam,CPI-DAR,3,CPI-TZ
+Camp 4 Health Post,CPI-CXB-C4,4,CPI-CXB
+Camp 5 Health Post,CPI-CXB-C5,4,CPI-CXB
+Kigamboni Clinic,CPI-DAR-KIG,4,CPI-DAR

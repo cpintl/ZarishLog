@@ -8,6 +8,10 @@ LIMIT $2 OFFSET $3;
 SELECT * FROM products
 WHERE id = $1 AND org_id = $2;
 
+-- name: GetProductBySKU :one
+SELECT * FROM products
+WHERE org_id = $1 AND sku = $2;
+
 -- name: CreateProduct :one
 INSERT INTO products (
     org_id, category_id, uom_id, sku, name, description, item_type,
@@ -36,6 +40,12 @@ UPDATE products SET
     status = $18, updated_by = $19
 WHERE id = $20 AND org_id = $21;
 
+-- name: UpdateProductStockParams :exec
+UPDATE products SET
+    min_stock = $1, max_stock = $2, reorder_point = $3,
+    lead_time_days = $4, unit_cost = $5, updated_by = $6
+WHERE id = $7 AND org_id = $8;
+
 -- name: DeleteProduct :exec
 UPDATE products SET status = 'inactive', updated_by = $1
 WHERE id = $2 AND org_id = $3;
@@ -46,3 +56,14 @@ WHERE org_id = $1
   AND (to_tsvector('simple', name || ' ' || sku || ' ' || COALESCE(description, '')) @@ plainto_tsquery('simple', $2) OR $2 = '')
 ORDER BY name
 LIMIT $3 OFFSET $4;
+
+-- name: ListProductsByCategory :many
+SELECT * FROM products
+WHERE org_id = $1 AND category_id = $2
+ORDER BY name
+LIMIT $3 OFFSET $4;
+
+-- name: CountProducts :one
+SELECT COUNT(*) FROM products
+WHERE org_id = $1
+  AND ($2 = '' OR status = $2::entity_status);

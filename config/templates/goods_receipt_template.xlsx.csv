@@ -1,0 +1,10 @@
+# ZarishLog Goods Receipt Note Template
+# Instructions: One row per product received. Fill in all fields.
+# GRN Number: _______________    Date: _______________    Received By: _______________
+# PO Number: _______________  Supplier: _______________
+sku,product_name,quantity,uom,batch_number,expiry_date,unit_cost,condition,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,1000,EA,AMOX-2026-B,2028-01-15,0.12,Good,
+SUP-LTX-MED,Latex Examination Gloves,50,BX,LTX-2026-C,2028-06-01,3.50,Good,
+WASH-SOAP-BAR,Soap Bar 200g,500,EA,BATCH-001,,0.80,Good,
+NUT-RUTF,RUTF Sachet 92g,2000,SA,RUTF-2026-A,2027-08-01,0.55,Good,
+ADMN-LAPTOP,Dell Latitude 5540,5,EA,,,1200.00,Good,New laptops for field office

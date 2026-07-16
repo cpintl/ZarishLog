@@ -1,0 +1,11 @@
+# ZarishLog Distribution/Delivery Template
+# Instructions: One row per product distributed. Fill distribution header info first.
+# Distribution Number: _______________    Date: _______________    Location: _______________
+# Program: _______________    Beneficiary Count: _______________
+sku,product_name,quantity_planned,uom,quantity_distributed,batch_number,notes
+NUT-RUTF,RUTF Sachet 92g,500,SA,,,
+WASH-SOAP-BAR,Soap Bar 200g,200,EA,,,
+WASH-BKT-10L,Plastic Bucket 10L,50,EA,,,
+MED-PCM-500,Paracetamol 500mg Tablets,1000,EA,,,
+SUP-LTX-MED,Latex Examination Gloves,100,BX,,,
+NUT-MNP,Micronutrient Powder 30 sachets,200,BX,,,

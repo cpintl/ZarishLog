@@ -1,0 +1,11 @@
+# ZarishLog Physical Stock Count Template
+# Instructions: Fill in the counted quantity for each product at each location.
+# Leave blank if product not found at expected location.
+# Warehouse: _______________    Count Date: _______________    Counted By: _______________
+warehouse_code,zone_code,product_sku,product_name,expected_qty,uom,counted_qty,variance,notes
+CXB-CWH,GEN-A,MED-AMOX-500,Amoxicillin 500mg Capsules,5000,EA,,,
+CXB-CWH,GEN-A,MED-PCM-500,Paracetamol 500mg Tablets,10000,EA,,,
+CXB-CWH,GEN-B,SUP-LTX-MED,Latex Examination Gloves,200,BX,,,
+CXB-CWH,GEN-B,WASH-SOAP-BAR,Soap Bar 200g,2000,EA,,,
+CXB-CWH,GEN-C,NUT-RUTF,RUTF Sachet 92g,3000,SA,,,
+CXB-CWH,GEN-C,WASH-BKT-10L,Plastic Bucket 10L,100,EA,,,
