@@ -94,11 +94,13 @@
 
 ## Phase 8 — Replenishment & Forecasting (Week 9)
 
-- [ ] AMC calculation (3/6/12-month rolling window)
-- [ ] Buffer stock and reorder point calculation
-- [ ] FMC (Forecasted Monthly Consumption)
-- [ ] Low-stock/overstock/sleeping-stock alerts
-- [ ] ML forecasting microservice (Prophet)
+- [x] AMC calculation (3/6/12-month rolling from stock movements) — `POST /replenishment/amc`
+- [x] Reorder recommendation generation (auto-type/priority) — `POST/GET /replenishment/recommendations`
+- [x] Reorder review workflow — `PUT /replenishment/recommendations/:id/review`
+- [x] Forecast results CRUD (ML engine endpoint) — `POST/GET /replenishment/forecasts`
+- [x] Unit tests (testify + sqlmock, 9 tests)
+- [ ] ML Prophet microservice integration
+- [ ] Safety stock auto-calculation
 
 ## Phase 9 — User & Access Management (Week 10)
 

@@ -138,6 +138,14 @@ DELETE /api/v1/assets/:id                # Delete asset
 POST   /api/v1/assets/:id/custody        # Transfer custody
 POST   /api/v1/assets/:id/maintenance    # Create maintenance record
 GET    /api/v1/assets/:id/maintenance    # List maintenance records
+POST   /api/v1/replenishment/amc        # Calculate AMC (3/6/12-month rolling)
+GET    /api/v1/replenishment/amc        # List AMC calculations
+GET    /api/v1/replenishment/amc/latest # Get latest AMC for product+warehouse
+GET    /api/v1/replenishment/recommendations  # List reorder recommendations
+POST   /api/v1/replenishment/recommendations  # Generate reorder recommendation
+PUT    /api/v1/replenishment/recommendations/:id/review  # Mark reviewed
+GET    /api/v1/replenishment/forecasts  # List forecast results
+POST   /api/v1/replenishment/forecasts  # Create forecast result (ML engine)
 GET    /api/v1/reports/stock-status      # [STUB]
 GET    /api/v1/reports/valuation         # [STUB]
 GET    /api/v1/reports/expiry            # [STUB]

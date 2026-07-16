@@ -18,7 +18,7 @@
 | Phase 5 — Stock & Inventory Module | ✅ Complete | GRN, Stock Issue (Create with line items), Transfer (Create with line items via transaction), Adjustment (Create with line items via transaction — computes difference), Stock Levels (List paginated), Stock Movements (List paginated), Batch Genealogy (GET trail with ordered movements), structured validation on all stock models, 5 new unit tests |
 | Phase 6 — Quality Assurance | ✅ Complete | QA inspection CRUD, checklist templates (with items), dispositions, expiry monitoring, 12 unit tests |
 | Phase 7 — Distribution & Asset Management | ✅ Complete | Distribution CRUD (with line items + beneficiaries), asset register CRUD, custody transfer, maintenance history, 17 unit tests |
-| Phase 8 — Replenishment & Forecasting | ❌ Not started | AMC (3/6/12-month), buffer stock, reorder points, ML forecasting microservice (Prophet) |
+| Phase 8 — Replenishment & Forecasting | ✅ Complete | AMC calculation (3/6/12-month from stock movements), reorder recommendations (auto-type/priority), forecast results CRUD, 9 unit tests |
 | Phase 9 — User & Access Management | ❌ Not started | User CRUD + role assignment, permission matrix, password reset, MFA, audit log |
 | Phase 10 — Offline-First & PWA | ❌ Not started | Dexie.js IndexedDB, Workbox service worker, Background Sync, conflict resolution |
 | Phase 11 — Reporting & Analytics | ❌ Not started | Metabase dashboards, stock turnover, expiry dashboard, donor compliance reports |

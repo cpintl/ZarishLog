@@ -148,6 +148,18 @@ func main() {
 				distributions.GET("", handler.ListDistributions(db))
 				distributions.GET("/:id", handler.GetDistribution(db))
 			}
+			replenishment := protected.Group("/replenishment")
+			replenishment.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist"))
+			{
+				replenishment.POST("/amc", handler.CalculateAMC(db))
+				replenishment.GET("/amc", handler.ListAMCCalculations(db))
+				replenishment.GET("/amc/latest", handler.GetLatestAMC(db))
+				replenishment.GET("/recommendations", handler.ListReorderRecommendations(db))
+				replenishment.POST("/recommendations", handler.CreateReorderRecommendation(db))
+				replenishment.PUT("/recommendations/:id/review", handler.MarkRecommendationReviewed(db))
+				replenishment.GET("/forecasts", handler.ListForecastResults(db))
+				replenishment.POST("/forecasts", handler.CreateForecastResult(db))
+			}
 		}
 	}
 
