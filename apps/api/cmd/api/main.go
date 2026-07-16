@@ -114,6 +114,19 @@ func main() {
 				stock.GET("/levels", handler.GetStockLevels(db))
 				stock.GET("/movements", handler.GetStockMovements(db))
 				stock.GET("/batches/:id/trail", handler.GetBatchTrail(db))
+				stock.GET("/expiring", handler.GetExpiringStock(db))
+			}
+
+			qa := protected.Group("/qa")
+			qa.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				qa.POST("/inspections", handler.CreateInspection(db))
+				qa.GET("/inspections", handler.ListInspections(db))
+				qa.GET("/inspections/:id", handler.GetInspection(db))
+				qa.POST("/inspections/:id/disposition", handler.CreateDisposition(db))
+				qa.POST("/checklists", handler.CreateChecklistTemplate(db))
+				qa.GET("/checklists", handler.ListChecklistTemplates(db))
+				qa.GET("/checklists/:id", handler.GetChecklistTemplate(db))
 			}
 		}
 	}

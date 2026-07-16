@@ -73,12 +73,13 @@
 
 ## Phase 6 — Quality Assurance Module (Week 7)
 
-- [ ] QA inspection on receipt
-- [ ] Pass/fail/quarantine disposition
+- [x] QA inspection on receipt — `internal/handler/qa.go`
+- [x] Pass/fail/quarantine disposition — `POST /qa/inspections/:id/disposition`
+- [x] Expiry monitoring — `GET /stock/expiring?days=30`
+- [x] QA checklist templates with items — `POST/GET /qa/checklists`
+- [x] Unit tests (testify + sqlmock, 12 tests)
 - [ ] Quarantine area management (RLS enforced)
-- [ ] Expiry monitoring + alert configuration
 - [ ] Corrective action / disposal records
-- [ ] QA checklist templates
 
 ## Phase 7 — Distribution & Asset Management (Week 8)
 

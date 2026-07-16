@@ -6,3 +6,10 @@ func nullIfEmpty(s string) interface{} {
 	}
 	return s
 }
+
+func nullIfEmptyPtr(s *string) interface{} {
+	if s == nil || *s == "" {
+		return nil
+	}
+	return *s
+}

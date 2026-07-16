@@ -119,9 +119,14 @@ GET    /api/v1/stock/levels              # Current stock levels
 GET    /api/v1/stock/movements           # Stock movement ledger
 GET    /api/v1/stock/batches/:id/trail   # Batch genealogy
 
-# Future — stubbed
-GET    /api/v1/qa/inspections            # [STUB]
-POST   /api/v1/qa/inspect                # [STUB]
+GET    /api/v1/stock/expiring             # Expiry monitoring (query ?days=30)
+POST   /api/v1/qa/inspections            # Create inspection with checklist results
+GET    /api/v1/qa/inspections            # List inspections (paginated)
+GET    /api/v1/qa/inspections/:id        # Get inspection + results + disposition
+POST   /api/v1/qa/inspections/:id/disposition  # Create disposition
+POST   /api/v1/qa/checklists             # Create checklist template with items
+GET    /api/v1/qa/checklists             # List checklist templates (paginated)
+GET    /api/v1/qa/checklists/:id         # Get checklist template with items
 GET    /api/v1/assets                    # [STUB]
 POST   /api/v1/assets/transfer           # [STUB]
 GET    /api/v1/reports/stock-status      # [STUB]

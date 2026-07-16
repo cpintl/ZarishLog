@@ -16,7 +16,7 @@
 | Phase 3 — Product/Catalogue Module | ✅ Complete | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM CRUD (List/Get/Create/Update/Delete), bulk CSV import with duplicate detection, PostgreSQL ILIKE search (name/SKU/description/brand/manufacturer), structured validation + pagination + error helpers, 12 unit tests (testify + sqlmock) |
 | Phase 4 — Warehouse & Location Module | ✅ Complete | Warehouse CRUD (List/Get/Create/Update/Delete), Location CRUD (List/Get/Create/Update/Delete with hierarchy tree), Location constraints (get/upsert with ON CONFLICT), location_type validator, 13 unit tests (testify + sqlmock) |
 | Phase 5 — Stock & Inventory Module | ✅ Complete | GRN, Stock Issue (Create with line items), Transfer (Create with line items via transaction), Adjustment (Create with line items via transaction — computes difference), Stock Levels (List paginated), Stock Movements (List paginated), Batch Genealogy (GET trail with ordered movements), structured validation on all stock models, 5 new unit tests |
-| Phase 6 — Quality Assurance | ❌ Not started | QA inspection on receipt, pass/fail/quarantine, expiry monitoring, corrective action |
+| Phase 6 — Quality Assurance | ✅ Complete | QA inspection CRUD, checklist templates (with items), dispositions, expiry monitoring, 12 unit tests |
 | Phase 7 — Distribution & Asset Management | ❌ Not started | Distribution forms, multi-program allocation, returns/disposal, asset lifecycle, depreciation |
 | Phase 8 — Replenishment & Forecasting | ❌ Not started | AMC (3/6/12-month), buffer stock, reorder points, ML forecasting microservice (Prophet) |
 | Phase 9 — User & Access Management | ❌ Not started | User CRUD + role assignment, permission matrix, password reset, MFA, audit log |
