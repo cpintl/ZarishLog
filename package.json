@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.2.0",
   "description": "ZarishLog — Unified Humanitarian Logistics, Supply Chain & Asset Management Platform",
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@11",
   "engines": {
     "node": ">=20.0.0"
   },

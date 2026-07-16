@@ -15,13 +15,13 @@ bash scripts/zarishlog-setup.sh --yes
 The bootstrap script auto-detects your machine, installs missing prerequisites, configures Git, pulls Docker images, installs VS Code extensions, and sets up the project environment. After that, you can start the full local sandbox with:
 
 ```bash
-./scripts/sandbox.sh start
+./scripts/sandbox-start.sh
 ```
 
-The same flow is available from VS Code via the Sandbox tasks in the Tasks menu.
+The same flow is available from VS Code via the Sandbox tasks in the Tasks menu: `Sandbox: Start`, `Sandbox: Stop`, `Sandbox: Reset`, `Sandbox: Health`.
 
 ```bash
-bash scripts/sandbox.sh start
+bash scripts/sandbox-start.sh
 ```
 
 The same flow is available from VS Code via the "Sandbox: Start" task.

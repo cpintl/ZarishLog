@@ -6,48 +6,50 @@ VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev
 COMMIT_HASH := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
+
+
 help:
-	@echo "╔═══════════════════════════════════════════════════════════════╗"
-	@echo "║  ZarishLog Development Toolkit                               ║"
-	@echo "║  Version: $(VERSION)                                         ║"
-	@echo "╚═══════════════════════════════════════════════════════════════╝"
-	@echo ""
-	@echo "  ┌─────────────────────┬─────────────────────────────────────┐"
-	@echo "  │ SETUP & ENVIRONMENT │                                     │"
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤"
-	@echo "  │ make setup          │ Run full bootstrap + install deps   │"
-	@echo "  │ make docker-up      │ Start all Docker services           │"
-	@echo "  │ make docker-down    │ Stop all Docker services            │"
-	@echo "  │ make db-up          │ Start database services only        │"
-	@echo "  │ make db-down        │ Stop database services              │"
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤"
-	@echo "  │ BUILD & DEV         │                                     │"
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤"
-	@echo "  │ make dev            │ Start API + Web in dev mode         │"
-	@echo "  │ make build          │ Build Go binary + frontend          │
-	@echo "  │ make build-go       │ Build Go binary only                │
-	@echo "  │ make build-docker   │ Build Docker images                 │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ DATABASE            │                                     │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ make db-migrate     │ Run SQL migrations                  │
-	@echo "  │ make db-seed        │ Seed master data                    │
-	@echo "  │ make db-reset       │ Drop, recreate, migrate, seed       │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ TEST & VALIDATE     │                                     │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ make test           │ Run all tests                       │
-	@echo "  │ make test-go        │ Run Go tests only                   │
-	@echo "  │ make test-web       │ Run frontend tests only             │
-	@echo "  │ make lint           │ Lint all code                       │
-	@echo "  │ make validate       │ Validate config files               │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ PUBLISH             │                                     │
-	@echo "  ├─────────────────────┼─────────────────────────────────────┤
-	@echo "  │ make publish        │ Build + push Docker images          │
-	@echo "  │ make release        │ Create release tag + publish        │
-	@echo "  └─────────────────────┴─────────────────────────────────────┘
-	@echo ""
+	@echo '╔═══════════════════════════════════════════════════════════════╗'
+	@echo '║  ZarishLog Development Toolkit                               ║'
+	@echo '║  Version: $(VERSION)                                         ║'
+	@echo '╚═══════════════════════════════════════════════════════════════╝'
+	@echo ''
+	@echo '  ┌─────────────────────┬─────────────────────────────────────┐'
+	@echo '  │ SETUP & ENVIRONMENT │                                     │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ make setup          │ Run full bootstrap + install deps   │'
+	@echo '  │ make docker-up      │ Start all Docker services           │'
+	@echo '  │ make docker-down    │ Stop all Docker services            │'
+	@echo '  │ make db-up          │ Start database services only        │'
+	@echo '  │ make db-down        │ Stop database services              │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ BUILD & DEV         │                                     │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ make dev            │ Start API + Web in dev mode         │'
+	@echo '  │ make build          │ Build Go binary + frontend          │'
+	@echo '  │ make build-go       │ Build Go binary only                │'
+	@echo '  │ make build-docker   │ Build Docker images                 │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ DATABASE            │                                     │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ make db-migrate     │ Run SQL migrations                  │'
+	@echo '  │ make db-seed        │ Seed master data                    │'
+	@echo '  │ make db-reset       │ Drop, recreate, migrate, seed       │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ TEST & VALIDATE     │                                     │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ make test           │ Run all tests                       │'
+	@echo '  │ make test-go        │ Run Go tests only                   │'
+	@echo '  │ make test-web       │ Run frontend tests only             │'
+	@echo '  │ make lint           │ Lint all code                       │'
+	@echo '  │ make validate       │ Validate config files               │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ PUBLISH             │                                     │'
+	@echo '  ├─────────────────────┼─────────────────────────────────────┤'
+	@echo '  │ make publish        │ Build + push Docker images          │'
+	@echo '  │ make release        │ Create release tag + publish        │'
+	@echo '  └─────────────────────┴─────────────────────────────────────┘'
+	@echo ''
 
 # ─── Setup ──────────────────────────────────────────────────────────────
 

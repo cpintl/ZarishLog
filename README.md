@@ -95,6 +95,27 @@ make db-seed        # loads master catalogue
 make dev            # starts API (:8080) + Web (:3000)
 ```
 
+### One-click sandbox (recommended)
+
+You can start a local sandbox with the provided scripts or via VS Code Tasks.
+
+Terminal commands:
+
+```bash
+# Start full sandbox (pull images, wait for DB, run migrations + seed)
+bash scripts/sandbox-start.sh
+
+# Stop all sandbox services
+bash scripts/sandbox-stop.sh
+
+# Reset local data (drops volumes/local data and re-seeds)
+bash scripts/sandbox-reset.sh
+
+# Quick health check
+bash scripts/sandbox-health.sh
+```
+
+VS Code: open the Command Palette (Ctrl+Shift+P) → Tasks: Run Task → choose `Sandbox: Start` / `Sandbox: Stop` / `Sandbox: Reset` / `Sandbox: Health`.
 See [`SETUP.md`](./SETUP.md) for detailed setup instructions. A 1912-product master catalogue CSV is included at `config/metadata/master_product_catalogue.csv` (65+ categories, 3 major domains: Drugs, Assets, Humanitarian/Technical).
 
 ## 6. Status

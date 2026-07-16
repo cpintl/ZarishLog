@@ -4,7 +4,7 @@
     {
       "label": "Sandbox: Start",
       "type": "shell",
-      "command": "bash scripts/sandbox.sh start",
+      "command": "bash scripts/sandbox-start.sh",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "build",
       "problemMatcher": []
@@ -12,7 +12,15 @@
     {
       "label": "Sandbox: Stop",
       "type": "shell",
-      "command": "bash scripts/sandbox.sh stop",
+      "command": "bash scripts/sandbox-stop.sh",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Sandbox: Open Services",
+      "type": "shell",
+      "command": "echo 'Open browser to: http://localhost:3000 (web), http://localhost:8080 (api), http://localhost:9001 (minio), http://localhost:7700 (meilisearch)'",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "none",
       "problemMatcher": []
@@ -20,7 +28,7 @@
     {
       "label": "Sandbox: Reset",
       "type": "shell",
-      "command": "bash scripts/sandbox.sh reset",
+      "command": "bash scripts/sandbox-reset.sh",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "none",
       "problemMatcher": []
@@ -28,7 +36,7 @@
     {
       "label": "Sandbox: Health",
       "type": "shell",
-      "command": "bash scripts/sandbox.sh health",
+      "command": "bash scripts/sandbox-health.sh",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "none",
       "problemMatcher": []
