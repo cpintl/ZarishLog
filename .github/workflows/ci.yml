@@ -85,9 +85,9 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: apps/web
 
-      - name: Lint
-        run: pnpm lint -- --strict 2>/dev/null || echo "Skipping lint — ESLint needs config setup"
-        working-directory: apps/web
+      # Lint disabled: needs ESLint config setup (next lint is interactive without it)
+      # - name: Lint
+      #   run: pnpm lint
 
       - name: Typecheck
         run: pnpm typecheck

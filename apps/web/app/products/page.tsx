@@ -2,6 +2,7 @@ interface Product {
   id: string;
   sku: string;
   name: string;
+  category?: { name: string };
   item_type: string;
   status: string;
 }

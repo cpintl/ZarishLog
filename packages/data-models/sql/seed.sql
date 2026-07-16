@@ -1074,7 +1074,7 @@ UPDATE products SET generic_name = 'Sterile gauze swabs 10x10cm 8-ply', storage_
 WHERE sku = 'SUP-GAUZE' AND org_id = '00000000-0000-0000-0000-000000000001';
 
 -- Nutrition
-UPDATE products SET dosage_form_code = 'PWD', generic_name = 'Ready-to-Use Therapeutic Food (peanut-based)', brand_name = 'Plumpy\'Nut, Plumpy\'Sup', storage_conditions = 'Store below 30°C, no refrigeration needed', reference_urls = '[{"label":"WHO RUTF","url":"https://www.who.int/publications/i/item/9789241512435"}]'
+UPDATE products SET dosage_form_code = 'PWD', generic_name = 'Ready-to-Use Therapeutic Food (peanut-based)', brand_name = 'Plumpy''Nut, Plumpy''Sup', storage_conditions = 'Store below 30°C, no refrigeration needed', reference_urls = '[{"label":"WHO RUTF","url":"https://www.who.int/publications/i/item/9789241512435"}]'
 WHERE sku = 'NUT-RUTF' AND org_id = '00000000-0000-0000-0000-000000000001';
 
 UPDATE products SET dosage_form_code = 'PWD', generic_name = 'F100 Therapeutic Milk formulation', storage_conditions = 'Mix with water, use within 24hrs of reconstitution'
