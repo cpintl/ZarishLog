@@ -1,0 +1,27 @@
+{
+  "formId": "RET",
+  "title": "Stock Return Form",
+  "description": "Record returned items from programs, beneficiaries, or suppliers",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "returnNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "returnDate", "type": "date", "required": true, "default": "now" },
+    { "name": "returnType", "type": "select", "options": ["Beneficiary", "Program", "Supplier", "Internal"], "required": true },
+    { "name": "returnedFrom", "type": "text", "required": true },
+    { "name": "receivedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "reason", "type": "textarea", "required": true },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "text" },
+        { "name": "expiryDate", "type": "date" },
+        { "name": "quantity", "type": "number", "required": true },
+        { "name": "condition", "type": "select", "options": ["Unopened", "Damaged", "Expired", "Near Expiry"], "required": true },
+        { "name": "disposition", "type": "select", "options": ["Return to Stock", "Quarantine", "Dispose", "Return to Supplier"] }
+      ]
+    },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

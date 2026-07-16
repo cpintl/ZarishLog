@@ -1,19 +1,41 @@
-ZL-000001,A-Cold (Bromhexine Hydrochloride) 4 mg/5 ml Syrup,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000001
-Name: A-Cold (Bromhexine Hydrochloride) 4 mg/5 ml Syrup
-Cat: Pharmaceutical Stock",,,,ZL-000001
-ZL-000002,A-Cof (Dextromethorphan + Pseudoephedrine + Triprolidine) (10 mg+30 mg+1.25 mg)/5 ml Syrup,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000002
-Name: A-Cof (Dextromethorphan + Pseudoephedrine + Triprolidine) (10 mg+30 mg+1.25 mg)/5 ml Syrup
-Cat: Pharmaceutical Stock",,,,ZL-000002
-ZL-000003,A-Clox (Cloxacillin Sodium) 500 mg/vial Injection,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000003
-Name: A-Clox (Cloxacillin Sodium) 500 mg/vial Injection
-Cat: Pharmaceutical Stock",,,,ZL-000003
-ZL-000004,A-Clox (Cloxacillin Sodium) 250 mg/vial Injection,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000004
-Name: A-Clox (Cloxacillin Sodium) 250 mg/vial Injection
-Cat: Pharmaceutical Stock",,,,ZL-000004
-ZL-000005,A-Clox (Cloxacillin Sodium) 125 mg/5 ml Powder for Suspension,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000005
-Name: A-Clox (Cloxacillin Sodium) 125 mg/5 ml Powder for Suspension
-Cat: Pharmaceutical Stock",,,,ZL-000005
-ZL-000006,A-Clox (Cloxacillin Sodium) 500 mg Capsule,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000006
-Name: A-Clox (Cloxacillin Sodium) 500 mg Capsule
-Cat: Pharmaceutical Stock",,,,ZL-000006
-ZL-000007,A-Care (Betacarotene + Vitamin C + Vitamin E) 6 mg+200 mg+50 mg Tablet,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000007
+sku,name,category_name,item_type,description,strength,dosage_form,uom_abbreviation,is_batch_tracked,is_expiry_tracked,is_cold_chain,is_hazardous,is_essential,is_controlled,is_asset,replenishment_type,valuation_method,manufacturers,source
+MED-AMOX-500,Amoxicillin 500mg Capsules,Medicines & Drugs,drug,Broad-spectrum antibiotic,500 mg,Capsule,EA,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,medex.com.bd
+MED-PCM-500,Paracetamol 500mg Tablets,Medicines & Drugs,drug,Analgesic and antipyretic,500 mg,Tablet,EA,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,medex.com.bd
+MED-ART-100,Artemether 20mg+Lumefantrine 120mg,Medicines & Drugs,drug,Antimalarial combination therapy,20 mg+120 mg,Tablet,EA,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,medex.com.bd
+MED-ORS,WHO Oral Rehydration Salts,Medicines & Drugs,drug,For diarrhea management,,Oral Powder,PK,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,medex.com.bd
+MED-VIT-A,Vitamin A Capsules 200000 IU,Medicines & Drugs,drug,High-dose vitamin A supplement,200000 IU,Capsule,EA,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,medex.com.bd
+SUP-LTX-MED,Latex Examination Gloves (Box 100),Medical Supplies,medical_supply,Sterile latex examination gloves,,,BX,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+SUP-SYG-5ML,Syringe 5ml (Box 100),Medical Supplies,medical_supply,Disposable syringe 5ml,,,BX,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+SUP-GAUZE,Gauze Swabs Sterile 10x10cm (Box 100),Medical Supplies,medical_supply,Sterile gauze swabs,,,BX,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+SUP-MASK-SRG,Surgical Mask (Box 50),Medical Supplies,medical_supply,Disposable surgical face masks,,,BX,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+SUP-BANDAGE,Crepe Bandage 10cm x 4.5m,Medical Supplies,medical_supply,Elastic crepe bandage,,,EA,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+SUP-CATH-FOLEY,Foley Catheter 16FR,Medical Supplies,medical_supply,Silicone foley catheter,,,EA,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+EQP-BP-MANUAL,Manual Blood Pressure Monitor,Medical Equipment,equipment,Aneroid sphygmomanometer,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+EQP-STETH,Stethoscope Dual Head,Medical Equipment,equipment,Dual-head acoustic stethoscope,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+EQP-THERM-IR,Infrared Thermometer,Medical Equipment,equipment,Non-contact infrared thermometer,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+EQP-OX-PULSE,Pulse Oximeter,Medical Equipment,equipment,Finger pulse oximeter,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+EQP-REF-COLD,Solar-Powered Refrigerator,Medical Equipment,equipment,For vaccine cold chain storage,,,EA,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+NUT-RUTF,RUTF Sachet 92g,Nutrition,nutrition,Ready-to-Use Therapeutic Food,,,CTN,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+NUT-F100,F100 Therapeutic Milk (Box 12),Nutrition,nutrition,Therapeutic milk for severe malnutrition,,,BX,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+NUT-LNS,LNS (Lipid-Based Nutrient Supplement),Nutrition,nutrition,Lipid-based nutrient supplement,,,CTN,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+WASH-SOAP-BAR,Soap Bar 200g,WASH Supplies,material,Laundry and handwashing soap,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-BKT-10L,Plastic Bucket 10L,WASH Supplies,material,Collapsible water bucket with tap,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-JERRY-20L,Jerry Can 20L,WASH Supplies,material,Plastic jerry can for water transport,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-TAB-CHLOR,Chlorine Tablets (Bottle 300),WASH Supplies,material,Water purification tablets,,,BX,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-AQUA-TAB,AquaTab 33mg (Box 1000),WASH Supplies,material,Water purification tablets 33mg,,,BX,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-MOSQ-NET,Insecticide Mosquito Net,Office & Admin,material,Long-lasting insecticidal net,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+WASH-TARP,Tarpaulin 4x6m,Office & Admin,material,Weather-resistant shelter tarp,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+GEN-BLAN-KIT,Blanket Kit (Emergency),Office & Admin,material,Thermal emergency blankets kit,,,ST,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+GEN-KITCHEN-SET,Kitchen Set Family,Office & Admin,material,Family kitchen set 4 persons,,,ST,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+GEN-DIGNITY-KIT,Dignity Kit Women,Office & Admin,material,Female hygiene and dignity kit,,,ST,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+GEN-SOLAR-LAMP,Solar Lamp with USB,Office & Admin,equipment,Portable solar powered LED lamp,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+ADMN-PAPER-A4,Office Paper A4 Box,Office & Admin,consumable,Printer paper A4 5000 sheets,,,BX,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+ADMN-TONER,Toner Cartridge HP 85A,Office & Admin,consumable,Laser printer toner cartridge,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,min_max,fifo,,
+ADMN-DESK,Office Desk 120x60cm,Office & Admin,asset,Standard office desk,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,min_max,fifo,,
+ADMN-CHAIR,Office Chair Ergonomic,Office & Admin,asset,Ergonomic office chair,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,min_max,fifo,,
+ADMN-LAPTOP,Laptop Computer 15.6 inch,Office & Admin,asset,Business laptop with accessories,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,min_max,fifo,,
+ADMN-TABLET,Tablet 10 inch,Office & Admin,asset,Android tablet for field data collection,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,min_max,fifo,,
+ADMN-VHF,VHF Radio Handheld,Office & Admin,asset,Handheld VHF radio for field communication,,,EA,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,min_max,fifo,,
+ADMN-POWER-BANK,Power Bank 20000mAh,Office & Admin,equipment,Solar-compatible power bank,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+INSTR-SCALE-DIG,Digital Weighing Scale 150kg,Medical Equipment,instrument,Digital scale for nutrition screening,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,
+INSTR-MUAC,MUAC Measuring Tape,Medical Supplies,instrument,Mid-upper arm circumference tape,,,EA,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,min_max,fifo,,

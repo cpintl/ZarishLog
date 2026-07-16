@@ -1,0 +1,34 @@
+{
+  "formId": "MONTHLY-RPT",
+  "title": "Monthly Logistics Report",
+  "description": "Holistic monthly report covering stock status, KPIs, challenges, and recommendations",
+  "fields": [
+    { "name": "reportMonth", "type": "month", "required": true },
+    { "name": "orgLevelId", "type": "select", "source": "orgLevels", "required": true },
+    { "name": "preparedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "approvedBy", "type": "user", "required": false },
+    {
+      "name": "stockSummary",
+      "type": "group",
+      "fields": [
+        { "name": "totalProducts", "type": "number" },
+        { "name": "productsInStock", "type": "number" },
+        { "name": "productsOutOfStock", "type": "number" },
+        { "name": "stockValue", "type": "number" }
+      ]
+    },
+    {
+      "name": "kpis",
+      "type": "group",
+      "fields": [
+        { "name": "fillRate", "type": "number", "suffix": "%" },
+        { "name": "orderLeadTime", "type": "number", "suffix": "days" },
+        { "name": "inventoryAccuracy", "type": "number", "suffix": "%" },
+        { "name": "expiryRate", "type": "number", "suffix": "%" }
+      ]
+    },
+    { "name": "challenges", "type": "textarea" },
+    { "name": "recommendations", "type": "textarea" },
+    { "name": "attachments", "type": "file-upload", "multiple": true }
+  ]
+}

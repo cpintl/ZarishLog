@@ -1,0 +1,8 @@
+# [Organization Name] Purchase Request Template
+# Instructions: Complete this form to request new procurement.
+# PR Number: _______________    Date: _______________    Requested By: _______________
+# Department: _______________    Program: _______________    Justification Code: _______________
+sku,product_name,quantity,uom,estimated_unit_cost,estimated_total,suggested_supplier,delivery_date,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,10000,EA,0.15,1500.00,PharmaCorp Ltd,2026-09-01,"Semi-annual resupply"
+SUP-LTX-MED,Latex Examination Gloves,500,BX,3.50,1750.00,MedSupply Intl,2026-09-15,
+EQP-BP-MANUAL,Manual Blood Pressure Monitor,10,EA,25.00,250.00,MedEquip Ltd,2026-10-01,"New clinic setup"

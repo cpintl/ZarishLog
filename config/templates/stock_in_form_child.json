@@ -1,0 +1,24 @@
+{
+  "formId": "STK-IN-C",
+  "title": "Stock In — Child Facility",
+  "description": "Simplified receiving for small/remote facilities",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "supplierName", "type": "text", "required": false },
+    { "name": "referenceNumber", "type": "text", "required": true },
+    { "name": "receivedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "receivedBy", "type": "user", "required": true, "auto": "currentUser" },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "text" },
+        { "name": "expiryDate", "type": "date" },
+        { "name": "quantityReceived", "type": "number", "required": true },
+        { "name": "condition", "type": "select", "options": ["Good", "Damaged"] }
+      ]
+    },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

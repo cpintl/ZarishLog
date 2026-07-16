@@ -1,0 +1,6 @@
+# [Organization Name] Asset Allocation Template
+# Instructions: Assign or reassign assets to employees.
+# Processed By: _______________    Date: _______________
+asset_tag,asset_name,employee_name,employee_email,department,location,purpose,allocation_date,expected_return_date,condition,acknowledged
+CPI-LAP-001,Laptop Computer 15.6in,"Fatima Rahman",fatima@example.org,Programs,"Cox Bazar Office","Field program coordination",2026-07-01,2027-06-30,Good,Yes
+CPI-VHF-001,VHF Radio Handheld,"Mohammad Ali",mohammad@example.org,Logistics,"CXB-CWH Warehouse","Warehouse communications",2026-07-01,,Good,Yes

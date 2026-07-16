@@ -1,0 +1,26 @@
+{
+  "formId": "STK-CARD",
+  "title": "Stock Card",
+  "description": "Per-product, per-location ledger tracking all stock movements (receipts, issues, adjustments, balance)",
+  "fields": [
+    { "name": "productId", "type": "select", "source": "products", "required": true },
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "locationId", "type": "select", "source": "locations", "required": false },
+    { "name": "batchId", "type": "select", "source": "batches", "required": false, "note": "Leave empty to see all batches" },
+    { "name": "dateFrom", "type": "date", "required": true },
+    { "name": "dateTo", "type": "date", "required": true, "default": "now" },
+    {
+      "name": "entries",
+      "type": "readonly-table",
+      "columns": [
+        { "name": "date", "type": "date" },
+        { "name": "reference", "type": "text", "label": "Reference No." },
+        { "name": "movementType", "type": "text", "label": "Type" },
+        { "name": "quantityIn", "type": "number" },
+        { "name": "quantityOut", "type": "number" },
+        { "name": "balance", "type": "number", "calculated": "cumulative" },
+        { "name": "remarks", "type": "text" }
+      ]
+    }
+  ]
+}

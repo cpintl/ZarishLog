@@ -2,7 +2,7 @@ name: zarishlog
 
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: zarishlog
@@ -19,7 +19,7 @@ services:
       retries: 10
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -34,23 +34,39 @@ services:
       MINIO_ROOT_USER: zarishlog
       MINIO_ROOT_PASSWORD: zarishlog_dev_password
     ports:
-      - "9000:9000" # S3 API
-      - "9001:9001" # Console
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - miniodata:/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    image: quay.io/keycloak/keycloak:26.0
     restart: unless-stopped
-    command: start-dev
+    command: start-dev --import-realm
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: zarishlog_dev_password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: zarishlog_dev_password
       KC_DB: dev-file
+      KC_HOSTNAME: localhost
+      KC_HTTP_PORT: 8080
     ports:
       - "8080:8080"
+    volumes:
+      - ./infrastructure/docker/keycloak:/opt/keycloak/data/import:ro
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: zarishlog_search_key
+      MEILI_NO_ANALYTICS: "true"
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilidata:/meili_data
 
 volumes:
   pgdata:
   redisdata:
   miniodata:
+  meilidata:

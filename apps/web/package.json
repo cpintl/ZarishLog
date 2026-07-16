@@ -1,19 +1,28 @@
 {
   "name": "@zarishlog/web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p ${WEB_PORT:-3000}",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "next": "^15.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@zarishlog/business-logic": "workspace:*"
+    "dexie": "^4.0.8",
+    "dexie-react-hooks": "^1.1.7",
+    "idb": "^8.0.0",
+    "next-pwa": "^5.6.0",
+    "workbox-precaching": "^7.1.0",
+    "workbox-routing": "^7.1.0",
+    "workbox-strategies": "^7.1.0",
+    "workbox-background-sync": "^7.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "typescript": "^5.6.3",
@@ -21,6 +30,9 @@
     "@types/node": "^22.7.5",
     "tailwindcss": "^3.4.13",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47"
+    "postcss": "^8.4.47",
+    "vitest": "^2.1.2",
+    "@testing-library/react": "^16.0.1",
+    "@vitejs/plugin-react": "^4.3.3"
   }
 }

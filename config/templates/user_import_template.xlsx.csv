@@ -1,0 +1,9 @@
+# [Organization Name] User Import Template
+# Instructions: One row per user. Required: email, name, role_code
+# role_code must match existing roles: GLOBAL_ADMIN, COUNTRY_REP, WAREHOUSE_OFFICER, etc.
+# org_level_code: Use the org level code (e.g. [org_code]-CXB, [org_code]-BD)
+# department_code: Optional, use department codes
+email,name,job_title,phone,role_code,org_level_code,department_code,is_active
+admin@example.org,Admin User,System Administrator,+8801712345678,GLOBAL_ADMIN,CPI-GHQ,ADMIN,TRUE
+wh.manager@example.org,Jane Smith,Warehouse Manager,+8801712345679,WAREHOUSE_OFFICER,CPI-CXB,LOGISTICS,TRUE
+storekeeper@example.org,Ahmed Khan,Store Keeper,+8801712345680,WAREHOUSE_STOREKEEPER,CPI-CXB,LOGISTICS,TRUE

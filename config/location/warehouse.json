@@ -1,0 +1,146 @@
+{
+  "schema_name": "CPI Bangladesh Mission Warehouse Directory Schema",
+  "version": "1.0.0",
+  "warehouse_directory": {
+    
+    "LEVEL_2_COUNTRY_OFFICE": [
+      {
+        "id": "CPI-L2-001",
+        "office_category": "Country Office",
+        "name": "Community Partners International (CPI) Bangladesh Country Office",
+        "organization": "Community Partners International — Bangladesh Mission",
+        "plain_address": "Navana Bilkis Laurent, A-2 (Level-2), Plot- 11/B, Road - 36, Block - C.W.N (B), Gulshan-2, Dhaka-1212",
+        "map_location_url": "https://www.google.com/maps?q=Navana+Bilkis+Laurent,+Gulshan-2,+Dhaka",
+        "contact_details": {
+          "phone_mobile": "+880 1729-926877",
+          "mobile_assignment": "Country Director",
+          "phone_office": null,
+          "email": "cpi.bangladesh@cpintl.org"
+        },
+        "website": "https://www.cpintl.org"
+      }
+    ],
+    "LEVEL_3_PROJECT_OFFICE": [
+      {
+        "id": "CPI-L3-001",
+        "office_category": "Project Office",
+        "name": "Community Partners International (CPI) Cox's Bazar Project Office",
+        "organization": "Community Partners International — Bangladesh Mission",
+        "plain_address": "White House (3rd Floor), Kolatoli Bypass Road (Opposite CXB Police Lines)East Dolphin Point, Cox's Bazar 4700, Bangladesh",
+        "map_location_url": "https://www.google.com/maps/place/21.4172,92.0004",
+        "contact_details": {
+          "phone_mobile": "+880 1534-206479",
+          "mobile_assignment": "HRA Department (Official)",
+          "phone_office": null,
+          "email": "cpi.bangladesh@cpintl.org"
+        },
+        "website": "https://www.cpintl.org",
+        "field_operations": {
+          "managed_by": "Local Partner Organizations (e.g., YPSA — Young Power in Social Action)",
+          "partner_website": "https://www.ypsa.org"
+        }
+    },
+      {
+        "id": "CPI-L3-002",
+        "office_category": "Project Office",
+        "name": "Community Partners International (CPI) Bangkok Office",
+        "organization": "Community Partners International Thailand",
+        "plain_address": "84, 1 Soi Sukhumvit 62, Phra Khanong Tai, Khet Phra Khanong, Bangkok 10260, Thailand",
+        "map_location_url": "https://www.google.com/maps?q=84,+1+Soi+Sukhumvit+62,+Bangkok",
+        "contact_details": {
+          "phone_mobile": null,
+          "phone_office": null,
+          "email": "info@cpintl.org"
+        },
+        "website": "https://www.cpintl.org"
+      },
+      {
+        "id": "CPI-L3-003",
+        "office_category": "Project Office",
+        "name": "Community Partners International (CPI) Mae Sot Field Office",
+        "organization": "Community Partners International Thailand",
+        "plain_address": "Mae Sot, Tak, Thailand",
+        "map_location_url": "https://www.google.com/maps?q=Mae+Sot,+Tak,+Thailand",
+        "contact_details": {
+          "phone_mobile": null,
+          "phone_office": null,
+          "email": "info@cpintl.org"
+        },
+        "description": "Field office facilitating cross-border health initiatives along the Thailand-Myanmar border.",
+        "website": "https://www.cpintl.org"
+      }
+    ],
+    "LEVEL_4_PROGRAM_SITE_OFFICE": [
+      {
+        "id": "CPI-L4-001",
+        "office_category": "Program Site Office",
+        "name": "CPI Cox's Bazar Central Warehouse",
+        "organization": "Community Partners International — Bangladesh Mission",
+        "plain_address": "Cox's Bazar Central Warehouse, Cox's Bazar, Bangladesh",
+        "map_location_url": "https://www.google.com/maps?q=21.4333,92.0167",
+        "contact_details": {
+          "phone_mobile": null,
+          "email": "cpi.bangladesh@cpintl.org"
+        }
+      },
+      {
+        "id": "CPI-L4-002",
+        "office_category": "Program Site Office",
+        "name": "CPI Health Post (UID-418)",
+        "organization": "Community Partners International — Bangladesh Mission",
+        "plain_address": "Ukhiya Refugee Camp Network, Cox's Bazar, Bangladesh",
+        "map_location_url": "https://www.google.com/maps?q=21.21361055,92.1507723",
+        "geo_coordinates": {
+          "latitude": 21.21361055,
+          "longitude": 92.1507723
+        },
+        "contact_details": {
+          "phone_mobile": null,
+          "email": "cpi.bangladesh@cpintl.org"
+        }
+      },
+      {
+        "id": "CPI-L4-003",
+        "office_category": "Program Site Office",
+        "name": "CPI Health Outreach Office - Camp 01 West",
+        "organization": "Community Partners International — CPI-YPSA Joint Program",
+        "plain_address": "Camp 01 West, Block: B, PalongKhali, Ukhiya, Cox's Bazar- 4750",
+        "map_location_url": "https://www.google.com/maps?q=21.21357074,92.15084974",
+        "geo_coordinates": {
+          "latitude": 21.21357074,
+          "longitude": 92.15084974
+        }
+      },
+      {
+        "id": "CPI-L4-004",
+        "office_category": "Program Site Office",
+        "name": "CPI Health Outreach Office - Camp 04",
+        "organization": "Community Partners International — CPI-YPSA Joint Program",
+        "plain_address": "Camp 04, Block: C, PalongKhali, Ukhiya, Cox's Bazar- 4750",
+        "map_location_url": "https://www.google.com/maps?q=21.20893874,92.1455123",
+        "geo_coordinates": {
+          "latitude": 21.20893874,
+          "longitude": 92.1455123
+        }
+        
+      },
+      {
+        "id": "CPI-L4-005",
+        "office_category": "Program Site Office",
+        "name": "250 Bed District Sadar Hospital, Cox's Bazar (CPI Supported)",
+        "organization": "Community Partners International — Health System Strengthening (HSS) Program",
+        "plain_address": "250 Bed District Sadar Hospital, Cox's Bazar, Bangladesh",
+        "map_location_url": "https://www.google.com/maps?q=21.44091571,91.97660079",
+        "geo_coordinates": {
+          "latitude": 21.44091571,
+          "longitude": 91.97660079
+        },
+        "description": "CPI Supported Tertiary Health Facility running Health System Strengthening (HSS) operations.",
+        "contact_details": {
+          "phone_mobile": null,
+          "email": "cpi.bangladesh@cpintl.org"
+        }
+      }
+    ]
+  }
+}

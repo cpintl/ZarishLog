@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "database": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-postgres", "--connection-string", "postgresql://zarishlog:zarishlog_dev_password@localhost:5432/zarishlog"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-github", "--token", "${GITHUB_TOKEN}"]
+    },
+    "docker": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "mcp/docker"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-filesystem", "--workspace", "${workspaceFolder}"]
+    }
+  }
+}

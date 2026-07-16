@@ -1,0 +1,17 @@
+name,abbreviation,category
+Each,EA,count
+Box,BX,count
+Carton,CTN,count
+Pallet,PL,count
+Kilogram,KG,weight
+Gram,G,weight
+Liter,L,volume
+Milliliter,ML,volume
+Meter,M,length
+Square Meter,M2,area
+Dozen,DZ,count
+Pair,PR,count
+Set,ST,count
+Packet,PK,count
+Drum,DR,volume
+Sachet,SA,count

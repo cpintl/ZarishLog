@@ -1,0 +1,29 @@
+{
+  "formId": "PROD_REG",
+  "title": "Product Registration",
+  "fields": [
+    { "name": "sku", "type": "text", "required": true, "unique": true },
+    { "name": "name", "type": "text", "required": true },
+    { "name": "generic_name", "type": "text" },
+    { "name": "brand_name", "type": "text" },
+    { "name": "dosage_form_code", "type": "select", "source": "dosageForms" },
+    { "name": "item_type", "type": "select", "options": ["drug", "medical_supply", "equipment", "instrument", "material", "vaccine", "nutrition", "lab_reagent", "asset", "consumable"] },
+    { "name": "category_id", "type": "select", "source": "categories" },
+    { "name": "uom_id", "type": "select", "source": "uoms", "required": true },
+    { "name": "gtin", "type": "text" },
+    { "name": "description", "type": "textarea" },
+    { "name": "manufacturer", "type": "text" },
+    { "name": "is_batch_tracked", "type": "checkbox" },
+    { "name": "is_serial_tracked", "type": "checkbox" },
+    { "name": "is_expiry_tracked", "type": "checkbox" },
+    { "name": "is_cold_chain", "type": "checkbox" },
+    { "name": "is_hazardous", "type": "checkbox" },
+    { "name": "storage_conditions", "type": "text" },
+    { "name": "reference_urls", "type": "text" },
+    { "name": "min_stock", "type": "number" },
+    { "name": "max_stock", "type": "number" },
+    { "name": "reorder_point", "type": "number" },
+    { "name": "lead_time_days", "type": "number" },
+    { "name": "unit_cost", "type": "number" }
+  ]
+}

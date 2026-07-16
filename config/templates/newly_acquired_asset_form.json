@@ -1,0 +1,27 @@
+{
+  "formId": "AST-ACQ",
+  "title": "Newly Acquired Asset Registration",
+  "description": "Register new asset upon acquisition (purchase, donation, transfer)",
+  "fields": [
+    { "name": "assetTag", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "productId", "type": "select", "source": "products", "required": true },
+    { "name": "serialNumber", "type": "text" },
+    { "name": "brand", "type": "text" },
+    { "name": "model", "type": "text" },
+    { "name": "acquisitionType", "type": "select", "options": ["Purchase", "Donation", "Transfer", "Manufactured"], "required": true },
+    { "name": "acquisitionDate", "type": "date", "required": true, "default": "now" },
+    { "name": "supplierId", "type": "select", "source": "suppliers" },
+    { "name": "purchaseOrderNo", "type": "text" },
+    { "name": "purchaseCost", "type": "number" },
+    { "name": "currency", "type": "text", "default": "USD" },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": true },
+    { "name": "custodianId", "type": "user", "required": true },
+    { "name": "locationId", "type": "select", "source": "locations" },
+    { "name": "condition", "type": "select", "options": ["New", "Used — Good", "Used — Fair", "Refurbished"], "required": true },
+    { "name": "depreciationMethod", "type": "select", "options": ["Straight Line", "Reducing Balance", "None"] },
+    { "name": "usefulLifeYears", "type": "number" },
+    { "name": "warrantyExpiryDate", "type": "date" },
+    { "name": "invoiceDocument", "type": "file-upload" },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

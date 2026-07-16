@@ -1,0 +1,9 @@
+# [Organization Name] Organization Hierarchy Import Template
+# Instructions: Fill in one row per organizational unit.
+# level: 1=Global HQ, 2=Country Office, 3=Project Office, 4=Program Site
+# parent_code: Leave blank for L1. For others, use the code of the parent unit.
+name,code,level,parent_code
+[Organization Name] HQ,[org_code],1,
+[Country] Office - [Name],[org_code]-[country],2,[org_code]
+Project Office - [Location],[org_code]-[location],3,[org_code]-[country]
+[Site Name],[org_code]-[site],4,[org_code]-[location]

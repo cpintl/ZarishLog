@@ -1,0 +1,17 @@
+{
+  "formId": "AST-ALC",
+  "title": "Asset Allocation / Assignment",
+  "description": "Assign or reassign an asset to an employee",
+  "fields": [
+    { "name": "assetId", "type": "select", "source": "assets", "required": true },
+    { "name": "employeeId", "type": "user", "required": true },
+    { "name": "allocationDate", "type": "date", "required": true, "default": "now" },
+    { "name": "expectedReturnDate", "type": "date" },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": true },
+    { "name": "location", "type": "text", "note": "Physical location where asset will be used" },
+    { "name": "purpose", "type": "textarea", "required": true },
+    { "name": "conditionOnAllocation", "type": "select", "options": ["New", "Good", "Fair", "Needs Repair"] },
+    { "name": "acknowledgedByEmployee", "type": "boolean", "default": false },
+    { "name": "acknowledgementDocument", "type": "file-upload", "note": "Signed acknowledgement form" }
+  ]
+}

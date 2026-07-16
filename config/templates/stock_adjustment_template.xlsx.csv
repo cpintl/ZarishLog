@@ -1,0 +1,10 @@
+# [Organization Name] Stock Adjustment Template
+# Instructions: One row per product adjustment.
+# Adjustment Number: _______________    Date: _______________    Warehouse: _______________
+# Reason Code: DAMAGE|EXPIRY|THEFT|COUNT_ERROR|BREAKAGE|DONATION|SAMPLE|RETURN_TO_SUPPLIER
+sku,product_name,expected_qty,actual_qty,uom,difference,reason_code,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,5000,4985,EA,-15,COUNT_ERROR,Physical count variance
+WASH-SOAP-BAR,Soap Bar 200g,2000,1990,EA,-10,BREAKAGE,Damaged during handling
+SUP-LTX-MED,Latex Examination Gloves,200,180,BX,-20,THEFT,Lock broken in storage area
+MED-PCM-500,Paracetamol 500mg Tablets,10000,9975,EA,-25,COUNT_ERROR,Shelf miscount corrected
+NUT-RUTF,RUTF Sachet 92g,3000,2850,SA,-150,EXPIRY,Batch RUTF-2025-A expired

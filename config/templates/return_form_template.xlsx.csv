@@ -1,0 +1,8 @@
+# [Organization Name] Stock Return Template
+# Instructions: Record items returned from programs, beneficiaries, or suppliers.
+# Return No: _______________    Date: _______________    Return Type: _______________
+# Returned From: _______________    Received By: _______________
+sku,product_name,batch_number,expiry_date,quantity,uom,condition,disposition,remarks
+SUP-LTX-MED,Latex Examination Gloves,LTX-2026-A,2028-07-01,10,BX,Unopened,Return to Stock,"Valid batch, good condition"
+WASH-SOAP-BAR,Soap Bar 200g,,,50,EA,Damaged,Dispose,"Packaging damaged during distribution"
+MED-PCM-500,Paracetamol 500mg,PCM-2026-A,2027-01-15,25,EA,Near Expiry,Quarantine,"Less than 6 months to expiry"

@@ -1,0 +1,19 @@
+{
+  "formId": "AST-TRF",
+  "title": "Asset Transfer Form",
+  "description": "Transfer asset between locations, departments, or projects",
+  "fields": [
+    { "name": "assetId", "type": "select", "source": "assets", "required": true },
+    { "name": "transferDate", "type": "date", "required": true, "default": "now" },
+    { "name": "fromLocation", "type": "select", "source": "locations", "required": true },
+    { "name": "toLocation", "type": "select", "source": "locations", "required": true },
+    { "name": "fromDepartment", "type": "select", "source": "departments" },
+    { "name": "toDepartment", "type": "select", "source": "departments" },
+    { "name": "fromCustodian", "type": "user" },
+    { "name": "toCustodian", "type": "user" },
+    { "name": "reason", "type": "select", "options": ["Reassignment", "Project Change", "Return to Pool", "Relocation", "Other"], "required": true },
+    { "name": "authorizedBy", "type": "user", "required": true },
+    { "name": "conditionOnTransfer", "type": "select", "options": ["Good", "Fair", "Needs Repair"] },
+    { "name": "notes", "type": "textarea" }
+  ]
+}

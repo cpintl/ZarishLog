@@ -1,0 +1,10 @@
+# [Organization Name] Temperature Log Template
+# Instructions: Record temperature readings for cold chain and storage areas.
+# Location: _______________    Equipment: _______________    Date: _______________
+time,temperature_c,min_threshold,max_threshold,alarm_status,action_taken,recorded_by
+06:00,4.0,2.0,8.0,Normal,,John Doe
+08:00,5.2,2.0,8.0,Normal,,John Doe
+10:00,6.1,2.0,8.0,Normal,,John Doe
+12:00,7.5,2.0,8.0,Warning,Adjusted thermostat,John Doe
+14:00,5.8,2.0,8.0,Normal,,John Doe
+16:00,4.5,2.0,8.0,Normal,,John Doe

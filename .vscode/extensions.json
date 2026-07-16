@@ -1,0 +1,26 @@
+{
+  "recommendations": [
+    "golang.go",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+    "tamasfe.even-better-toml",
+    "aaron-bond.better-comments",
+    "streetsidesoftware.code-spell-checker",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "vivaxy.vscode-conventional-commits",
+    "ms-azuretools.vscode-docker",
+    "redhat.vscode-yaml",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-mermaid",
+    "davidanson.vscode-markdownlint",
+    "pkief.material-icon-theme",
+    "irongeek.vscode-env",
+    "github.vscode-github-actions",
+    "github.copilot",
+    "github.copilot-chat"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "formId": "WH_REG",
+  "title": "Warehouse / Location Registration",
+  "fields": [
+    { "name": "name", "type": "text", "required": true },
+    { "name": "code", "type": "text", "required": true, "unique": true },
+    { "name": "type", "type": "select", "options": ["central", "sub_warehouse", "transit", "quarantine"] },
+    { "name": "address", "type": "textarea" },
+    { "name": "city", "type": "text" },
+    { "name": "country", "type": "text" },
+    { "name": "latitude", "type": "number", "step": 0.0000001 },
+    { "name": "longitude", "type": "number", "step": 0.0000001 },
+    { "name": "contact_phone", "type": "tel" },
+    { "name": "operating_hours", "type": "text" },
+    { "name": "has_generator", "type": "checkbox" },
+    { "name": "has_cctv", "type": "checkbox" },
+    { "name": "has_fire_system", "type": "checkbox" },
+    { "name": "security_guard", "type": "checkbox" },
+    {
+      "name": "locations",
+      "type": "table",
+      "columns": [
+        { "name": "location_code", "type": "text", "required": true },
+        { "name": "location_name", "type": "text" },
+        { "name": "location_type", "type": "select", "options": ["zone", "rack", "bin", "shelf", "area"] },
+        { "name": "is_cold_chain", "type": "checkbox" },
+        { "name": "is_hazardous", "type": "checkbox" },
+        { "name": "is_secure", "type": "checkbox" },
+        { "name": "max_capacity", "type": "number" }
+      ]
+    }
+  ]
+}

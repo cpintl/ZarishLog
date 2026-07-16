@@ -1,0 +1,6 @@
+# [Organization Name] Asset Transfer Template
+# Instructions: Record asset transfers between departments or locations.
+# Transfer Date: _______________    Authorized By: _______________
+asset_tag,asset_name,from_location,to_location,from_department,to_department,from_custodian,to_custodian,reason,condition,notes
+CPI-DESK-001,Office Desk 120x60cm,CXB-CWH,CXB-SWH-1,Logistics,Programs,Mohammad Ali,Jane Smith,"Reallocation to field office",Good,
+CPI-LAP-002,Laptop Computer 15.6in,Dhaka Office,Cox Bazar Office,Finance,Logistics,Robert Brown,Tariq Mahmud,"Staff transfer",Good,

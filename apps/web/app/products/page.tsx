@@ -1,28 +1,23 @@
-// Server component: fetches the seeded product catalogue directly from the API.
-// This is the first end-to-end demoable slice per BLUEPRINT.md Phase 1/2:
-// seeded DB -> NestJS API -> Next.js UI.
-
 interface Product {
   id: string;
   sku: string;
   name: string;
-  itemType: string;
+  item_type: string;
   status: string;
-  category: { name: string };
-  uom: { code: string };
+}
+
+interface ProductsResponse {
+  data: Product[];
 }
 
 async function getProducts(): Promise<Product[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-  // DEV-ONLY placeholder org id — matches the fixed id set for ORG_001 in
-  // seed.ts. Replace with the authenticated user's organization once the
-  // auth module (Keycloak/OIDC) is wired in.
-  const res = await fetch(`${apiUrl}/products`, {
-    headers: { "x-organization-id": "org_001_seed" },
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+  const res = await fetch(`${apiUrl}/api/v1/products`, {
     cache: "no-store",
   });
   if (!res.ok) return [];
-  return res.json();
+  const body: ProductsResponse = await res.json();
+  return body.data ?? [];
 }
 
 export default async function ProductsPage() {
@@ -51,15 +46,15 @@ export default async function ProductsPage() {
                 <td className="px-4 py-2 font-mono text-xs">{p.sku}</td>
                 <td className="px-4 py-2">{p.name}</td>
                 <td className="px-4 py-2">{p.category?.name}</td>
-                <td className="px-4 py-2">{p.itemType}</td>
-                <td className="px-4 py-2">{p.uom?.code}</td>
+                <td className="px-4 py-2">{p.item_type}</td>
+                <td className="px-4 py-2">-</td>
                 <td className="px-4 py-2">{p.status}</td>
               </tr>
             ))}
             {products.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
-                  No products found. Run <code>pnpm db:seed</code> and confirm the API is running.
+                  No products found. Run <code>make db-seed</code> and confirm the API is running.
                 </td>
               </tr>
             )}

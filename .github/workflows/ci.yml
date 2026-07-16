@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  GO_VERSION: "1.26"
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  backend:
+    name: Backend (Go)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: zarishlog
+          POSTGRES_PASSWORD: zarishlog_ci_password
+          POSTGRES_DB: zarishlog_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U zarishlog"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Run schema migrations
+        run: |
+          for f in packages/data-models/sql/migrations/*.sql; do
+            echo "Applying $$(basename $$f)..."
+            psql -h localhost -U zarishlog -d zarishlog_test -f "$$f"
+          done
+        env:
+          PGPASSWORD: zarishlog_ci_password
+
+      - name: Seed data
+        run: psql -h localhost -U zarishlog -d zarishlog_test -f packages/data-models/sql/seed.sql
+        env:
+          PGPASSWORD: zarishlog_ci_password
+
+      - name: Go vet
+        run: go vet ./...
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgresql://zarishlog:zarishlog_ci_password@localhost:5432/zarishlog_test
+
+      - name: Go test
+        run: go test ./... -v -race -count=1
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgresql://zarishlog:zarishlog_ci_password@localhost:5432/zarishlog_test
+
+      - name: Go build
+        run: go build ./cmd/api
+        working-directory: apps/api
+
+  frontend:
+    name: Frontend (Next.js)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: apps/web
+
+      - name: Lint
+        run: pnpm lint
+        working-directory: apps/web
+
+      - name: Typecheck
+        run: pnpm typecheck
+        working-directory: apps/web
+
+      - name: Build
+        run: pnpm build
+        working-directory: apps/web
+
+  # Deploy job - uncomment when production infra is configured
+  # deploy:
+  #   needs: [backend, frontend]
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Deploy
+  #       run: echo "Deploy step goes here"

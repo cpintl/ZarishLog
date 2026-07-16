@@ -1,0 +1,29 @@
+{
+  "formId": "AMC-RPT",
+  "title": "Average Monthly Consumption Report",
+  "description": "Reports AMC over 3, 6, and 12 months per product per warehouse",
+  "fields": [
+    { "name": "productId", "type": "select", "source": "products", "required": false },
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": false },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": false },
+    { "name": "reportPeriod", "type": "select", "options": ["Last 3 Months", "Last 6 Months", "Last 12 Months", "Custom"], "required": true },
+    { "name": "periodFrom", "type": "date" },
+    { "name": "periodTo", "type": "date" },
+    {
+      "name": "results",
+      "type": "readonly-table",
+      "columns": [
+        { "name": "productId", "type": "text", "label": "Product" },
+        { "name": "amc_3m", "type": "number", "label": "AMC (3m)" },
+        { "name": "amc_6m", "type": "number", "label": "AMC (6m)" },
+        { "name": "amc_12m", "type": "number", "label": "AMC (12m)" },
+        { "name": "maxConsumption", "type": "number" },
+        { "name": "stdDeviation", "type": "number" },
+        { "name": "currentStock", "type": "number" },
+        { "name": "monthsOfStock", "type": "number", "calculated": "currentStock / amc_3m" }
+      ]
+    },
+    { "name": "exportFormat", "type": "select", "options": ["PDF", "CSV", "XLSX"] }
+  ]
+}

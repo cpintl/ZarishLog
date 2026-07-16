@@ -1,0 +1,12 @@
+node_modules/
+.pnpm-store/
+dist/
+.next/
+out/
+.turbo/
+.git/
+*.md
+.env
+.env.*
+.gitignore
+.gitkeep

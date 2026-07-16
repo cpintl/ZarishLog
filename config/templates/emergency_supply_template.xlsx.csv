@@ -1,0 +1,8 @@
+# [Organization Name] Emergency Supply Request Template
+# Instructions: Complete this form for emergency supply requests.
+# Request No: _______________    Date: _______________    Requested By: _______________
+# Emergency Type: _______________    Urgency: _______________    Affected Population: _______________
+sku,product_name,quantity_needed,quantity_available,gap,preferred_supplier,notes
+MED-AMOX-500,Amoxicillin 500mg Capsules,5000,4500,-500,PharmaCorp Ltd,"Urgent — malaria outbreak"
+NUT-RUTF,RUTF Sachet 92g,2000,800,-1200,NutriAid Global,"Severe acute malnutrition cases"
+WASH-TAB-CHLOR,Chlorine Tablets,100,50,-50,ChemCorp Ltd,"Water contamination"

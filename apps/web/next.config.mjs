@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@zarishlog/business-logic"],
+  output: "standalone",
 };
+
 export default nextConfig;

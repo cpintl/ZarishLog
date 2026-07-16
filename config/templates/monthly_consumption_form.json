@@ -1,0 +1,25 @@
+{
+  "formId": "CONS-MONTHLY",
+  "title": "Monthly Consumption Report",
+  "description": "Summary of all stock consumption by product and program for a given month",
+  "fields": [
+    { "name": "reportMonth", "type": "month", "required": true },
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": false },
+    { "name": "preparedBy", "type": "user", "required": true, "auto": "currentUser" },
+    {
+      "name": "consumptionLines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "openingBalance", "type": "number", "required": true },
+        { "name": "quantityReceived", "type": "number", "required": true },
+        { "name": "quantityIssued", "type": "number", "required": true },
+        { "name": "quantityAdjustments", "type": "number" },
+        { "name": "closingBalance", "type": "number", "calculated": "openingBalance + quantityReceived - quantityIssued + quantityAdjustments" },
+        { "name": "daysOutOfStock", "type": "number" }
+      ]
+    },
+    { "name": "notes", "type": "textarea" }
+  ]
+}
