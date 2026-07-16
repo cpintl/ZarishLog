@@ -1,188 +1,113 @@
-# ZarishLog: Modern Humanitarian Logistics & Supply Chain Platform
+# ZarishLog
+## Unified Humanitarian Logistics, Supply Chain & Asset Management Platform
 
 [![CI Pipeline](https://github.com/cpintl/zarishlog/actions/workflows/ci-test-pipeline.yml/badge.svg)](https://github.com/cpintl/zarishlog/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Stack: Offline-First PWA](https://img.shields.io/badge/Stack-Next.js%20%7C%20Supabase%20%7C%20PouchDB-blue)](https://github.com/cpintl)
 
-## 1.0 Executive & Strategic Blueprint
-
-**ZarishLog** is a purpose-built enterprise-grade technology system designed to address supply chain deficits in unpredictable, volatile, and resource-constrained humanitarian field environments. Operating at the intersection of **Disaster Management**, **Humanitarian Logistics**, and **Sustainable Relief Logistics (SRHL)**, ZarishLog provides real-time transaction transparency and high-accuracy asset accountability.
-
-The system features an engine designed for **offline-first local resilience**, enabling seamless workflow continuation across low-bandwidth environments (e.g., Cox's Bazar Refugee Camps, Bangladesh) via edge data caches, moving downstream transactions back to cloud synchronization layers upon connection re-establishment.
-
+ZarishLog is an open-source, offline-first, multi-tenant platform that unifies warehouse management (WMS), inventory management (IMS), procurement, quality assurance, distribution, and fixed-asset tracking for humanitarian and development organizations operating across multi-level (L1 Global → L2 Country Office → L3 Project Office/Central Warehouse → L4 Program Site/Sub-Warehouse) structures.
+ 
+It is the successor and unification of two earlier working names in this project's history — **ZarishStock** (WMS-focused) and the original **ZarishLog** blueprint (full logistics + asset scope) — merged into one system and one set of documents.
+ 
+> Companion documents: [`PRODUCT_REQUIREMENTS_DOCUMENT.md`](./PRODUCT_REQUIREMENTS_DOCUMENT.md) · [`BLUEPRINT.md`](./BLUEPRINT.md) · [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+ 
 ---
-
-## 2.0 Core Tech Stack Architecture
-
-ZarishLog is architected as a high-performance, containerized monorepo structured around fully open-source tech stacks and zero-cost scaling models:
-
-* **Frontend Ecosystem:** PWA-native Next.js core providing adaptive layout responsiveness across desktop, tablet, and field mobile devices.
-* **Mobile Framework:** React Native / Expo engine utilizing a unified application runtime for Android and iOS systems.
-* **Database Architecture:** PostgreSQL (Supabase Engine) optimized with strict Row-Level Security (RLS) policies for secure multi-tenant isolation, combined with PouchDB/SQLite client interfaces for offline transaction persistence.
-* **Infrastructure Management:** Docker Compose automated environment provisioning suitable for self-hosted instances, local machines, or cloud deployment layers.
-
----
-
-## 3.0 Operational & Functional Hierarchies
-
-### 3.1 Structural Site Mapping Matrix
-All dynamic logistics interactions track systematically down through a strict 4-level structural hierarchy:
-
-```text
-Level 01: Global Headquarters (CPI HQ - Berkeley, CA)
-   └── Level 02: Country Offices (CPI Bangladesh Mission - Gulshan, Dhaka)
-          └── Level 03: Project Offices (Cox's Bazar Operations Infrastructure Hub)
-                 └── Level 04: Program Site Stores (Anchor Health Posts, WASH Centers)
+ 
+## 1. Why ZarishLog
+ 
+Humanitarian organizations run inventory today across disconnected spreadsheets (`MASTER ASSETS INVENTORY.xlsx`), paper stock cards, and heavyweight commercial ERPs their field offices can't afford or run offline. This creates four recurring failures the source material for this project documents directly:
+ 
+- **Fragmented data** — the same item, warehouse, or program is named differently across sheets and offices, with no canonical ID.
+- **No real-time visibility** across L1–L4 levels — a country office cannot see project-office stock until someone emails a spreadsheet.
+- **Weak compliance** — FEFO, expiry, batch, and QA rules are enforced manually or not at all.
+- **No offline capability** — field/camp locations frequently lose connectivity, and most commercial WMS tools assume a permanent connection.
+ZarishLog solves this with one canonical master catalogue, one multi-tenant data model, and an offline-first application that keeps working when the network doesn't.
+ 
+## 2. Core Objectives
+ 
+| Objective | What it means in practice |
+|---|---|
+| **Unification** | One platform for medical, non-medical, consumable, and fixed-asset inventory |
+| **Visibility** | Real-time stock, location, and movement across all L1–L4 levels |
+| **Compliance** | FEFO/FIFO enforcement, expiry management, QA workflows, full audit trail |
+| **Efficiency** | Automated GRN, issue, transfer, adjustment, and AMC/FMC-based replenishment |
+| **Integration** | Clean APIs into Finance, Procurement, and MEAL systems |
+| **Resilience** | Works fully offline at field/camp level and syncs when connectivity returns |
+| **Zero/low cost** | Built entirely on open-source software and always-free or generous free-tier cloud services |
+ 
+## 3. Tech Stack at a Glance
+ 
+| Layer | Choice | Why |
+|---|---|---|
+| Monorepo | **Turborepo** (npm/pnpm workspaces) | Fast incremental builds, shared packages across web/mobile/api |
+| Frontend (Web/PWA) | **Next.js 15** (React 19) + Tailwind CSS + shadcn/ui | PWA-capable, huge ecosystem, free hosting on Vercel/Cloudflare Pages |
+| Mobile | **React Native (Expo)** | Shares business logic/types with the web app; one codebase for Android + iOS |
+| Backend API | **NestJS** (Node.js/TypeScript) | Structured, DI-based, scales with team size better than ad-hoc API routes; still fine to prototype with Next.js route handlers early and graduate later |
+| Database | **PostgreSQL 17** (self-hosted or Supabase/Neon free tier) | Relational integrity for a 22,000+ item catalogue and audit-critical stock ledger; row-level security for multi-tenancy |
+| ORM | **Prisma** or **Drizzle** | Type-safe schema + migrations shared between NestJS and scripts |
+| Auth | **Keycloak** (self-host) or **Supabase Auth** (managed free tier) | OIDC/JWT, RBAC, MFA, SSO-ready |
+| Offline sync | **RxDB** or **PowerSync** + **PGlite**/SQLite (mobile) | CRDT/log-based sync between local device DB and Postgres; proven offline-first pattern |
+| Object storage | **MinIO** (self-host, S3-compatible) or Cloudflare R2 free tier | Photos, scanned GRNs, batch certificates |
+| Background jobs | **BullMQ** + Redis | AMC calculation, expiry alerts, notification dispatch |
+| CI/CD | **GitHub Actions** | Free for public/most private repos; GUI-driven approvals via GitHub Environments |
+| IaC | **Terraform** | Declarative infra for self-host, hybrid, or cloud (GCP/AWS/Azure free tiers) |
+| Container/orchestration | **Docker Compose** (single VPS) → **k3s** (lightweight Kubernetes) at scale | Keeps ops simple until real scale is needed |
+| Reverse proxy/TLS | **Caddy** or **Traefik** | Automatic HTTPS, zero-config free certs |
+| Monitoring | **Beszel** / **Uptime Kuma** + **OpenObserve** | Lightweight, self-hosted, free |
+| BI/Reporting | **Metabase** (free CE) | Point-and-click dashboards over Postgres, no separate BI build needed |
+ 
+Full rationale for each choice is in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+ 
+## 4. Monorepo Structure
+ 
 ```
-
-### 3.2 Canonical Terminology Standards
-
-To maintain complete data integrity across fragmented legacy resources, the enterprise data pipeline maps structural concepts to verified system entities:
-
-* `SKU` $\rightarrow$ **`Item Code`** / **`Item Unique Code`**
-* `Bin / Shelf / Zone` $\rightarrow$ **`Location ID`** (Canonical spatial bin coordinate)
-* `Theme / Group / Focus` $\rightarrow$ **`Intervention Thematic Domain`**
-* `Equipment / Fixed Resource` $\rightarrow$ **`Asset`** ($>1$ Year Lifecycle; Serial Tracked)
-* `Consumables / Medical Supplies` $\rightarrow$ **`Inventory`** (Short-term; Batch/Lot Tracked)
-
----
-
-## 4.0 Local Quick-Start Execution Guide
-
-### 4.1 Prerequisites
-
-Ensure the target deployment machine has the following packages installed:
-
-* Docker Desktop / Docker Engine ver 24.0+
-* Node.js v24.x or higher LTS release
-* Git SCM engine
-
-### 4.2 Local Environment Provisioning
-
-To instantiate the comprehensive framework stack locally (Frontend PWA, App Backend, Database Engine), clone the repository and execute the composition build:
-
-```bash
-# Clone the repository framework
-git clone [https://github.com/cpintl/ZarishLog.git](https://github.com/cpintl/ZarishLog.git)
-cd zarishlog
-
-# Execute configuration workspace installation
-npm install
-
-# Initialize local Docker environment infrastructure
-docker-compose -f infra/docker/docker-compose.yml up --build -d
-
-```
-
-Once running, the standard local access points will route as follows:
-
-* **ZarishLog PWA Web App Interface:** `http://localhost:3000`
-* **Core Central API Platform Gateway:** `http://localhost:8080`
-* **Local Supabase Administration Dashboard:** `http://localhost:54321`
-
----
-
-## 5.0 Database Seeding & Structural Schema
-
-The localized structural persistence tables are declared within `infra/supabase/migrations/001_core_schema.sql`. The engine tracks core transactions through a **Mother-Child (Header-Line)** relational table array:
-
-```sql
--- Conceptual Overview of Transaction Tracking Mechanics
-SELECT 
-    m.grn_number, 
-    m.stock_in_date, 
-    c.item_code, 
-    c.quantity_in, 
-    c.batch_number, 
-    c.expiry_date
-FROM stock_in_mother m
-JOIN stock_in_child c ON m.stock_in_id = c.stock_in_id
-WHERE m.warehouse_id = 'L3-CXB-CW';
-
-```
-
----
-
-## 6.0 Policy & Governance Compliance Standards
-
-The system systematically hardcodes operational procedures defined by the technical advisory team:
-
-1. **FEFO Routing System (First Expiry, First Out):** Enforced at database level for all pharmaceutical categories (`Pharmaceutical Stock`). Items with the nearest explicit expiry date are surfaced to the pick list first.
-2. **FIFO Routing System (First In, First Out):** Applied across all `Consumable Stock` and visibility materials to prevent long-term degradation.
-3. **Environmental Integrity Constraints:** Prompts automatic alerts if the ambient pharmacy zones exceed **30°C** or if Cold Chain configurations breach the critical **2°C to 8°C** operating boundary.
-4. **Partner Risk Governance:** Automated ranking tiering (Silver, Gold, Platinum Capacity Tiers) derived from Pre-Award Due Diligence Assessments to systematically dictate fund distribution mechanics.
-
----
-
-## 7.0 Open Source Licensing & Authority
-
-Distributed under the terms of the MIT License. See `LICENSE` for structural context.
-
-**System Authority & Technical Maintenance Governance:** Designed, developed, and maintained by the **ZarishLog Team** in partnership with the Community Partners International Bangladesh Mission Health Programs Division. For integration specifications, contact `bgd.cpms@cpintl.org`.
-
----
-
-## Repository Tree
-
-```text
-ZarishLog/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── 01_bug_report.md
-│   │   ├── 02_feature_request.md
-│   │   └── 03_field_incident.md
-│   └── workflows/
-│       ├── cd-production-deploy.yml
-│       ├── ci-test-pipeline.yml
-│       └── profile-readme-sync.yml
+zarishlog/
 ├── apps/
-│   ├── backend/
-│   │   ├── src/
-│   │   │   ├── controllers/
-│   │   │   ├── middleware/
-│   │   │   ├── routes/
-│   │   │   └── index.js
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   ├── frontend-pwa/
-│   │   ├── public/
-│   │   │   ├── assets/
-│   │   │   └── manifest.json
-│   │   ├── src/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   ├── pages/
-│   │   │   └── styles/
-│   │   ├── next.config.js
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   └── mobile-app/
-│       ├── assets/
-│       ├── src/
-│       │   ├── database/ (Local SQLite / PouchDB offline syncing)
-│       │   └── screens/
-│       ├── app.json
-│       └── package.json
-├── docs/
-│   ├── 001-master-catalogue.md
-│   ├── 003-field-directory.json
-│   ├── 004-warehouse-handbook.md
-│   └── 005-due-diligence.md
-├── infra/
-│   ├── docker/
-│   │   └── docker-compose.yml
-│   └── supabase/
-│       ├── migrations/
-│       │   ├── 001_core_schema.sql
-│       │   └── 002_rls_policies.sql
-│       └── seed.sql
+│   ├── web/              # Next.js PWA (staff console, dashboards, forms)
+│   ├── mobile/            # Expo/React Native (scanning, field ops, offline)
+│   └── api/                # NestJS backend (REST/GraphQL, business logic)
 ├── packages/
-│   └── shared/
-│       ├── constants/
-│       ├── utils/
-│       └── package.json
-├── .gitignore
-├── LICENSE
-├── README.md
-└── turbo.json
+│   ├── ui/                 # Shared React components (design system)
+│   ├── data-models/        # Shared TypeScript types + Zod/Prisma schemas
+│   ├── business-logic/     # FEFO sort, AMC/FMC calc, reorder point, QR/barcode gen
+│   └── config/             # ESLint, TS config, Tailwind config
+├── config/
+│   ├── metadata/            # Canonical CSV/JSON: UoM, categories, statuses, roles
+│   └── templates/           # GRN, SRF, transfer, adjustment, QA form definitions
+├── infrastructure/
+│   ├── terraform/           # Cloud/self-host provisioning modules
+│   └── kubernetes/          # k3s manifests (optional, phase 3+)
+├── docs/
+│   ├── PRODUCT_REQUIREMENTS_DOCUMENT.md
+│   ├── BLUEPRINT.md
+│   └── ARCHITECTURE.md
+└── .github/workflows/       # CI/CD pipelines
 ```
+ 
+## 5. Getting Started (Local, Free)
+ 
+```bash
+git clone https://github.com/<your-org>/zarishlog.git
+cd zarishlog
+cp .env.example .env          # fill in local secrets
+docker compose up -d           # postgres, redis, minio, keycloak
+pnpm install
+pnpm db:migrate && pnpm db:seed   # loads master catalogue from config/metadata
+pnpm dev                        # runs web + api together via Turborepo
+```
+ 
+Everything above runs on a free-tier VPS or even a laptop — no paid service is required to develop or demo the full system.
+ 
+## 6. Status
+ 
+This repository currently ships four foundational documents (README, PRD, Blueprint, Architecture) synthesizing all prior ZarishStock/ZarishLog research and catalogue work into one coherent, buildable plan. Implementation follows the phased roadmap in `BLUEPRINT.md`, starting with the database schema and master catalogue import.
+ 
+## 7. License
+ 
+Recommended: **MIT** for code, **CC-BY-4.0** for documentation/catalogue data — keeps the project maximally reusable by other humanitarian organizations, consistent with the "re-usable piece by piece" requirement.
+
+## 8. Contributing
+ 
+Non-coder-led, AI-paired development is the primary workflow for this project. See `BLUEPRINT.md` Phase 0 for how specifications are turned into working code with Claude/AI assistance without requiring the maintainer to hand-write code.
+
+
