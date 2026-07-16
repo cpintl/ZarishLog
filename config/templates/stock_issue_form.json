@@ -1,0 +1,20 @@
+{
+  "formId": "SRF",
+  "title": "Stock Request / Issue Form",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "requestedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "approvedBy", "type": "user", "requiredIf": "quantity > approvalThreshold" },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "quantityRequested", "type": "number", "required": true },
+        { "name": "batchAllocation", "type": "fefo-auto", "note": "Populated by allocateFefoPicking()" }
+      ]
+    },
+    { "name": "reasonCode", "type": "select", "source": "reason_codes", "required": true }
+  ]
+}

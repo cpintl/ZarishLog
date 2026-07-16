@@ -1,0 +1,628 @@
+// ZarishLog — Core Database Schema
+// See /docs/ARCHITECTURE.md §4 and SCHEMA_DESIGN.md for design rationale.
+// Multi-tenant isolation: every tenant-scoped model carries organizationId.
+// Row-Level Security (RLS) policies are applied separately via SQL migration
+// (see packages/data-models/prisma/migrations/*_rls.sql) — Prisma does not
+// manage RLS policies directly.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ORGANIZATIONAL HIERARCHY (Master Data)
+// ─────────────────────────────────────────────────────────────────────────
+
+enum OrgType {
+  NGO
+  INGO
+  GOVERNMENT
+  PARTNER
+  DONOR
+}
+
+enum EntityStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  code      String   @unique // e.g. ORG_001
+  name      String
+  acronym   String?
+  type      OrgType
+  status    EntityStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orgLevels     OrgLevel[]
+  programs      Program[]
+  users         User[]
+  products      Product[]
+  warehouses    Warehouse[]
+  auditLogs     AuditLog[]
+
+  @@map("organizations")
+}
+
+enum OrgLevelType {
+  L1_GLOBAL
+  L2_COUNTRY
+  L3_PROJECT_OFFICE
+  L4_PROGRAM_SITE
+}
+
+model OrgLevel {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  code           String // e.g. L3-CXB-CW
+  name           String
+  description    String?
+  level          OrgLevelType
+  parentId       String?
+  parent         OrgLevel?    @relation("OrgLevelHierarchy", fields: [parentId], references: [id])
+  children       OrgLevel[]   @relation("OrgLevelHierarchy")
+  country        String?
+  region         String?
+  status         EntityStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  warehouses Warehouse[]
+
+  @@unique([organizationId, code])
+  @@map("org_levels")
+}
+
+model Program {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  code           String // e.g. PRG-HLT
+  name           String
+  acronym        String?
+  description    String?
+  status         EntityStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  departments   Department[]
+  distributions Distribution[]
+
+  @@unique([organizationId, code])
+  @@map("programs")
+}
+
+model Department {
+  id          String       @id @default(cuid())
+  programId   String
+  program     Program      @relation(fields: [programId], references: [id])
+  code        String // e.g. HLT-PHA
+  name        String
+  description String?
+  scope       String? // Field / Office / Support
+  status      EntityStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([programId, code])
+  @@map("departments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ITEM MASTER (Master Data) — see PRD §6.1
+// ─────────────────────────────────────────────────────────────────────────
+
+enum ItemType {
+  DRUG
+  MEDICAL_SUPPLY
+  EQUIPMENT
+  INSTRUMENT
+  MATERIAL
+  VACCINE
+  NUTRITION
+  LAB_REAGENT
+  ASSET
+  CONSUMABLE
+}
+
+model ProductCategory {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  name           String
+  definition     String?
+  isPharma       Boolean  @default(false)
+  parentId       String?
+  parent         ProductCategory? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children       ProductCategory[] @relation("CategoryHierarchy")
+
+  products Product[]
+
+  @@map("product_categories")
+}
+
+model UnitOfMeasure {
+  id       String  @id @default(cuid())
+  code     String  @unique // e.g. PCS, BOX, VIAL
+  name     String  // e.g. Piece, Box, Vial
+  category String? // count / weight / volume
+
+  products Product[]
+
+  @@map("units_of_measure")
+}
+
+model Product {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+
+  // Identification
+  sku            String        // e.g. ZL-000001
+  name           String
+  barcode        String?
+  alternateCodes String[]      @default([])
+  manufacturer   String?
+
+  // Classification
+  categoryId String
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
+  itemType   ItemType
+
+  // Units & packaging
+  uomId          String
+  uom            UnitOfMeasure @relation(fields: [uomId], references: [id])
+  standardPackQty Int?
+  dimensionsLwhCm String?
+  weightKg        Float?
+
+  // Tracking & compliance
+  batchTracked   Boolean @default(false)
+  serialTracked  Boolean @default(false)
+  expiryTracked  Boolean @default(false)
+  isHazardous    Boolean @default(false)
+  coldChain      Boolean @default(false)
+
+  // Inventory & analytics
+  leadTimeDays     Int?
+  safetyStockQty   Float?
+  reorderPointQty  Float?
+  minStockQty      Float?
+  maxStockQty      Float?
+
+  status    EntityStatus @default(ACTIVE)
+  source    String?      // data provenance, e.g. "master_product_list.csv"
+  notes     String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  stockLevels    StockLevel[]
+  stockMovements StockMovement[]
+  batches        Batch[]
+  grnLines       GoodsReceiptLine[]
+
+  @@unique([organizationId, sku])
+  @@index([organizationId, itemType])
+  @@map("products")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// WAREHOUSE & LOCATION HIERARCHY (Master Data)
+// ─────────────────────────────────────────────────────────────────────────
+
+enum WarehouseType {
+  CENTRAL
+  SUB
+}
+
+model Warehouse {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  orgLevelId     String
+  orgLevel       OrgLevel      @relation(fields: [orgLevelId], references: [id])
+
+  code   String // e.g. L3-CXB-CW
+  name   String
+  type   WarehouseType
+  status EntityStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  locations      Location[]
+  stockLevels    StockLevel[]
+  stockMovements StockMovement[]
+  goodsReceipts  GoodsReceipt[]
+
+  @@unique([organizationId, code])
+  @@map("warehouses")
+}
+
+enum LocationType {
+  RECEIVING
+  GENERAL_STORAGE
+  PROGRAM_STORAGE
+  COLD_STORAGE
+  SECURE_STORAGE
+  QUARANTINE
+  DISPATCH
+}
+
+model Location {
+  id          String       @id @default(cuid())
+  warehouseId String
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id])
+  code        String // zone/rack/bin code
+  name        String
+  type        LocationType
+  capacityQty Float?
+  status      EntityStatus @default(ACTIVE)
+
+  stockLevels    StockLevel[]
+  stockMovements StockMovement[]
+
+  @@unique([warehouseId, code])
+  @@map("locations")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// BATCH / SERIAL TRACKING
+// ─────────────────────────────────────────────────────────────────────────
+
+model Batch {
+  id         String    @id @default(cuid())
+  productId  String
+  product    Product   @relation(fields: [productId], references: [id])
+  batchNo    String
+  expiryDate DateTime?
+  receivedAt DateTime  @default(now())
+
+  stockLevels    StockLevel[]
+  stockMovements StockMovement[]
+
+  @@unique([productId, batchNo])
+  @@index([expiryDate])
+  @@map("batches")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// STOCK — Transactional Data
+// stock_levels is a materialized position DERIVED from stock_movements.
+// Never write directly to stock_levels from application code except via
+// the recomputation service — this is what keeps offline sync safe.
+// ─────────────────────────────────────────────────────────────────────────
+
+enum StockStatus {
+  ON_HAND
+  RESERVED
+  IN_TRANSIT
+  ON_HOLD_QA
+  DAMAGED
+  EXPIRED
+  BACKORDERED
+}
+
+model StockLevel {
+  id          String      @id @default(cuid())
+  productId   String
+  product     Product     @relation(fields: [productId], references: [id])
+  warehouseId String
+  warehouse   Warehouse   @relation(fields: [warehouseId], references: [id])
+  locationId  String?
+  location    Location?   @relation(fields: [locationId], references: [id])
+  batchId     String?
+  batch       Batch?      @relation(fields: [batchId], references: [id])
+
+  quantity Float       @default(0)
+  status   StockStatus @default(ON_HAND)
+  updatedAt DateTime   @updatedAt
+
+  @@unique([productId, warehouseId, locationId, batchId, status])
+  @@index([warehouseId, productId])
+  @@map("stock_levels")
+}
+
+enum MovementType {
+  RECEIPT
+  ISSUE
+  TRANSFER_OUT
+  TRANSFER_IN
+  ADJUSTMENT_INCREASE
+  ADJUSTMENT_DECREASE
+  RETURN
+  DISPOSAL
+}
+
+// Append-only ledger. This is the source of truth; stock_levels is derived.
+model StockMovement {
+  id          String       @id @default(cuid())
+  productId   String
+  product     Product      @relation(fields: [productId], references: [id])
+  warehouseId String
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id])
+  locationId  String?
+  location    Location?    @relation(fields: [locationId], references: [id])
+  batchId     String?
+  batch       Batch?       @relation(fields: [batchId], references: [id])
+
+  type       MovementType
+  quantity   Float // always positive; direction implied by `type`
+  reasonCode String?
+  referenceDocType String? // GRN / SRF / TRANSFER / ADJUSTMENT / DISPOSAL
+  referenceDocId   String? // FK-by-convention to the originating document
+
+  performedById String
+  performedBy   User    @relation(fields: [performedById], references: [id])
+  approvedById  String?
+  approvedBy    User?   @relation("ApprovedMovements", fields: [approvedById], references: [id])
+
+  // Offline-sync metadata
+  clientEventId String? @unique // idempotency key generated on-device
+  occurredAt    DateTime // device-local timestamp of the action
+  syncedAt      DateTime @default(now()) // server receipt timestamp
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, warehouseId, occurredAt])
+  @@map("stock_movements")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// GOODS RECEIPT (GRN)
+// ─────────────────────────────────────────────────────────────────────────
+
+enum GrnStatus {
+  DRAFT
+  RECEIVED
+  QA_PENDING
+  QA_PASSED
+  QA_FAILED
+  CLOSED
+}
+
+model GoodsReceipt {
+  id          String    @id @default(cuid())
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+  grnNumber   String    @unique
+  supplierName String?
+  status      GrnStatus @default(DRAFT)
+  receivedAt  DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  lines GoodsReceiptLine[]
+  qaInspections QaInspection[]
+
+  @@map("goods_receipts")
+}
+
+model GoodsReceiptLine {
+  id             String        @id @default(cuid())
+  goodsReceiptId String
+  goodsReceipt   GoodsReceipt  @relation(fields: [goodsReceiptId], references: [id])
+  productId      String
+  product        Product       @relation(fields: [productId], references: [id])
+  batchNo        String?
+  expiryDate     DateTime?
+  quantityOrdered  Float?
+  quantityReceived Float
+  quantityAccepted Float?
+  condition      String?
+
+  @@map("goods_receipt_lines")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// QUALITY ASSURANCE
+// ─────────────────────────────────────────────────────────────────────────
+
+enum QaDecision {
+  PASS
+  FAIL
+  QUARANTINE
+}
+
+model QaInspection {
+  id             String       @id @default(cuid())
+  goodsReceiptId String?
+  goodsReceipt   GoodsReceipt? @relation(fields: [goodsReceiptId], references: [id])
+  inspectedById  String
+  inspectedBy    User         @relation(fields: [inspectedById], references: [id])
+  decision       QaDecision
+  notes          String?
+  inspectedAt    DateTime     @default(now())
+
+  @@map("qa_inspections")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// DISTRIBUTION
+// ─────────────────────────────────────────────────────────────────────────
+
+model Distribution {
+  id              String   @id @default(cuid())
+  programId       String
+  program         Program  @relation(fields: [programId], references: [id])
+  documentNumber  String   @unique
+  beneficiaryCount Int?
+  distributedAt   DateTime @default(now())
+  notes           String?
+
+  @@map("distributions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ASSET MANAGEMENT (distinct lifecycle from consumable inventory)
+// ─────────────────────────────────────────────────────────────────────────
+
+enum AssetLifecycleStatus {
+  IN_USE
+  IN_STORAGE
+  UNDER_MAINTENANCE
+  DISPOSED
+}
+
+model Asset {
+  id               String                @id @default(cuid())
+  organizationId   String
+  assetTag         String                @unique
+  name             String
+  acquisitionDate  DateTime?
+  acquisitionValue Float?
+  depreciationMethod String?
+  usefulLifeMonths Int?
+  custodianUserId  String?
+  custodian        User?                 @relation(fields: [custodianUserId], references: [id])
+  status           AssetLifecycleStatus  @default(IN_STORAGE)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  maintenanceLogs AssetMaintenanceLog[]
+
+  @@map("assets")
+}
+
+model AssetMaintenanceLog {
+  id          String   @id @default(cuid())
+  assetId     String
+  asset       Asset    @relation(fields: [assetId], references: [id])
+  performedAt DateTime @default(now())
+  description String
+  cost        Float?
+
+  @@map("asset_maintenance_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// USERS, ROLES & PERMISSIONS (Configuration Data) — PRD §4
+// ─────────────────────────────────────────────────────────────────────────
+
+enum RoleId {
+  R01_GLOBAL_ADMIN
+  R02_COUNTRY_REP
+  R03_THEME_MANAGER
+  R04_WAREHOUSE_OFFICER
+  R05_WAREHOUSE_STOREKEEPER
+  R06_ADMIN_LOG_OFFICER
+  R07_DEPT_MANAGER
+  R08_DEPT_COORDINATOR
+  R09_DEPT_OFFICER
+}
+
+model Role {
+  id          RoleId @id
+  name        String
+  description String?
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id     String @id @default(cuid())
+  module String // e.g. "products", "stock", "assets"
+  action String // e.g. "create", "read", "update", "delete", "approve"
+
+  roles RolePermission[]
+
+  @@unique([module, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       RoleId
+  role         Role       @relation(fields: [roleId], references: [id])
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  email          String       @unique
+  fullName       String
+  designation    String?
+  scopeOrgLevelId String?     // which L1-L4 node this user's role applies to
+  status         EntityStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  roles              UserRole[]
+  performedMovements StockMovement[]
+  approvedMovements  StockMovement[] @relation("ApprovedMovements")
+  qaInspections      QaInspection[]
+  custodyAssets      Asset[]
+  auditLogs          AuditLog[]
+
+  @@map("users")
+}
+
+model UserRole {
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  roleId RoleId
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// AUDIT TRAIL
+// ─────────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
+  action         String       // e.g. "product.update", "stock.adjust"
+  entityType     String
+  entityId       String
+  beforeState    Json?
+  afterState     Json?
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// NOTIFICATIONS (Configuration + Transactional)
+// ─────────────────────────────────────────────────────────────────────────
+
+enum NotificationRuleType {
+  LOW_STOCK
+  EXPIRY_ALERT
+  QA_FAILURE
+  UNAUTHORIZED_ADJUSTMENT
+  APPROVAL_PENDING
+}
+
+model NotificationRule {
+  id             String               @id @default(cuid())
+  organizationId String
+  type           NotificationRuleType
+  thresholdDays  Int? // for expiry alerts
+  targetRoleId   RoleId?
+  isActive       Boolean              @default(true)
+
+  @@map("notification_rules")
+}

@@ -1,0 +1,12 @@
+node_modules/
+.pnpm-store/
+dist/
+.next/
+out/
+.turbo/
+.env
+.env.local
+*.log
+coverage/
+.DS_Store
+packages/data-models/prisma/migrations/dev/

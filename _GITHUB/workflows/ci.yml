@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: zarishlog
+          POSTGRES_PASSWORD: zarishlog_ci_password
+          POSTGRES_DB: zarishlog_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U zarishlog"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://zarishlog:zarishlog_ci_password@localhost:5432/zarishlog_test
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  # Deploy job is intentionally left as a manual-approval template:
+  # configure a "production" GitHub Environment with required reviewers,
+  # then uncomment and point this at your registry/host. This satisfies
+  # the GUI-driven, approval-gated CI/CD requirement in ARCHITECTURE.md §8
+  # without hardcoding a specific cloud provider.
+  #
+  # deploy:
+  #   needs: build-and-test
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   steps:
+  #     - run: echo "Deploy step goes here"
