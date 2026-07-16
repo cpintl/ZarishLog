@@ -35,9 +35,9 @@ func (r *ProductRepository) Create(product *model.Product) error {
 		INSERT INTO products (org_id, category_id, uom_id, sku, name, description, item_type,
 			gtin, alternative_code, brand, manufacturer, is_batch_tracked, is_serial_tracked,
 			is_expiry_tracked, is_hazardous, is_cold_chain, min_stock, max_stock, reorder_point,
-			lead_time_days, unit_cost, status, created_by, updated_by)
+			lead_time_days, unit_cost, safety_stock, status, created_by, updated_by)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16,
-			$17, $18, $19, $20, $21, $22, $23, $24)
+			$17, $18, $19, $20, $21, $22, $23, $24, $25)
 		RETURNING id, created_at, updated_at`
 
 	return r.db.QueryRow(query,
@@ -46,6 +46,6 @@ func (r *ProductRepository) Create(product *model.Product) error {
 		product.Brand, product.Manufacturer, product.IsBatchTracked, product.IsSerialTracked,
 		product.IsExpiryTracked, product.IsHazardous, product.IsColdChain,
 		product.MinStock, product.MaxStock, product.ReorderPoint, product.LeadTimeDays,
-		product.UnitCost, product.Status, product.CreatedBy, product.UpdatedBy,
+		product.UnitCost, product.SafetyStock, product.Status, product.CreatedBy, product.UpdatedBy,
 	).Scan(&product.ID, &product.CreatedAt, &product.UpdatedAt)
 }

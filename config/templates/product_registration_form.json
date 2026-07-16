@@ -6,7 +6,7 @@
     { "name": "name", "type": "text", "required": true },
     { "name": "generic_name", "type": "text" },
     { "name": "brand_name", "type": "text" },
-    { "name": "dosage_form_code", "type": "select", "options": ["TAB", "CAP", "INJ", "SYR", "SUS", "CRM", "ONT", "DRP", "AER", "SOL", "PWD", "SUP", "IMP", "PAT"] },
+    { "name": "dosage_form_code", "type": "select", "source": "dosageForms" },
     { "name": "item_type", "type": "select", "options": ["drug", "medical_supply", "equipment", "instrument", "material", "vaccine", "nutrition", "lab_reagent", "asset", "consumable"] },
     { "name": "category_id", "type": "select", "source": "categories" },
     { "name": "uom_id", "type": "select", "source": "uoms", "required": true },

@@ -14,7 +14,7 @@
       "name": "items",
       "type": "table",
       "columns": [
-        { "name": "sku", "type": "text", "required": true },
+        { "name": "product_id", "type": "select", "source": "products", "required": true },
         { "name": "batch_number", "type": "text" },
         { "name": "quantity", "type": "number", "required": true },
         { "name": "unit_cost", "type": "number" },

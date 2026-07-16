@@ -30,7 +30,7 @@ readonly GOLANGCI_LINT_VERSION="1.64.2"
 readonly SQLC_VERSION="1.27.0"
 readonly GOFUMPT_VERSION="0.7.0"
 readonly DOCKER_COMPOSE_VERSION="2.32.0"
-readonly POSTGRES_CLIENT_VERSION="18"
+readonly POSTGRES_CLIENT_VERSION="16"
 
 # ─── Color Output ────────────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -110,6 +110,11 @@ detect_os() {
   OS="$(uname -s)"
   ARCH="$(uname -m)"
   
+  # Detect distribution codename (Linux Mint needs Ubuntu codename for Docker repos)
+  OS_CODENAME="$(lsb_release -cs 2>/dev/null || echo 'unknown')"
+  UBUNTU_CODENAME="$(grep -oP 'UBUNTU_CODENAME=\K.*' /etc/os-release 2>/dev/null || echo '')"
+  DOCKER_CODENAME="${UBUNTU_CODENAME:-$OS_CODENAME}"
+
   case "$OS" in
     Linux)
       if command -v apt-get &>/dev/null; then
@@ -164,7 +169,15 @@ check_prerequisites() {
 
   # Core prerequisites
   check_tool "Docker" "docker" "docker --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+'" "${DOCKER_COMPOSE_VERSION%%.*}.x" || all_present=false
-  check_tool "Docker Compose" "docker compose" "docker compose version --short 2>/dev/null" "${DOCKER_COMPOSE_VERSION}" || all_present=false
+  # Docker Compose is a CLI plugin, not a standalone binary — check via docker subcommand
+  if docker compose version &>/dev/null; then
+    local dc_version
+    dc_version="$(docker compose version --short 2>/dev/null | grep -oP '^\d+\.\d+\.\d+')"
+    log_ok "Docker Compose: ${dc_version} (required: ${DOCKER_COMPOSE_VERSION})"
+  else
+    log_warn "Docker Compose: NOT FOUND (required: ${DOCKER_COMPOSE_VERSION})"
+    all_present=false
+  fi
   check_tool "Go" "go" "go version 2>/dev/null | grep -oP 'go\S+' | tr -d 'go'" "${GO_VERSION}" || all_present=false
   check_tool "Node.js" "node" "node --version 2>/dev/null | tr -d 'v'" "${NODE_MAJOR}.x" || all_present=false
   check_tool "pnpm" "pnpm" "pnpm --version 2>/dev/null" "${PNPM_VERSION}.x" || all_present=false
@@ -237,7 +250,7 @@ install_docker() {
           run_cmd "Installing Docker dependencies" sudo apt-get install -y -qq ca-certificates curl gnupg lsb-release
           sudo mkdir -p /etc/apt/keyrings
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg 2>/dev/null
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${DOCKER_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
           sudo apt-get update -qq
           run_cmd "Installing Docker" sudo apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin
           ;;
@@ -327,12 +340,12 @@ install_go() {
   run_cmd "Extracting Go" sudo tar -C /usr/local -xzf "/tmp/${go_tarball}"
   rm -f "/tmp/${go_tarball}"
 
-  # Add to PATH if not present
+  # Add to PATH if not present (prepend so /usr/local/go/bin takes priority)
   if ! grep -q '/usr/local/go/bin' "$HOME/.profile" 2>/dev/null; then
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> "$HOME/.profile"
+    echo 'export PATH=/usr/local/go/bin:$PATH' >> "$HOME/.profile"
     log_info "Added Go to PATH in ~/.profile"
   fi
-  export PATH="$PATH:/usr/local/go/bin"
+  export PATH="/usr/local/go/bin:$PATH"
 
   log_ok "Go ${GO_VERSION} installed successfully"
   HAS_CHANGES=true
@@ -349,24 +362,22 @@ install_go_tools() {
   fi
 
   # golangci-lint
-  if ! command -v golangci-lint &>/dev/null || [[ "$INSTALL_GO" == "true" ]]; then
-    if command -v golangci-lint &>/dev/null; then
-      if ! confirm "Install/upgrade golangci-lint?"; then
-        log_info "Skipping golangci-lint"
-      else
-        run_cmd "Installing golangci-lint" \
-          curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(go env GOPATH)/bin" "v${GOLANGCI_LINT_VERSION}"
-        log_ok "golangci-lint ${GOLANGCI_LINT_VERSION} installed"
-      fi
-    else
-      confirm "Install golangci-lint (linter)?" && \
-        run_cmd "Installing golangci-lint" \
-          curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(go env GOPATH)/bin" "v${GOLANGCI_LINT_VERSION}" && \
-        log_ok "golangci-lint ${GOLANGCI_LINT_VERSION} installed" || \
-        log_info "Skipping golangci-lint"
-    fi
-  else
+  if command -v golangci-lint &>/dev/null && [[ "$INSTALL_GO" != "true" ]]; then
     log_ok "golangci-lint already installed"
+  else
+    if command -v golangci-lint &>/dev/null; then
+      confirm "Install/upgrade golangci-lint?" || { log_info "Skipping golangci-lint"; }
+    else
+      confirm "Install golangci-lint (linter)?" || { log_info "Skipping golangci-lint"; }
+    fi
+    if command -v golangci-lint &>/dev/null; then
+      log_info "golangci-lint already available, skipping install"
+    else
+      log_info "Installing golangci-lint..."
+      curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(go env GOPATH)/bin" "v${GOLANGCI_LINT_VERSION}" 2>&1 | sed 's/^/    /' && \
+        log_ok "golangci-lint ${GOLANGCI_LINT_VERSION} installed" || \
+        log_info "Skipping golangci-lint (install failed)"
+    fi
   fi
 
   # sqlc
@@ -448,6 +459,8 @@ install_node_via_pnpm() {
   fi
 
   if command -v pnpm &>/dev/null; then
+    # Ensure pnpm's global bin is in PATH
+    eval "$(pnpm setup 2>/dev/null)" || true
     run_cmd "Installing Node.js ${NODE_MAJOR}.x via pnpm" \
       pnpm env use --global "${NODE_MAJOR}" 2>/dev/null || \
       pnpm install -g "node@${NODE_MAJOR}" 2>/dev/null || true
@@ -486,7 +499,7 @@ install_postgres_client() {
 
   case "$PKG_MANAGER" in
     apt)
-      sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+      sudo sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt ${DOCKER_CODENAME}-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
       curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
       sudo apt-get update -qq
       sudo apt-get install -y -qq "postgresql-client-${POSTGRES_CLIENT_VERSION}"
@@ -702,7 +715,7 @@ print_summary() {
     "Node.js:$(node --version 2>/dev/null || echo 'NOT INSTALLED')"
     "pnpm:$(pnpm --version 2>/dev/null || echo 'NOT INSTALLED')"
     "Docker:$(docker --version 2>/dev/null || echo 'NOT INSTALLED')"
-    "Docker Compose:$(docker compose version --short 2>/dev/null || echo 'NOT INSTALLED')"
+    "Docker Compose:$(docker compose version --short 2>/dev/null | grep -oP '^\d+\.\d+\.\d+' || echo 'NOT INSTALLED')"
     "psql:$(psql --version 2>/dev/null || echo 'NOT INSTALLED')"
     "golangci-lint:$(golangci-lint version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo 'NOT INSTALLED')"
     "sqlc:$(sqlc version 2>/dev/null || echo 'NOT INSTALLED')"

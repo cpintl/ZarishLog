@@ -108,8 +108,8 @@
 
 | File | Format | Content |
 |---|---|---|
-| `master_product_list.csv` | CSV | 40-product sample catalogue with SKU, category, UoM, type, tracking flags |
-| `master_product_catalogue.csv` | CSV | Expanded 1912-product pharmaceutical/humanitarian catalogue across 65+ categories (generated via `scripts/process_catalogue_csvs.py`) |
+| `master_product_list.csv` | CSV | 40-product sample catalogue (SKU scheme: `{PREFIX}-{ABBREV}-{SPEC}` e.g. `MED-AMOX-500`); used by template CSV examples and seed data |
+| `master_product_catalogue.csv` | CSV | Expanded 1912-product pharmaceutical/humanitarian catalogue (SKU scheme: `{item_type}-{name}-{seq}` e.g. `DRUG-acemetacin-0001`); 65+ categories (generated via `scripts/process_catalogue_csvs.py`) |
 | `catalogue_summary.txt` | Text | Summary breakdown of the expanded catalogue (1912 items by type and category) |
 | `organization.csv` | CSV | 8-entry L1-L4 org hierarchy |
 | `programs.csv` | CSV | 6 thematic program areas |

@@ -25,6 +25,7 @@ type Product struct {
 	ReorderPoint    float64   `json:"reorder_point" db:"reorder_point"`
 	LeadTimeDays    int       `json:"lead_time_days" db:"lead_time_days"`
 	UnitCost        float64   `json:"unit_cost" db:"unit_cost"`
+	SafetyStock     float64   `json:"safety_stock" db:"safety_stock"`
 	Status          string    `json:"status" db:"status"`
 	CreatedBy       string    `json:"created_by" db:"created_by"`
 	UpdatedBy       string    `json:"updated_by" db:"updated_by"`

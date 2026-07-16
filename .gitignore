@@ -40,6 +40,9 @@ coverage/
 __pycache__/
 *.pyc
 
+# Downloads
+*.tar.gz
+
 # Docker
 pgdata/
 redisdata/
