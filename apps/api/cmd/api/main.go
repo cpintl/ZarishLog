@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	Version    = "0.2.0-dev"
+	Version    = "0.3.0-dev"
 	CommitHash = "unknown"
 	BuildTime  = "unknown"
 )
@@ -42,6 +42,7 @@ func main() {
 
 	r := gin.New()
 	r.Use(gin.Recovery())
+	r.Use(middleware.ErrorHandler())
 	r.Use(gin.Logger())
 	r.Use(middleware.CORS())
 	r.Use(middleware.Tenant())
@@ -53,6 +54,7 @@ func main() {
 
 		protected := api.Group("")
 		protected.Use(middleware.Auth(cfg))
+		protected.Use(middleware.Audit(db))
 
 		{
 			products := protected.Group("/products")
@@ -77,6 +79,7 @@ func main() {
 			{
 				warehouses.GET("", handler.ListWarehouses(db))
 				warehouses.POST("", handler.CreateWarehouse(db))
+				warehouses.GET("/:id/locations", handler.NotImplementedStub(db))
 			}
 
 			stock := protected.Group("/stock")

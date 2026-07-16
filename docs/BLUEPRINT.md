@@ -31,20 +31,21 @@
 
 ## Phase 2 — Go API Core (Week 3)
 
-- [ ] Go module init (`github.com/cpintl/zarishlog-api`)
-- [ ] Configuration layer (viper/envconfig)
-- [ ] Database connection pool (sqlx)
-- [ ] Middleware: auth (OIDC/JWT validation), RBAC, audit logging, tenant context
-- [ ] Health check endpoint
-- [ ] Error handling middleware (structured JSON errors)
-- [ ] Request validation (bindings)
-- [ ] Pagination helpers
+- [x] Go module init (`github.com/cpintl/zarishlog-api`) — `apps/api/`
+- [x] Configuration layer (viper/envconfig) — `internal/config/`
+- [x] Database connection pool (sqlx)
+- [x] Middleware: auth (OIDC/JWT validation), RBAC (`RequireRole` on all groups), tenant context — `internal/middleware/`
+- [x] Health check endpoint — `GET /api/v1/health`
+- [x] Error handling middleware (structured JSON errors) — `internal/response/` error types + `internal/middleware/error.go`
+- [x] Request validation (bindings) — `internal/validator/` with custom UUIDv7/enum/date validators via go-playground/validator
+- [x] Pagination helpers — `internal/pagination/` (page/page_size query params, LIMIT/OFFSET, COUNT queries)
+- [x] Audit logging middleware — `internal/middleware/audit.go` (async inserts to audit_log table)
 
 ## Phase 3 — Product/Catalogue Module (Week 4)
 
-- [ ] Category CRUD (handler → service → repository)
-- [ ] Product CRUD (handler → service → repository)
-- [ ] UoM CRUD
+- [x] Category CRUD (List/Create) — handlers in `internal/handler/category_handler.go`
+- [x] Product CRUD (List/Get/Create/Update/Delete) — `internal/handler/product_handler.go`
+- [x] UoM model — `internal/model/uom.go`
 - [ ] Bulk import CSV/XLSX with validation
 - [ ] Search endpoint (with Meilisearch integration)
 - [ ] Unit tests (testify + sqlmock)
@@ -52,7 +53,7 @@
 
 ## Phase 4 — Warehouse & Location Module (Week 5)
 
-- [ ] Warehouse CRUD
+- [x] Warehouse CRUD (List/Create) — `internal/handler/warehouse_handler.go`
 - [ ] Location hierarchy (zone/rack/bin) CRUD
 - [ ] Location constraints (ambient, cold chain, hazardous, secure)
 - [ ] Storage condition validation
@@ -60,12 +61,12 @@
 
 ## Phase 5 — Stock & Inventory Module (Week 6)
 
-- [ ] GRN (Goods Receipt Note) — receive stock with batch/expiry
-- [ ] SRF (Stock Request Form) — issue stock with FEFO enforcement
-- [ ] Inter-warehouse transfer
-- [ ] Stock adjustment with reason codes
-- [ ] Stock ledger (append-only movements)
-- [ ] Stock levels (materialized view)
+- [x] GRN (Goods Receipt Note) — receive stock with batch/expiry — `internal/handler/grn_handler.go`
+- [x] SRF (Stock Request Form) — issue stock with FEFO enforcement — `internal/handler/issue_handler.go`
+- [ ] Inter-warehouse transfer — stubbed (501 Not Implemented)
+- [ ] Stock adjustment with reason codes — stubbed (501)
+- [x] Stock ledger (append-only movements) — List with filters
+- [x] Stock levels — queried from warehouse × product
 - [ ] Batch/serial genealogy tracking
 - [ ] Barcode/QR generation
 

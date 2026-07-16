@@ -45,10 +45,10 @@ curl https://api.zarishlog.org/api/v1/products | jq '.data | length'
 
 See `.github/workflows/ci.yml` for the automated pipeline:
 
-1. **PR opened** → `go vet`, `go test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`
-2. **Merge to main** → Docker build + push to GHCR
-3. **Tag push** → Auto-deploy to staging
-4. **Manual approval** → Deploy to production
+1. **PR opened** → `go vet`, `go build`, `go test`, `pnpm build` (Next.js)
+2. **Merge to main** → (future: Docker build + push to GHCR)
+3. **Tag push** → (future: Auto-deploy to staging)
+4. **Manual approval** → (future: Deploy to production)
 
 ## Adding a New Module
 
@@ -58,23 +58,19 @@ See `.github/workflows/ci.yml` for the automated pipeline:
 # Create handler
 touch apps/api/internal/handler/newmodule.go
 
-# Create service
-touch apps/api/internal/service/newmodule.go
-
-# Create repository
-touch apps/api/internal/repository/newmodule_repo.go
-
 # Add model
-# Edit apps/api/internal/model/ (add struct)
+# Edit apps/api/internal/model/ (add struct with json/db/validate tags)
 
 # Add routes
-# Edit apps/api/cmd/api/main.go (add routes)
+# Edit apps/api/cmd/api/main.go (add routes with middleware.RequireRole)
 
 # Add SQL queries
 # Create packages/data-models/sql/queries/newmodule.sql
 
 # Run sqlc to generate code
 cd apps/api && sqlc generate
+
+# Use internal/response/ for JSON responses and internal/validator/ for validation
 ```
 
 ### Frontend (Next.js)
@@ -108,7 +104,7 @@ psql -h localhost -U zarishlog -d zarishlog -c "DROP TABLE IF EXISTS new_table C
 
 - **Health:** `GET /api/v1/health`
 - **Metrics:** Prometheus endpoint at `/api/v1/metrics` (future)
-- **Logs:** Structured JSON via zerolog, collected via Docker
+- **Logs:** Gin default logger (structured JSON logging via zerolog planned for future)
 
 ## Security
 

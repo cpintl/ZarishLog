@@ -7,7 +7,7 @@
 
 ZarishLog is an **open-source, offline-first, multi-tenant** platform unifying warehouse management (WMS), inventory management (IMS), procurement, quality assurance, distribution, and fixed-asset tracking for humanitarian and development organizations operating across multi-level (L1 Global → L2 Country Office → L3 Project Office → L4 Program Site) structures.
 
-> Companion docs: [`SETUP.md`](./SETUP.md) · [`CONFIGURE.md`](./docs/CONFIGURE.md) · [`BLUEPRINT.md`](./docs/BLUEPRINT.md) · [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md) · [`PRODUCT_REQUIREMENTS_DOCUMENT.md`](./docs/PRODUCT_REQUIREMENTS_DOCUMENT.md)
+> Companion docs: [`SETUP.md`](./SETUP.md) · [`CONFIGURE.md`](./CONFIGURE.md) · [`BLUEPRINT.md`](./docs/BLUEPRINT.md) · [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md) · [`STATUS.md`](./docs/STATUS.md) · [`MAINTAINERS.md`](./MAINTAINERS.md) · [`GLOSSARY.md`](./config/reference_data/GLOSSARY.md) · [`PRODUCT_REQUIREMENTS_DOCUMENT.md`](./docs/PRODUCT_REQUIREMENTS_DOCUMENT.md)
 
 ---
 
@@ -93,11 +93,11 @@ make db-seed        # loads master catalogue
 make dev            # starts API (:8080) + Web (:3000)
 ```
 
-See [`SETUP.md`](./SETUP.md) for detailed setup instructions and [`CONFIGURE.md`](./docs/CONFIGURE.md) for configuration reference. A 1912-product master catalogue CSV is included at `config/metadata/master_product_catalogue.csv` (65+ categories, 3 major domains: Drugs, Assets, Humanitarian/Technical).
+See [`SETUP.md`](./SETUP.md) for detailed setup instructions. A 1912-product master catalogue CSV is included at `config/metadata/master_product_catalogue.csv` (65+ categories, 3 major domains: Drugs, Assets, Humanitarian/Technical).
 
 ## 6. Status
 
-Sandbox environment is production-ready. Master Catalogue designed (1912 products across 65+ categories in expanded CSV catalogue). Phase 0 (Foundation) complete: Docker Compose, Makefile, CI workflow, AGENTS.md, .env.example, config validation scripts, and sandbox bootstrap all in place.
+Sandbox environment is scaffolded. Master Catalogue designed (1912 products across 65+ categories in expanded CSV catalogue). Phase 0 (Foundation) complete, Phase 1 (Database) complete, Phase 2 (API Core) complete, Phases 3–5 (Catalogue, Warehouse, Stock) partially built. See [`STATUS.md`](./docs/STATUS.md) for detailed phase tracking.
 
 ## 7. License
 

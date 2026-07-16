@@ -115,7 +115,7 @@ ZarishLog is a unified, offline-first, multi-tenant SaaS platform for humanitari
 
 | Layer | Choice |
 |---|---|
-| Backend | Go 1.26 + Gin 1.12 |
+| Backend | Go 1.26 + Gin 1.12 — generated sqlc code in `internal/db/` |
 | Database | PostgreSQL 18 + sqlc + sqlx |
 | Frontend | Next.js 15 + React 19 PWA |
 | Mobile | Expo/React Native |

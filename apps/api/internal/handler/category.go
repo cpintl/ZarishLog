@@ -1,31 +1,42 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/cpintl/zarishlog-api/internal/model"
+	"github.com/cpintl/zarishlog-api/internal/pagination"
+	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/zarishlog-api/internal/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
 
 func ListCategories(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var categories []model.ProductCategory
-		query := `SELECT * FROM product_categories WHERE org_id = $1 ORDER BY name`
-		err := db.Select(&categories, query, c.GetString("org_id"))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch categories"})
+		orgID := c.GetString("org_id")
+		params := pagination.FromQuery(c)
+
+		var total int
+		if err := db.Get(&total, `SELECT COUNT(*) FROM product_categories WHERE org_id = $1`, orgID); err != nil {
+			response.InternalError(c, "failed to count categories")
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"data": categories})
+
+		var categories []model.ProductCategory
+		query := `SELECT * FROM product_categories WHERE org_id = $1 ORDER BY name LIMIT $2 OFFSET $3`
+		err := db.Select(&categories, query, orgID, params.Limit(), params.Offset())
+		if err != nil {
+			response.InternalError(c, "failed to fetch categories")
+			return
+		}
+
+		response.Paginated(c, categories, total, params.Page, params.PageSize)
 	}
 }
 
 func CreateCategory(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var cat model.ProductCategory
-		if err := c.ShouldBindJSON(&cat); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &cat); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
@@ -43,9 +54,9 @@ func CreateCategory(db *sqlx.DB) gin.HandlerFunc {
 		).Scan(&cat.ID, &cat.CreatedAt, &cat.UpdatedAt)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create category"})
+			response.InternalError(c, "failed to create category")
 			return
 		}
-		c.JSON(http.StatusCreated, gin.H{"data": cat})
+		response.Created(c, cat)
 	}
 }

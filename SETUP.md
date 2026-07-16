@@ -29,7 +29,7 @@ If you prefer to install tools manually or the bootstrap script doesn't support 
 | **pnpm** | `11.x` | `corepack enable && corepack prepare pnpm@11 --activate` | `corepack enable && corepack prepare pnpm@11 --activate` |
 | **Docker** | Latest CE | [Docker Desktop for Linux](https://docs.docker.com/engine/install/) | [Docker Desktop for Mac](https://docs.docker.com/desktop/mac/install/) |
 | **Docker Compose** | `v2.32+` | Included with Docker Desktop | Included with Docker Desktop |
-| **psql** | `18` | `sudo apt install postgresql-client-18` | `brew install postgresql@18` |
+| **psql** | `18` | `sudo apt install postgresql-client-18` (or `postgresql-client-16` if 18 unavailable) | `brew install postgresql@18` |
 
 ### 1.2 Optional Go Tools
 
@@ -89,6 +89,7 @@ make db-seed
 ### 2.5 Install Frontend Dependencies
 
 ```bash
+pnpm setup          # set up corepack if not already done
 cd apps/web && pnpm install && cd ../..
 ```
 
@@ -137,7 +138,8 @@ curl http://localhost:8080/api/v1/health
 ### 4.2 List Products
 
 ```bash
-curl http://localhost:8080/api/v1/products
+# Most endpoints require auth; use the admin token or test with:
+curl http://localhost:8080/api/v1/products -H "Authorization: Bearer <token>"
 # Expected: {"data":[...]}
 ```
 
@@ -181,6 +183,7 @@ make test
 | `apps/api/sqlc.yaml` | SQL code generation config |
 | `Makefile` | Common development tasks |
 | `go.work` | Go workspace (multi-module) |
+| `apps/api/internal/db/` | sqlc-generated Go code (19 files, ~9,600 lines) |
 | `.vscode/settings.json` | VS Code settings (Go, SQL, formatting) |
 | `.vscode/tasks.json` | VS Code build/test/deploy tasks |
 | `.vscode/launch.json` | Debug configurations |

@@ -1,31 +1,48 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/cpintl/zarishlog-api/internal/model"
+	"github.com/cpintl/zarishlog-api/internal/pagination"
+	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/zarishlog-api/internal/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
 
+func NotImplementedStub(_ *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		response.NotImplemented(c, "this endpoint is not implemented yet")
+	}
+}
+
 func ListWarehouses(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var warehouses []model.Warehouse
-		query := `SELECT * FROM warehouses WHERE org_id = $1 ORDER BY name`
-		err := db.Select(&warehouses, query, c.GetString("org_id"))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch warehouses"})
+		orgID := c.GetString("org_id")
+		params := pagination.FromQuery(c)
+
+		var total int
+		if err := db.Get(&total, `SELECT COUNT(*) FROM warehouses WHERE org_id = $1`, orgID); err != nil {
+			response.InternalError(c, "failed to count warehouses")
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"data": warehouses})
+
+		var warehouses []model.Warehouse
+		query := `SELECT * FROM warehouses WHERE org_id = $1 ORDER BY name LIMIT $2 OFFSET $3`
+		err := db.Select(&warehouses, query, orgID, params.Limit(), params.Offset())
+		if err != nil {
+			response.InternalError(c, "failed to fetch warehouses")
+			return
+		}
+
+		response.Paginated(c, warehouses, total, params.Page, params.PageSize)
 	}
 }
 
 func CreateWarehouse(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var wh model.Warehouse
-		if err := c.ShouldBindJSON(&wh); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &wh); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
@@ -43,9 +60,9 @@ func CreateWarehouse(db *sqlx.DB) gin.HandlerFunc {
 		).Scan(&wh.ID, &wh.CreatedAt, &wh.UpdatedAt)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create warehouse"})
+			response.InternalError(c, "failed to create warehouse")
 			return
 		}
-		c.JSON(http.StatusCreated, gin.H{"data": wh})
+		response.Created(c, wh)
 	}
 }

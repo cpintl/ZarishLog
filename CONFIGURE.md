@@ -444,7 +444,8 @@ bash scripts/validate-config.sh
 make db-seed
 
 # Step 5: Verify
-curl http://localhost:8080/api/v1/products
+curl http://localhost:8080/api/v1/health
+# Note: Most API endpoints require JWT auth via Keycloak
 ```
 
 ---

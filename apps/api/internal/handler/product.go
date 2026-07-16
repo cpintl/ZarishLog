@@ -1,9 +1,12 @@
 package handler
 
 import (
-	"net/http"
+	"fmt"
 
 	"github.com/cpintl/zarishlog-api/internal/model"
+	"github.com/cpintl/zarishlog-api/internal/pagination"
+	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/zarishlog-api/internal/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
@@ -11,16 +14,24 @@ import (
 func ListProducts(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		orgID := c.GetString("org_id")
+		params := pagination.FromQuery(c)
 
-		var products []model.Product
-		query := `SELECT * FROM products WHERE org_id = $1 ORDER BY name LIMIT 100`
-		err := db.Select(&products, query, orgID)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch products"})
+		var total int
+		countQuery := `SELECT COUNT(*) FROM products WHERE org_id = $1`
+		if err := db.Get(&total, countQuery, orgID); err != nil {
+			response.InternalError(c, "failed to count products")
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": products})
+		var products []model.Product
+		query := `SELECT * FROM products WHERE org_id = $1 ORDER BY name LIMIT $2 OFFSET $3`
+		err := db.Select(&products, query, orgID, params.Limit(), params.Offset())
+		if err != nil {
+			response.InternalError(c, "failed to fetch products")
+			return
+		}
+
+		response.Paginated(c, products, total, params.Page, params.PageSize)
 	}
 }
 
@@ -33,19 +44,19 @@ func GetProduct(db *sqlx.DB) gin.HandlerFunc {
 		query := `SELECT * FROM products WHERE id = $1 AND org_id = $2`
 		err := db.Get(&product, query, id, orgID)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "product not found"})
+			response.NotFound(c, "product not found")
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": product})
+		response.OK(c, product)
 	}
 }
 
 func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var product model.Product
-		if err := c.ShouldBindJSON(&product); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &product); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
@@ -53,14 +64,14 @@ func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 		product.CreatedBy = c.GetString("user_id")
 		product.UpdatedBy = c.GetString("user_id")
 
-		query := `
+		query := fmt.Sprintf(`
 			INSERT INTO products (org_id, category_id, uom_id, sku, name, description, item_type,
 				gtin, alternative_code, brand, manufacturer, is_batch_tracked, is_serial_tracked,
 				is_expiry_tracked, is_hazardous, is_cold_chain, min_stock, max_stock, reorder_point,
 				lead_time_days, unit_cost, safety_stock, status, created_by, updated_by)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16,
 				$17, $18, $19, $20, $21, $22, $23, $24, $25)
-			RETURNING id, created_at, updated_at`
+			RETURNING id, created_at, updated_at`)
 
 		err := db.QueryRow(query,
 			product.OrgID, product.CategoryID, product.UomID, product.SKU, product.Name,
@@ -72,11 +83,11 @@ func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 		).Scan(&product.ID, &product.CreatedAt, &product.UpdatedAt)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create product: " + err.Error()})
+			response.InternalError(c, fmt.Sprintf("failed to create product: %v", err))
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"data": product})
+		response.Created(c, product)
 	}
 }
 
@@ -84,14 +95,14 @@ func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		var product model.Product
-		if err := c.ShouldBindJSON(&product); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &product); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
 		product.UpdatedBy = c.GetString("user_id")
 
-		query := `
+		query := fmt.Sprintf(`
 			UPDATE products SET
 				name = $1, description = $2, category_id = $3, uom_id = $4,
 				gtin = $5, brand = $6, manufacturer = $7, is_batch_tracked = $8,
@@ -99,7 +110,7 @@ func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 				is_cold_chain = $12, min_stock = $13, max_stock = $14, reorder_point = $15,
 				lead_time_days = $16, unit_cost = $17, safety_stock = $18, status = $19,
 				updated_by = $20
-			WHERE id = $21 AND org_id = $22`
+			WHERE id = $21 AND org_id = $22`)
 
 		_, err := db.Exec(query,
 			product.Name, product.Description, product.CategoryID, product.UomID,
@@ -110,11 +121,11 @@ func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 			product.UpdatedBy, id, c.GetString("org_id"),
 		)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update product"})
+			response.InternalError(c, "failed to update product")
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "product updated"})
+		response.OK(c, gin.H{"message": "product updated"})
 	}
 }
 
@@ -124,9 +135,10 @@ func DeleteProduct(db *sqlx.DB) gin.HandlerFunc {
 		query := `UPDATE products SET status = 'inactive', updated_by = $1 WHERE id = $2 AND org_id = $3`
 		_, err := db.Exec(query, c.GetString("user_id"), id, c.GetString("org_id"))
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete product"})
+			response.InternalError(c, "failed to delete product")
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "product deleted"})
+
+		response.OK(c, gin.H{"message": "product deleted"})
 	}
 }

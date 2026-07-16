@@ -5,12 +5,12 @@ import "time"
 type Warehouse struct {
 	ID          string    `json:"id" db:"id"`
 	OrgID       string    `json:"org_id" db:"org_id"`
-	Name        string    `json:"name" db:"name"`
-	Code        string    `json:"code" db:"code"`
-	Type        string    `json:"type" db:"type"`
+	Name        string    `json:"name" db:"name" validate:"required,max=255"`
+	Code        string    `json:"code" db:"code" validate:"required,max=50"`
+	Type        string    `json:"type" db:"type" validate:"required,wh_type"`
 	Address     string    `json:"address" db:"address"`
-	City        string    `json:"city" db:"city"`
-	Country     string    `json:"country" db:"country"`
+	City        string    `json:"city" db:"city" validate:"required,max=100"`
+	Country     string    `json:"country" db:"country" validate:"required,max=100"`
 	IsActive    bool      `json:"is_active" db:"is_active"`
 	CreatedBy   string    `json:"created_by" db:"created_by"`
 	UpdatedBy   string    `json:"updated_by" db:"updated_by"`

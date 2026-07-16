@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/cpintl/zarishlog-api/internal/model"
+	"github.com/cpintl/zarishlog-api/internal/pagination"
+	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/zarishlog-api/internal/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
@@ -11,8 +12,8 @@ import (
 func CreateGRN(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var grn model.GRN
-		if err := c.ShouldBindJSON(&grn); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &grn); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
@@ -30,19 +31,19 @@ func CreateGRN(db *sqlx.DB) gin.HandlerFunc {
 		).Scan(&grn.ID, &grn.CreatedAt, &grn.UpdatedAt)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create GRN: " + err.Error()})
+			response.InternalError(c, "failed to create GRN")
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"data": grn})
+		response.Created(c, grn)
 	}
 }
 
 func CreateIssue(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var issue model.StockIssue
-		if err := c.ShouldBindJSON(&issue); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if errs := validator.BindAndValidate(c, &issue); errs != nil {
+			response.Validation(c, errs)
 			return
 		}
 
@@ -58,48 +59,68 @@ func CreateIssue(db *sqlx.DB) gin.HandlerFunc {
 		).Scan(&issue.ID, &issue.CreatedAt)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create issue"})
+			response.InternalError(c, "failed to create issue")
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"data": issue})
+		response.Created(c, issue)
 	}
 }
 
 func CreateTransfer(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented yet"})
+		response.NotImplemented(c, "inter-warehouse transfer not implemented yet")
 	}
 }
 
 func CreateAdjustment(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented yet"})
+		response.NotImplemented(c, "stock adjustment not implemented yet")
 	}
 }
 
 func GetStockLevels(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var levels []model.StockLevel
-		query := `SELECT * FROM stock_levels WHERE org_id = $1 ORDER BY product_id`
-		err := db.Select(&levels, query, c.GetString("org_id"))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch stock levels"})
+		orgID := c.GetString("org_id")
+		params := pagination.FromQuery(c)
+
+		var total int
+		if err := db.Get(&total, `SELECT COUNT(*) FROM stock_levels WHERE org_id = $1`, orgID); err != nil {
+			response.InternalError(c, "failed to count stock levels")
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"data": levels})
+
+		var levels []model.StockLevel
+		query := `SELECT * FROM stock_levels WHERE org_id = $1 ORDER BY product_id LIMIT $2 OFFSET $3`
+		err := db.Select(&levels, query, orgID, params.Limit(), params.Offset())
+		if err != nil {
+			response.InternalError(c, "failed to fetch stock levels")
+			return
+		}
+
+		response.Paginated(c, levels, total, params.Page, params.PageSize)
 	}
 }
 
 func GetStockMovements(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var movements []model.StockMovement
-		query := `SELECT * FROM stock_movements WHERE org_id = $1 ORDER BY created_at DESC LIMIT 100`
-		err := db.Select(&movements, query, c.GetString("org_id"))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch stock movements"})
+		orgID := c.GetString("org_id")
+		params := pagination.FromQuery(c)
+
+		var total int
+		if err := db.Get(&total, `SELECT COUNT(*) FROM stock_movements WHERE org_id = $1`, orgID); err != nil {
+			response.InternalError(c, "failed to count stock movements")
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"data": movements})
+
+		var movements []model.StockMovement
+		query := `SELECT * FROM stock_movements WHERE org_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`
+		err := db.Select(&movements, query, orgID, params.Limit(), params.Offset())
+		if err != nil {
+			response.InternalError(c, "failed to fetch stock movements")
+			return
+		}
+
+		response.Paginated(c, movements, total, params.Page, params.PageSize)
 	}
 }

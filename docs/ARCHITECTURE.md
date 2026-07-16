@@ -27,7 +27,7 @@
                  │ Sync protocol   │                    │
        ┌─────────▼─────────────────▼────────────────────▼──────────┐
        │                    API Layer — Go + Gin 1.12                │
-       │  Middleware: Auth (OIDC/JWT) · RBAC · Audit · Tenant       │
+        │  Middleware: Auth (OIDC/JWT) · RBAC (enforced) · Audit · Tenant       │
        │  Modules: Catalogue · Warehouse · Stock · GRN/SRF · QA ·   │
        │           Assets · Forecasting · Reporting · Notifications  │
        └─────────┬──────────────────────────────────────────────────┘
@@ -40,7 +40,7 @@
                  │
        ┌─────────▼──────────────────────────────────────────────────┐
        │                    Data Layer                                │
-       │  PostgreSQL 18 (sqlc + sqlx)                                │
+        │  PostgreSQL 18 (sqlc + sqlx) — generated code in `internal/db/`        │
        │  RLS per org_id · UUIDv7 PKs · Audit columns               │
        │  Append-only stock_movements ledger                         │
        └─────────┬──────────────────────────────────────────────────┘
@@ -71,40 +71,41 @@
 ## 4. API Design
 
 ```
-GET    /api/v1/health
-GET    /api/v1/products          # List products (paginated)
-POST   /api/v1/products          # Create product
-GET    /api/v1/products/:id      # Get product
-PUT    /api/v1/products/:id      # Update product
-DELETE /api/v1/products/:id      # Soft-delete product
-POST   /api/v1/products/import   # Bulk import CSV
+GET    /api/v1/health                    # No auth required
+                                         # All other routes require JWT via Keycloak
+GET    /api/v1/products                  # List products (paginated, RBAC enforced)
+POST   /api/v1/products                  # Create product
+GET    /api/v1/products/:id              # Get product
+PUT    /api/v1/products/:id              # Update product
+DELETE /api/v1/products/:id              # Soft-delete product
+POST   /api/v1/products/import           # Bulk import CSV [STUB]
 
-GET    /api/v1/categories        # List categories
-POST   /api/v1/categories        # Create category
+GET    /api/v1/categories                # List categories
+POST   /api/v1/categories                # Create category
 
-GET    /api/v1/warehouses        # List warehouses
-POST   /api/v1/warehouses        # Create warehouse
-GET    /api/v1/warehouses/:id/locations  # Location hierarchy
+GET    /api/v1/warehouses                # List warehouses
+POST   /api/v1/warehouses                # Create warehouse
+GET    /api/v1/warehouses/:id/locations  # Location hierarchy [STUB]
 
-POST   /api/v1/stock/grn         # Goods Receipt Note
-POST   /api/v1/stock/issue       # Stock Issue (SRF)
-POST   /api/v1/stock/transfer    # Inter-warehouse transfer
-POST   /api/v1/stock/adjust      # Stock adjustment
-GET    /api/v1/stock/levels      # Current stock levels
-GET    /api/v1/stock/movements   # Stock movement ledger
+POST   /api/v1/stock/grn                 # Goods Receipt Note
+POST   /api/v1/stock/issue               # Stock Issue (SRF)
+POST   /api/v1/stock/transfer            # Inter-warehouse transfer [STUB — returns 501]
+POST   /api/v1/stock/adjust              # Stock adjustment [STUB — returns 501]
+GET    /api/v1/stock/levels              # Current stock levels
+GET    /api/v1/stock/movements           # Stock movement ledger
 
-GET    /api/v1/qa/inspections    # QA inspections
-POST   /api/v1/qa/inspect        # Perform inspection
+GET    /api/v1/qa/inspections            # QA inspections [STUB]
+POST   /api/v1/qa/inspect                # Perform inspection [STUB]
 
-GET    /api/v1/assets            # Asset register
-POST   /api/v1/assets/transfer   # Asset custody transfer
+GET    /api/v1/assets                    # Asset register [STUB]
+POST   /api/v1/assets/transfer           # Asset custody transfer [STUB]
 
-GET    /api/v1/reports/stock-status
-GET    /api/v1/reports/valuation
-GET    /api/v1/reports/expiry
+GET    /api/v1/reports/stock-status      # [STUB]
+GET    /api/v1/reports/valuation         # [STUB]
+GET    /api/v1/reports/expiry            # [STUB]
 
-POST   /api/v1/sync/push         # Push offline events
-GET    /api/v1/sync/pull         # Pull latest state
+POST   /api/v1/sync/push                # Push offline events [STUB]
+GET    /api/v1/sync/pull                # Pull latest state [STUB]
 ```
 
 ## 5. Data Model Overview
@@ -126,8 +127,8 @@ Key design:
 ## 6. Multi-Tenancy & Security
 
 - RLS on every table using `app.current_org_id` session variable set per-request from JWT
-- Role × Scope × Action matrix (R01–R09) enforced in Gin middleware
-- Audit interceptor on every write (actor, timestamp, before/after, IP)
+- Role × Scope × Action matrix (R01–R09) enforced via `middleware.RequireRole()` on every route group
+- Audit interceptor on every write (actor, timestamp, before/after, IP) — integration in progress
 - Transport: TLS everywhere
 
 ## 7. Offline-First Design
@@ -148,7 +149,6 @@ Key design:
 ## 9. CI/CD Pipeline
 
 ```
-PR → GitHub Actions: go vet + test, pnpm lint + typecheck + build
-  → merge to main → build Docker images → push to GHCR
-  → auto-deploy staging → manual approval → deploy production
+PR → GitHub Actions: go vet + build + test · pnpm build (Next.js)
+  → merge to main → (future: build Docker images → push to GHCR → deploy)
 ```

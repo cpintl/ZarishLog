@@ -12,7 +12,7 @@
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
 | Phase 1 — Database & Data Models | ✅ Complete | 79 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
-| Phase 2 — Go API Core | ✅ Partial | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints; missing: pagination, audit middleware, structured error handling |
+| Phase 2 — Go API Core | ✅ Complete | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints, structured error handling (`internal/response/`), request validation (`internal/validator/`, custom UUIDv7/enum/date validators), pagination helpers (`internal/pagination/`, page/page_size with LIMIT/OFFSET on all list endpoints), audit logging middleware (`internal/middleware/audit.go`), error middleware (`internal/middleware/error.go`) |
 | Phase 3 — Product/Catalogue Module | ✅ Partial | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM model; missing: bulk CSV import, Meilisearch search, unit/integration tests |
 | Phase 4 — Warehouse & Location Module | ✅ Partial | Warehouse CRUD (List/Create); missing: location hierarchy, constraints, storage validation |
 | Phase 5 — Stock & Inventory Module | ✅ Partial | GRN, Issue, stock levels, stock movements (List with filters); missing: inter-warehouse transfer, adjustments (both stubbed 501), batch genealogy, barcode/QR |
@@ -71,7 +71,7 @@
 | QA Checklist Items | 14 | 7 general + 4 cold chain + 3 hazardous items |
 | Alert Configurations | 6 | Expiry (30/60/90d), low stock, overstock, sleeping stock, QA hold, approval pending |
 | Reorder Recommendations | 2 | Sample recommendations |
-| **Total seed SQL** | **~1410 lines** | 120+ INSERT statements across 32 tables |
+| **Total seed SQL** | **~1,407 lines** (seed.sql) + 2,255 lines (006_master_product_seed.sql) | 128 INSERT statements across 32 tables (seed.sql) + 20 on products (006_seed) |
 
 ### 2.3 sqlc Query Inventory
 
@@ -138,10 +138,12 @@
 
 | Category | Count | Key Indexes |
 |---|---|---|
-| Primary/B-tree | ~30 | `idx_products_org_id`, `idx_stock_levels_product_warehouse`, `idx_batches_expiry_date`, `idx_stock_movements_created`, `idx_alerts_org_type`, etc. |
-| Composite (org_id + created_at) | 10 | Purchase orders, distributions, returns, disposals, stock counts, snapshots, suppliers, audit log, data change log, sync log |
+| Primary/B-tree | 39 | `idx_products_org_id`, `idx_stock_levels_product_warehouse`, `idx_batches_expiry_date`, `idx_stock_movements_created`, `idx_alerts_org_type`, etc. |
+| Composite (org_id + created_at) | 9 | Purchase orders, distributions, returns, disposals, stock counts, snapshots, suppliers, audit log, data change log, sync log |
 | GIN (JSONB) | 2 | `idx_audit_log_changes`, `idx_audit_log_changes_path` |
 | Spatial | 1 | `idx_warehouses_lat_lng` |
+| Unique (uom) | 1 | `idx_uom_name_unique` |
+| **Total indexes** | **52** | |
 
 ---
 
@@ -170,148 +172,148 @@
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 13 | `units_of_measure` | Reference | UoM catalog (EA, BX, KG, L, etc.) by category |
-| 14 | `product_categories` | Tenant | Hierarchical product categories with UNSPSC/ECLASS codes |
-| 15 | `products` | Tenant | Item master (SKU, GTIN, batch/serial tracking, storage flags) |
-| 16 | `product_packaging` | Tenant | Multi-level packaging hierarchy with barcode, dimensions, weight |
-| 17 | `product_substitutes` | Junction | Therapeutic/generic/brand/equivalency substitutions |
-| 18 | `product_attachments` | Tenant | SOPs, photos, MSDS documents per product |
-| 19 | `dosage_forms` | Reference | 22 drug dosage forms with emoji icons and storage rules |
-| 20 | `justification_codes` | Reference | MSF ordering justifications: P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) |
+| 15 | `units_of_measure` | Reference | UoM catalog (EA, BX, KG, L, etc.) by category |
+| 16 | `product_categories` | Tenant | Hierarchical product categories with UNSPSC/ECLASS codes |
+| 17 | `products` | Tenant | Item master (SKU, GTIN, batch/serial tracking, storage flags) |
+| 18 | `product_packaging` | Tenant | Multi-level packaging hierarchy with barcode, dimensions, weight |
+| 19 | `product_substitutes` | Junction | Therapeutic/generic/brand/equivalency substitutions |
+| 20 | `product_attachments` | Tenant | SOPs, photos, MSDS documents per product |
+| 21 | `dosage_forms` | Reference | 22 drug dosage forms with emoji icons and storage rules |
+| 22 | `justification_codes` | Reference | MSF ordering justifications: P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) |
 
 ### Domain 3: Procurement & Suppliers (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 21 | `suppliers` | Tenant | Vendor/supplier registry with contact and tax info |
-| 22 | `supplier_contracts` | Tenant | Contract terms, discounts, currency, exclusivity |
-| 23 | `purchase_orders` | Tenant | PO header with approval workflow (pending/approved/rejected) |
-| 24 | `po_line_items` | Tenant | PO detail (product, qty ordered/received, unit price, line total) |
+| 23 | `suppliers` | Tenant | Vendor/supplier registry with contact and tax info |
+| 24 | `supplier_contracts` | Tenant | Contract terms, discounts, currency, exclusivity |
+| 25 | `purchase_orders` | Tenant | PO header with approval workflow (pending/approved/rejected) |
+| 26 | `po_line_items` | Tenant | PO detail (product, qty ordered/received, unit price, line total) |
 
 ### Domain 4: Warehouse & Locations (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 25 | `warehouses` | Tenant | Central, sub-warehouse, transit, quarantine types with geo/contact |
-| 26 | `locations` | Tenant | Hierarchical zone/aisle/rack/bin/shelf/area with cold/hazard/secure flags |
-| 27 | `location_constraints` | Tenant | Temperature, humidity, capacity, pharma/food grade constraints |
-| 28 | `warehouse_documents` | Tenant | Licenses, permits, certificates with expiry tracking |
+| 27 | `warehouses` | Tenant | Central, sub-warehouse, transit, quarantine types with geo/contact |
+| 28 | `locations` | Tenant | Hierarchical zone/aisle/rack/bin/shelf/area with cold/hazard/secure flags |
+| 29 | `location_constraints` | Tenant | Temperature, humidity, capacity, pharma/food grade constraints |
+| 30 | `warehouse_documents` | Tenant | Licenses, permits, certificates with expiry tracking |
 
 ### Domain 5: Stock & Batches (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 29 | `batches` | Tenant | Batch/lot/serial records with expiry and manufacturer |
-| 30 | `stock_levels` | Tenant | Current positions (product x warehouse x location x batch) with status (on_hand, reserved, committed, in_transit, backordered, etc.) |
-| 31 | `stock_movements` | Tenant | Append-only ledger (receipt, issue, transfer, adjustment, return, disposal) |
-| 32 | `stock_snapshots` | Tenant | Periodic snapshots for AMC calculation (daily/weekly/monthly) |
+| 31 | `batches` | Tenant | Batch/lot/serial records with expiry and manufacturer |
+| 32 | `stock_levels` | Tenant | Current positions (product x warehouse x location x batch) with status (on_hand, reserved, committed, in_transit, backordered, etc.) |
+| 33 | `stock_movements` | Tenant | Append-only ledger (receipt, issue, transfer, adjustment, return, disposal) |
+| 34 | `stock_snapshots` | Tenant | Periodic snapshots for AMC calculation (daily/weekly/monthly) |
 
 ### Domain 6: Goods Receipt & Issue (9 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 32 | `goods_receipts` | Tenant | GRN header (supplier, PO ref, received by) |
-| 33 | `grn_line_items` | Tenant | GRN detail (product, batch, expiry, quantity, unit cost) |
-| 34 | `stock_issues` | Tenant | SRF header (requested by, approved by, program, department) |
-| 35 | `issue_line_items` | Tenant | SRF detail (product, batch, quantity, unit cost) |
-| 36 | `stock_transfers` | Tenant | Inter-warehouse transfer header |
-| 37 | `transfer_line_items` | Tenant | Transfer detail (product, batch, quantity) |
-| 38 | `stock_adjustments` | Tenant | Adjustment header (reason code, status) |
-| 39 | `adjustment_reason_codes` | Reference | Reason catalog (damage, expiry, theft, breakage, etc.) |
-| 40 | `adjustment_line_items` | Tenant | Adjustment detail (expected vs actual, variance, reason) |
+| 35 | `goods_receipts` | Tenant | GRN header (supplier, PO ref, received by) |
+| 36 | `grn_line_items` | Tenant | GRN detail (product, batch, expiry, quantity, unit cost) |
+| 37 | `stock_issues` | Tenant | SRF header (requested by, approved by, program, department) |
+| 38 | `issue_line_items` | Tenant | SRF detail (product, batch, quantity, unit cost) |
+| 39 | `stock_transfers` | Tenant | Inter-warehouse transfer header |
+| 40 | `transfer_line_items` | Tenant | Transfer detail (product, batch, quantity) |
+| 41 | `stock_adjustments` | Tenant | Adjustment header (reason code, status) |
+| 42 | `adjustment_reason_codes` | Reference | Reason catalog (damage, expiry, theft, breakage, etc.) |
+| 43 | `adjustment_line_items` | Tenant | Adjustment detail (expected vs actual, variance, reason) |
 
 ### Domain 7: Quality Assurance (5 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 41 | `qa_inspections` | Tenant | Inspection record (product, batch, result, score) |
-| 42 | `qa_checklist_templates` | Tenant | Inspection checklist definitions by category |
-| 43 | `qa_checklist_items` | Tenant | Individual checklist questions with criticality and weight |
-| 44 | `qa_checklist_results` | Tenant | Actual inspection answers with scores |
-| 45 | `qa_dispositions` | Tenant | Pass/fail/quarantine/rework/partial outcomes with destination |
+| 44 | `qa_inspections` | Tenant | Inspection record (product, batch, result, score) |
+| 45 | `qa_checklist_templates` | Tenant | Inspection checklist definitions by category |
+| 46 | `qa_checklist_items` | Tenant | Individual checklist questions with criticality and weight |
+| 47 | `qa_checklist_results` | Tenant | Actual inspection answers with scores |
+| 48 | `qa_dispositions` | Tenant | Pass/fail/quarantine/rework/partial outcomes with destination |
 
 ### Domain 8: Distribution (3 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 46 | `distributions` | Tenant | Distribution header (program, org level, beneficiary count) |
-| 47 | `distribution_line_items` | Tenant | Distribution detail (product, batch, planned vs actual qty) |
-| 48 | `distribution_beneficiaries` | Tenant | Beneficiary type/count records per distribution |
+| 49 | `distributions` | Tenant | Distribution header (program, org level, beneficiary count) |
+| 50 | `distribution_line_items` | Tenant | Distribution detail (product, batch, planned vs actual qty) |
+| 51 | `distribution_beneficiaries` | Tenant | Beneficiary type/count records per distribution |
 
 ### Domain 9: Returns & Disposal (5 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 49 | `stock_returns` | Tenant | Return header (beneficiary/program/supplier/internal) |
-| 50 | `return_line_items` | Tenant | Return detail (condition: unopened/damaged/expired) |
-| 51 | `disposals` | Tenant | Disposal header (method, authorized by, witness) |
-| 52 | `disposal_line_items` | Tenant | Disposal detail (product, batch, quantity) |
-| 53 | `disposal_methods` | Reference | Incineration, landfill, recycling, chemical treatment, etc. |
+| 52 | `stock_returns` | Tenant | Return header (beneficiary/program/supplier/internal) |
+| 53 | `return_line_items` | Tenant | Return detail (condition: unopened/damaged/expired) |
+| 54 | `disposals` | Tenant | Disposal header (method, authorized by, witness) |
+| 55 | `disposal_line_items` | Tenant | Disposal detail (product, batch, quantity) |
+| 56 | `disposal_methods` | Reference | Incineration, landfill, recycling, chemical treatment, etc. |
 
 ### Domain 10: Physical Count (3 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 54 | `stock_counts` | Tenant | Physical count header (full/cycle/spot/annual) |
-| 55 | `count_line_items` | Tenant | Count detail (expected vs counted, variance %, status) |
-| 56 | `count_variance_reconciliation` | Tenant | Reconciliation: adjustment, recount, write-off, justified |
+| 57 | `stock_counts` | Tenant | Physical count header (full/cycle/spot/annual) |
+| 58 | `count_line_items` | Tenant | Count detail (expected vs counted, variance %, status) |
+| 59 | `count_variance_reconciliation` | Tenant | Reconciliation: adjustment, recount, write-off, justified |
 
 ### Domain 11: Asset Management (5 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 57 | `assets` | Tenant | Asset register (tag, custodian, value, depreciation, lifecycle status) |
-| 58 | `asset_custody_changes` | Tenant | Custody transfer history (from/to/changed by) |
-| 59 | `asset_maintenance` | Tenant | Maintenance records (date, description, cost, next date) |
-| 60 | `asset_depreciation_schedule` | Tenant | Period-by-period depreciation (method, book values) |
-| 61 | `asset_attachments` | Tenant | Asset documents (purchase invoices, photos, certificates) |
+| 60 | `assets` | Tenant | Asset register (tag, custodian, value, depreciation, lifecycle status) |
+| 61 | `asset_custody_changes` | Tenant | Custody transfer history (from/to/changed by) |
+| 62 | `asset_maintenance` | Tenant | Maintenance records (date, description, cost, next date) |
+| 63 | `asset_depreciation_schedule` | Tenant | Period-by-period depreciation (method, book values) |
+| 64 | `asset_attachments` | Tenant | Asset documents (purchase invoices, photos, certificates) |
 
 ### Domain 12: Replenishment & Forecasting (3 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 62 | `amc_calculations` | Tenant | 3/6/12-month rolling AMC with max consumption, std dev |
-| 63 | `reorder_recommendations` | Tenant | Reorder/excess/critical recommendations with priority |
-| 64 | `forecast_results` | Tenant | ML engine forecasts (date, value, confidence bounds, model version) |
+| 65 | `amc_calculations` | Tenant | 3/6/12-month rolling AMC with max consumption, std dev |
+| 66 | `reorder_recommendations` | Tenant | Reorder/excess/critical recommendations with priority |
+| 67 | `forecast_results` | Tenant | ML engine forecasts (date, value, confidence bounds, model version) |
 
 ### Domain 13: Alerts & Notifications (3 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 65 | `alert_configurations` | Tenant | Configurable alert rules (expiry, low/over/sleeping stock, QA, approval) |
-| 66 | `alerts` | Tenant | Generated alerts (severity, title, message, ack/resolution tracking) |
-| 67 | `alert_recipients` | Tenant | Per-config user notification channel assignments |
+| 68 | `alert_configurations` | Tenant | Configurable alert rules (expiry, low/over/sleeping stock, QA, approval) |
+| 69 | `alerts` | Tenant | Generated alerts (severity, title, message, ack/resolution tracking) |
+| 70 | `alert_recipients` | Tenant | Per-config user notification channel assignments |
 
 ### Domain 14: Audit & Compliance (2 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 68 | `audit_log` | Tenant | Application-level audit trail (action, entity, changes JSONB, IP, UA) |
-| 69 | `data_change_log` | Tenant | Row-level data change log for sync conflict resolution |
+| 71 | `audit_log` | Tenant | Application-level audit trail (action, entity, changes JSONB, IP, UA) |
+| 72 | `data_change_log` | Tenant | Row-level data change log for sync conflict resolution |
 
 ### Domain 15: Offline Sync (2 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 70 | `sync_log` | Tenant | Push/pull/full sync history (records, errors, status) |
-| 71 | `sync_conflicts` | Tenant | Conflict records (server vs client versions, resolution strategy) |
+| 73 | `sync_log` | Tenant | Push/pull/full sync history (records, errors, status) |
+| 74 | `sync_conflicts` | Tenant | Conflict records (server vs client versions, resolution strategy) |
 
 ### Domain 16: Reports & Scheduling (2 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 72 | `report_definitions` | Tenant | Report catalog (SQL query, parameters, output formats, scheduling) |
-| 73 | `report_schedules` | Tenant | Cron-based report schedules with recipients and format |
+| 75 | `report_definitions` | Tenant | Report catalog (SQL query, parameters, output formats, scheduling) |
+| 76 | `report_schedules` | Tenant | Cron-based report schedules with recipients and format |
 
 ### Summary
 
 | Metric | Count |
 |---|---|
-| Tables | 79 (26 initial + 46 extended + 1 dosage forms + 3 master catalogue + 1 safety_stock alteration) |
-| Tenant-scoped (RLS) | 39 with `org_id` enforced |
+| Tables | 76 (26 initial + 46 extended + 1 dosage forms + 3 master catalogue) |
+| Tenant-scoped (RLS) | 39 with `org_id` enforced (incl. entity_attributes which uses `entity_id` via FK) |
 | Reference/lookup | 10 shared across tenants (incl. justification_codes, dosage_forms, disposal_methods) |
 | Junction/child | 28 inherited via FK |
-| Rows of seed data | ~1,410 lines of SQL, 120+ INSERT statements |
+| Rows of seed data | ~1,407 lines (seed.sql) + 2,255 lines (006_master_product_seed.sql), 148 INSERT statements total |
 | Custom ENUM types | 8 (`uom_category`, `item_type`, `entity_status`, `warehouse_type`, `location_type`, `movement_type`, `doc_type`, `stock_status`) |
 | Database functions | 7 (`uuid_generate_v7`, `app.current_org_id`, `app.current_user_id`, `app.current_program_id`, `app.current_org_level_id`, `app.current_department_id`, `app.set_isolation_context`) |
 
@@ -323,13 +325,13 @@
 
 | File | Tables | Lines |
 |---|---|---|
-| `001_initial_schema.sql` | 26 | 520 |
+| `001_initial_schema.sql` | 26 | 523 |
 | `002_extended_schema.sql` | 46 | 816 |
 | `003_product_icons_warehouse_maps.sql` | 1 (alterations) | 195 |
-| `004_finer_grained_rls_isolation.sql` | — | 161 |
+| `004_finer_grained_rls_isolation.sql` | — | 165 |
 | `005_master_catalogue_extension.sql` | 3 (new tables) | 198 |
 | `006_add_safety_stock.sql` | 0 (alteration) | 13 |
-| **Total** | **79** | **~1,903** |
+| **Total** | **76** | **~1,910** |
 
 ### `packages/data-models/sql/queries/` (16 files, 137 queries)
 
@@ -383,20 +385,21 @@
 
 ---
 
-## 5. Next Steps — Phase 2 Roadmap
+## 5. Next Steps — Phase 3 Roadmap
 
-Phase 2 will build the Go API core that connects the database layer to HTTP endpoints:
+Phase 3 will extend the Product/Catalogue module with missing features:
 
-- **Go module init** — `apps/api/` with `go.mod`, `cmd/server/main.go`, standard project layout (`internal/handler/`, `internal/service/`, `internal/repository/`)
-- **Configuration layer** — Envconfig/viper to load `.env`, DB DSN, Keycloak URLs, Meilisearch host
-- **Database pool** — sqlx connection pool with health check, migration runner integration
-- **Middleware stack** — OIDC/JWT validation (Keycloak), RBAC enforcement (check org_id + role), tenant context injection, audit logging, structured JSON error handling
-- **Health endpoint** — `GET /health` with DB/ping, Redis/ping, uptime
-- **Request validation** — Gin bindings with custom validators for UUIDv7, ISO dates, enum constraints
-- **Pagination** — Cursor-based pagination helper for list endpoints
-- **Base CRUD pattern** — Establish the handler -> service -> repository three-layer pattern using all 16 query files
+- **Bulk CSV/XLSX import** — Parse and validate product catalogue from CSV with duplicate detection
+- **Search endpoint** — Meilisearch integration for full-text product/category search
+- **UoM CRUD** — Full CRUD endpoints for units of measure
+- **Unit tests** — testify + sqlmock for handler-level tests
+- **Integration tests** — testcontainers-go for end-to-end API tests
 
-Ready to begin when the Go development environment is configured.
+Ready to begin when Phase 2 is verified in CI.
+
+---
+
+*Document automatically generated from source code analysis. Update as the project progresses through Phases 3-12.*
 
 ---
 

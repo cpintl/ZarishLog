@@ -35,11 +35,11 @@ type StockMovement struct {
 type GRN struct {
 	ID          string    `json:"id" db:"id"`
 	OrgID       string    `json:"org_id" db:"org_id"`
-	WarehouseID string    `json:"warehouse_id" db:"warehouse_id"`
-	Supplier    string    `json:"supplier" db:"supplier"`
+	WarehouseID string    `json:"warehouse_id" db:"warehouse_id" validate:"required,uuid7"`
+	Supplier    string    `json:"supplier" db:"supplier" validate:"required,max=255"`
 	PONumber    string    `json:"po_number" db:"po_number"`
-	ReceivedBy  string    `json:"received_by" db:"received_by"`
-	Status      string    `json:"status" db:"status"`
+	ReceivedBy  string    `json:"received_by" db:"received_by" validate:"required,max=255"`
+	Status      string    `json:"status" db:"status" validate:"omitempty,oneof=pending completed cancelled"`
 	Notes       string    `json:"notes" db:"notes"`
 	CreatedBy   string    `json:"created_by" db:"created_by"`
 	UpdatedBy   string    `json:"updated_by" db:"updated_by"`
@@ -62,10 +62,10 @@ type GRNLineItem struct {
 type StockIssue struct {
 	ID          string    `json:"id" db:"id"`
 	OrgID       string    `json:"org_id" db:"org_id"`
-	WarehouseID string    `json:"warehouse_id" db:"warehouse_id"`
-	RequestedBy string    `json:"requested_by" db:"requested_by"`
+	WarehouseID string    `json:"warehouse_id" db:"warehouse_id" validate:"required,uuid7"`
+	RequestedBy string    `json:"requested_by" db:"requested_by" validate:"required,max=255"`
 	ApprovedBy  string    `json:"approved_by" db:"approved_by"`
-	ProgramID   string    `json:"program_id" db:"program_id"`
-	Status      string    `json:"status" db:"status"`
+	ProgramID   string    `json:"program_id" db:"program_id" validate:"omitempty,uuid7"`
+	Status      string    `json:"status" db:"status" validate:"omitempty,oneof=draft submitted approved rejected"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 }
