@@ -146,6 +146,15 @@ POST   /api/v1/replenishment/recommendations  # Generate reorder recommendation
 PUT    /api/v1/replenishment/recommendations/:id/review  # Mark reviewed
 GET    /api/v1/replenishment/forecasts  # List forecast results
 POST   /api/v1/replenishment/forecasts  # Create forecast result (ML engine)
+GET    /api/v1/users                    # List users (paginated)
+POST   /api/v1/users                    # Create user
+GET    /api/v1/users/:id                # Get user + role assignments
+PUT    /api/v1/users/:id                # Update user
+DELETE /api/v1/users/:id                # Deactivate user
+POST   /api/v1/users/:id/roles          # Assign role to user
+DELETE /api/v1/users/:id/roles          # Remove role assignment
+GET    /api/v1/roles                    # List roles
+GET    /api/v1/permissions              # List permissions
 GET    /api/v1/reports/stock-status      # [STUB]
 GET    /api/v1/reports/valuation         # [STUB]
 GET    /api/v1/reports/expiry            # [STUB]

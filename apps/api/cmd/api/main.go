@@ -160,6 +160,21 @@ func main() {
 				replenishment.GET("/forecasts", handler.ListForecastResults(db))
 				replenishment.POST("/forecasts", handler.CreateForecastResult(db))
 			}
+
+			users := protected.Group("/users")
+			users.Use(middleware.RequireRole("admin"))
+			{
+				users.GET("", handler.ListUsers(db))
+				users.POST("", handler.CreateUser(db))
+				users.GET("/:id", handler.GetUser(db))
+				users.PUT("/:id", handler.UpdateUser(db))
+				users.DELETE("/:id", handler.DeactivateUser(db))
+				users.POST("/:id/roles", handler.AssignUserRole(db))
+				users.DELETE("/:id/roles", handler.RemoveUserRole(db))
+			}
+
+			protected.GET("/roles", handler.ListRoles(db))
+			protected.GET("/permissions", handler.ListPermissions(db))
 		}
 	}
 

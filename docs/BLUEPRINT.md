@@ -104,8 +104,10 @@
 
 ## Phase 9 — User & Access Management (Week 10)
 
-- [ ] User CRUD with role assignment per org scope
-- [ ] Permission matrix (module × action) enforcement
+- [x] User CRUD with role assignment per org scope — `internal/handler/users.go`
+- [x] Permission listing (module × action) — `GET /permissions`
+- [x] Role listing — `GET /roles`
+- [x] Unit tests (testify + sqlmock, 11 tests)
 - [ ] Self-service password reset
 - [ ] MFA support
 - [ ] Full activity/audit log

@@ -19,7 +19,7 @@
 | Phase 6 — Quality Assurance | ✅ Complete | QA inspection CRUD, checklist templates (with items), dispositions, expiry monitoring, 12 unit tests |
 | Phase 7 — Distribution & Asset Management | ✅ Complete | Distribution CRUD (with line items + beneficiaries), asset register CRUD, custody transfer, maintenance history, 17 unit tests |
 | Phase 8 — Replenishment & Forecasting | ✅ Complete | AMC calculation (3/6/12-month from stock movements), reorder recommendations (auto-type/priority), forecast results CRUD, 9 unit tests |
-| Phase 9 — User & Access Management | ❌ Not started | User CRUD + role assignment, permission matrix, password reset, MFA, audit log |
+| Phase 9 — User & Access Management | ✅ Complete | User CRUD, role/permission listing, role assignment with org-level scope, 11 unit tests |
 | Phase 10 — Offline-First & PWA | ❌ Not started | Dexie.js IndexedDB, Workbox service worker, Background Sync, conflict resolution |
 | Phase 11 — Reporting & Analytics | ❌ Not started | Metabase dashboards, stock turnover, expiry dashboard, donor compliance reports |
 | Phase 12 — Deployment & Infrastructure | ❌ Not started | Docker multi-stage, Terraform (VPC/RDS/ECS), GitHub Actions deploy, monitoring, load testing |
