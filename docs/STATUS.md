@@ -15,7 +15,7 @@
 | Phase 2 — Go API Core | ✅ Complete | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints, structured error handling (`internal/response/`), request validation (`internal/validator/`, custom UUIDv7/enum/date validators), pagination helpers (`internal/pagination/`, page/page_size with LIMIT/OFFSET on all list endpoints), audit logging middleware (`internal/middleware/audit.go`), error middleware (`internal/middleware/error.go`) |
 | Phase 3 — Product/Catalogue Module | ✅ Complete | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM CRUD (List/Get/Create/Update/Delete), bulk CSV import with duplicate detection, PostgreSQL ILIKE search (name/SKU/description/brand/manufacturer), structured validation + pagination + error helpers, 12 unit tests (testify + sqlmock) |
 | Phase 4 — Warehouse & Location Module | ✅ Complete | Warehouse CRUD (List/Get/Create/Update/Delete), Location CRUD (List/Get/Create/Update/Delete with hierarchy tree), Location constraints (get/upsert with ON CONFLICT), location_type validator, 13 unit tests (testify + sqlmock) |
-| Phase 5 — Stock & Inventory Module | ✅ Partial | GRN, Issue, stock levels, stock movements (List with filters); missing: inter-warehouse transfer, adjustments (both stubbed 501), batch genealogy, barcode/QR |
+| Phase 5 — Stock & Inventory Module | ✅ Complete | GRN, Stock Issue (Create with line items), Transfer (Create with line items via transaction), Adjustment (Create with line items via transaction — computes difference), Stock Levels (List paginated), Stock Movements (List paginated), Batch Genealogy (GET trail with ordered movements), structured validation on all stock models, 5 new unit tests |
 | Phase 6 — Quality Assurance | ❌ Not started | QA inspection on receipt, pass/fail/quarantine, expiry monitoring, corrective action |
 | Phase 7 — Distribution & Asset Management | ❌ Not started | Distribution forms, multi-program allocation, returns/disposal, asset lifecycle, depreciation |
 | Phase 8 — Replenishment & Forecasting | ❌ Not started | AMC (3/6/12-month), buffer stock, reorder points, ML forecasting microservice (Prophet) |
@@ -391,6 +391,7 @@
 |---|---|---|
 | Meilisearch full-text search integration | Medium | Replace PostgreSQL ILIKE in `GET /products/search` with dedicated Meilisearch endpoint for faster fuzzy/typo-tolerant search across product catalogue. Interface (`?q=`) stays the same. Requires Meilisearch service running (already in docker-compose). |
 | Integration tests (testcontainers-go) | Medium | End-to-end API tests with real PostgreSQL container for handler integration coverage. |
+| Barcode/QR code scanning support | Low | Add barcode/QR fields to products and stock movements, plus scan endpoint for mobile field ops. |
 | Batch genealogy (lot tracking lineage) | Low | Trace batches through receipt → storage → issue → transfer chain. |
 
 ---

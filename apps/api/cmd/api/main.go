@@ -113,6 +113,7 @@ func main() {
 				stock.POST("/adjust", handler.CreateAdjustment(db))
 				stock.GET("/levels", handler.GetStockLevels(db))
 				stock.GET("/movements", handler.GetStockMovements(db))
+				stock.GET("/batches/:id/trail", handler.GetBatchTrail(db))
 			}
 		}
 	}
