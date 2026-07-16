@@ -62,6 +62,8 @@ func main() {
 			{
 				products.GET("", handler.ListProducts(db))
 				products.POST("", handler.CreateProduct(db))
+				products.POST("/import", handler.ImportProducts(db))
+				products.GET("/search", handler.SearchProducts(db))
 				products.GET("/:id", handler.GetProduct(db))
 				products.PUT("/:id", handler.UpdateProduct(db))
 				products.DELETE("/:id", handler.DeleteProduct(db))
@@ -80,6 +82,16 @@ func main() {
 				warehouses.GET("", handler.ListWarehouses(db))
 				warehouses.POST("", handler.CreateWarehouse(db))
 				warehouses.GET("/:id/locations", handler.NotImplementedStub(db))
+			}
+
+			uoms := protected.Group("/uoms")
+			uoms.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist"))
+			{
+				uoms.GET("", handler.ListUoMs(db))
+				uoms.POST("", handler.CreateUoM(db))
+				uoms.GET("/:id", handler.GetUoM(db))
+				uoms.PUT("/:id", handler.UpdateUoM(db))
+				uoms.DELETE("/:id", handler.DeleteUoM(db))
 			}
 
 			stock := protected.Group("/stock")

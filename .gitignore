@@ -1,6 +1,7 @@
 # Go
 apps/api/bin/
 apps/api/dist/
+apps/api/api
 *.exe
 *.exe~
 *.dll

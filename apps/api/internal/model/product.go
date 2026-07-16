@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Product struct {
 	ID              string      `json:"id" db:"id"`
@@ -66,8 +68,13 @@ type ProductCategory struct {
 }
 
 type UoM struct {
-	ID          string `json:"id" db:"id"`
-	Name        string `json:"name" db:"name"`
-	Abbreviation string `json:"abbreviation" db:"abbreviation"`
-	Category    string `json:"category" db:"category"`
+	ID               string     `json:"id" db:"id"`
+	Name             string     `json:"name" db:"name" validate:"required,max=100"`
+	Abbreviation     string     `json:"abbreviation" db:"abbreviation" validate:"required,max=10"`
+	Category         string     `json:"category" db:"category" validate:"required,uom_category"`
+	BaseUomID        *string    `json:"base_uom_id" db:"base_uom_id" validate:"omitempty,uuid7"`
+	ConversionFactor *float64   `json:"conversion_factor" db:"conversion_factor" validate:"omitempty,min=0"`
+	Status           string     `json:"status" db:"status" validate:"omitempty,oneof=active inactive"`
+	CreatedAt        time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt        time.Time  `json:"updated_at" db:"updated_at"`
 }
