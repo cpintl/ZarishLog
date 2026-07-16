@@ -1,0 +1,28 @@
+{
+  "formId": "STK-OUT-M",
+  "title": "Stock Out — Mother Facility",
+  "description": "Full issue/dispatch form for central warehouses",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "issueNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "issuedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "requestedBy", "type": "user", "required": true },
+    { "name": "approvedBy", "type": "user", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": false },
+    { "name": "destinationLocation", "type": "text" },
+    { "name": "justificationCode", "type": "select", "source": "justification_codes", "required": false },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "fefo-auto", "note": "Auto-allocated FEFO" },
+        { "name": "quantityRequested", "type": "number", "required": true },
+        { "name": "quantityIssued", "type": "number", "required": true },
+        { "name": "unitCost", "type": "number" }
+      ]
+    },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

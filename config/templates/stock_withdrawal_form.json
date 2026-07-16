@@ -1,0 +1,26 @@
+{
+  "formId": "STK-WDL",
+  "title": "Stock Withdrawal Requisition",
+  "description": "Internal requisition to withdraw stock from warehouse for program use",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "requisitionNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "requestedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "requestedBy", "type": "user", "required": true },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "justificationCode", "type": "select", "source": "justification_codes", "required": false },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "quantityRequired", "type": "number", "required": true },
+        { "name": "purpose", "type": "text" }
+      ]
+    },
+    { "name": "approvedBy", "type": "user", "required": false },
+    { "name": "approvalStatus", "type": "select", "options": ["Pending", "Approved", "Rejected"], "default": "Pending" },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

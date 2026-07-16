@@ -1,0 +1,29 @@
+{
+  "formId": "DON",
+  "title": "Donation Receipt Form",
+  "description": "Record inbound donations from external donors",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "donorOrganization", "type": "text", "required": true },
+    { "name": "donorContact", "type": "text" },
+    { "name": "donationNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "receivedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "receivedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "donationType", "type": "select", "options": ["Cash", "In-Kind Goods", "Mixed"], "required": true },
+    { "name": "estimatedValue", "type": "number", "note": "Estimated market value in USD" },
+    { "name": "donationLetter", "type": "file-upload", "note": "Upload signed donation letter" },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "text" },
+        { "name": "expiryDate", "type": "date" },
+        { "name": "quantity", "type": "number", "required": true },
+        { "name": "condition", "type": "select", "options": ["Good", "Damaged", "Expired"] }
+      ]
+    },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

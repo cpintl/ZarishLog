@@ -1,0 +1,27 @@
+{
+  "formId": "NARC-LOG",
+  "title": "Narcotic / Controlled Substance Log",
+  "description": "Regulatory log for controlled substance transactions with witness requirements",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "logDate", "type": "date", "required": true, "default": "now" },
+    { "name": "pharmacistId", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "witnessId", "type": "user", "required": true },
+    {
+      "name": "entries",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "text", "required": true },
+        { "name": "transactionType", "type": "select", "options": ["Receipt", "Dispense", "Transfer", "Disposal"], "required": true },
+        { "name": "referenceNumber", "type": "text" },
+        { "name": "openingBalance", "type": "number", "required": true },
+        { "name": "quantityChange", "type": "number", "required": true },
+        { "name": "closingBalance", "type": "number", "calculated": "openingBalance + quantityChange" },
+        { "name": "patientId", "type": "text" },
+        { "name": "prescriberName", "type": "text" }
+      ]
+    },
+    { "name": "remarks", "type": "textarea" }
+  ]
+}

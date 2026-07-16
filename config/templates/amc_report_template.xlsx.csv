@@ -1,0 +1,7 @@
+# [Organization Name] AMC Calculation Report Template
+# Instructions: Fill in monthly consumption data for AMC calculation.
+# Warehouse: _______________    Period From: _______________    Period To: _______________
+sku,product_name,uom,month_1,month_2,month_3,month_4,month_5,month_6,total_consumption,amc,remarks
+MED-AMOX-500,Amoxicillin 500mg Capsules,EA,400,450,380,500,420,480,2630,438.33,"Stable consumption"
+SUP-LTX-MED,Latex Examination Gloves,BX,25,30,20,35,28,22,160,26.67,
+WASH-SOAP-BAR,Soap Bar 200g,EA,150,200,180,220,190,170,1110,185.00,

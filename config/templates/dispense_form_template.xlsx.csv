@@ -1,0 +1,6 @@
+# [Organization Name] Dispensing Record Template
+# Instructions: Record patient-level medicine dispensing.
+# Dispensary: _______________    Pharmacist: _______________    Date: _______________
+dispense_no,patient_id,patient_name,age,gender,diagnosis,sku,product_name,batch_no,dosage_form,strength,qty_prescribed,qty_dispensed,instructions
+DISP-001,PAT-1234,Fatima Begum,32,F,Malaria,MED-ART-100,Artemether 20mg+Lumefantrine 120mg,ART-2026-A,Tablet,"120mg",24,24,"Twice daily for 3 days"
+DISP-002,PAT-1235,Ahmad Hossain,45,M,Hypertension,MED-PCM-500,Paracetamol 500mg,PCM-2026-A,Tablet,"500mg",30,30,"Three times daily as needed"

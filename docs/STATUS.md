@@ -11,7 +11,7 @@
 | Phase | Status | Key Deliverables |
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
-| Phase 1 — Database & Data Models | ✅ Complete | 73 tables, 137 sqlc queries, 3 migrations, 1161-line seed data, RLS on 37 tenant tables, config-as-CSV/JSON framework |
+| Phase 1 — Database & Data Models | ✅ Complete | 78 tables, 137 sqlc queries, 4 migrations, 1690-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogue v1 |
 | Phase 2 — Go API Core | ❌ Not started | Go module init, config layer, DB pool, middleware (auth/RBAC/audit/tenant), health check, error handling, pagination |
 | Phase 3 — Product/Catalogue Module | ❌ Not started | Category CRUD, Product CRUD, UoM CRUD, bulk CSV import, Meilisearch search, unit/integration tests |
 | Phase 4 — Warehouse & Location Module | ❌ Not started | Warehouse CRUD, location hierarchy, location constraints, storage validation |
@@ -35,16 +35,22 @@
 | `001_initial_schema.sql` | 26 | 520 | Core schema: org, master data, warehouse, stock, transactions, QA, assets, RLS framework |
 | `002_extended_schema.sql` | 46 | 816 | Extended: packaging, procurement, QA checklists, distribution, returns, disposals, physical count, replenishment, alerts, audit, sync, reports |
 | `003_product_icons_warehouse_maps.sql` | 1 | 195 | Dosage forms lookup (22 icon types), extended product/warehouse/user/org fields, QA scoring, stock movement audit fields |
-| **Total** | **73** | **1531** | — |
+| `004_finer_grained_rls_isolation.sql` | — | 161 | Program/org-level/department scoped RLS, `app.set_isolation_context()` middleware helper |
+| `005_master_catalogue_extension.sql` | 5 | — | Master Catalogue fields: `strength`, `is_asset`, `replenishment_type`, `valuation_method`, `alternate_codes` (JSONB), `unspsc_commodity`, `eclass_code`, `is_kitting`, `temp_min_c`/`max_c`, `is_essential`, `is_controlled`; enums `aisle`, `committed`, `backordered`; `justification_codes` table; `entities` + `entity_attributes` tables; `conversion_factor` on UoM and packaging |
+| **Total** | **78** | **1887** | — |
 
 ### 2.2 Seed Data Inventory
 
 | Entity | Count | Details |
 |---|---|---|
-| Organizations | 1 | CPI (Center for Peace and Integrity) |
+| Organizations | 7 | CPI, UN, WHO, MSF, IFRC, WFP, UNICEF, ICRC (Master Catalogue ORG_001–007) |
 | Org Levels (L1-L4) | 8 | Global HQ, 2 Country Offices, 3 Project Offices, 2 Program Sites |
-| Programs | 10 | H&N, WASH, LVL, EDU, EPRR, R&L, PROT, SHELTER, NFI, LOGS |
-| Departments | 8 | H&N, WASH, LOG, PROC, FIN, HR, PROG, MEAL |
+| Programs | 17 | Original 10 + 7 standard (PRG-HLT, PRG-WASH, PRG-NUT, PRG-PRO, PRG-SHL, PRG-LOG, PRG-SUP) |
+| Departments | 18 | Original 8 + 10 standard (HLT-GEN, HLT-NCD, HLT-SRH, HLT-MH, HLT-PHA, HLT-LAB, LOG-PRC, LOG-WHS, LOG-TRN, LOG-FLT) |
+| Functions | 17 | WHS-REC, WHS-PUT, WHS-PIC, WHS-PAC, WHS-DSP, PHA-SEL, PHA-STK, PHA-ORD, PHA-DIS, PHA-SUP, PRC-ORD, PRC-CON, TRN-DSP, TRN-MNT, FLT-STK, LAB-TST, LAB-STK, GEN-CNS |
+| Entities | 5 | WH-CXB-CWH, WH-CXB-SWH1, WH-CXB-COLD, VH-CXB-001, VH-CXB-002 |
+| Entity Attributes | 11 | Warehouse capacity_m2, cold_chain_capable, has_generator, etc.; Vehicle registration, fuel_type, capacity_kg |
+| Justification Codes | 6 | P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) |
 | Roles | 12 | R01 Global Admin through R12 Auditor |
 | Permissions | 17 modules | 63 module/action pairs across products, stock, QA, assets, users, reports, suppliers, procurement, distributions, returns, disposals, stock counts, alerts, sync, audit |
 | Users | 8 | System Admin, Country Rep, Warehouse Manager, Storekeeper, Dept Manager, Field Worker, QA Officer, Logistics Admin |
@@ -64,7 +70,7 @@
 | QA Checklist Items | 14 | 7 general + 4 cold chain + 3 hazardous items |
 | Alert Configurations | 6 | Expiry (30/60/90d), low stock, overstock, sleeping stock, QA hold, approval pending |
 | Reorder Recommendations | 2 | Sample recommendations |
-| **Total seed SQL** | **1161 lines** | 74 INSERT statements across 28 tables |
+| **Total seed SQL** | **~1690 lines** | 120+ INSERT statements across 32 tables |
 
 ### 2.3 sqlc Query Inventory
 
@@ -92,10 +98,10 @@
 
 | Category | Count | Files |
 |---|---|---|
-| CSV Import Templates | 12 | `asset_registration`, `disposal_form`, `distribution`, `goods_receipt`, `inspection_checklist`, `organization_import`, `product_import`, `stock_adjustment`, `stock_count`, `stock_issue`, `stock_transfer`, `user_import` |
-| JSON Form Templates | 8 | `disposal_form`, `distribution_form`, `goods_receipt_form`, `product_registration_form`, `stock_count_form`, `stock_issue_form`, `user_registration_form`, `warehouse_registration_form` |
+| CSV Import Templates | 24 | Existing 12 + `stock_card`, `donation_form`, `amc_report`, `narcotic_log`, `temperature_log`, `dispense_form`, `emergency_supply`, `purchase_request`, `return_form`, `stock_withdrawal`, `asset_allocation`, `asset_transfer` |
+| JSON Form Templates | 29 | Existing 8 + `stock_in_form_mother`, `stock_in_form_child`, `stock_out_form_mother`, `stock_out_form_child`, `stock_card_form`, `donation_form`, `amc_report_form`, `monthly_consumption_form`, `monthly_report_form`, `emergency_supply_form`, `dispense_form`, `return_form`, `narcotic_log_form`, `temperature_log_form`, `stock_withdrawal_form`, `purchase_request_form`, `newly_acquired_asset_form`, `asset_allocation_form`, `asset_transfer_form`, `asset_loss_form`, `pharmacy_supervision_checklist` |
 | README | 1 | Form field reference documentation |
-| **Total** | **21** | `config/templates/` |
+| **Total** | **54** | `config/templates/` |
 
 ### 2.5 Config Metadata Files
 
@@ -113,13 +119,17 @@
 | Feature | Count | Details |
 |---|---|---|
 | Product Dosage Forms | 22 types | TAB, CAP, INJ, SYR, CRM, ONT, EYE, EAR, NAS, INH, SUP, PAT, SOL, PWD, GRN, SPR, LOT, GEL, WAF, IMP, TAB-EFF, SUS |
-| Product Extended Fields | 6 | `dosage_form_code`, `generic_name`, `brand_name`, `reference_urls` (JSONB), `storage_conditions`, `reorder_formula` (JSONB) |
+| Product Extended Fields (Phase 3) | 6 | `dosage_form_code`, `generic_name`, `brand_name`, `reference_urls` (JSONB), `storage_conditions`, `reorder_formula` (JSONB) |
+| Product Master Catalogue Fields (Phase 5) | 13 | `strength`, `unspsc_commodity`, `eclass_code`, `alternate_codes` (JSONB), `is_asset`, `replenishment_type`, `valuation_method`, `is_kitting`, `temp_min_c`, `temp_max_c`, `is_essential`, `is_controlled`, `conversion_factor` (on packaging) |
 | Warehouse Geo/Contact | 9 fields | `latitude`, `longitude`, `google_maps_url`, `contact_phone`, `operating_hours`, `has_generator`, `has_cctv`, `has_fire_system`, `security_guard` |
 | Organization Branding | 6 fields | `logo_url`, `website`, `country`, `default_currency`, `timezone`, `date_format` |
 | User Profile | 7 fields | `phone`, `job_title`, `department_id`, `avatar_url`, `signature_url`, `last_login_at`, `password_changed_at` |
 | Stock Movement Audit | 3 fields | `source_document_url`, `is_offline_sync`, `device_id` |
 | QA Scoring | 2 fields | `checklist_template_id`, `overall_score` |
-| RLS-Protected Tables | 37 | All tenant-scoped tables have `org_id` isolation policy |
+| Entity Hierarchy | 2 tables | `entities` (function-scoped objects) + `entity_attributes` (dynamic key-value properties) |
+| Justification Codes | 6 codes | P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) — MSF order justifications |
+| Extended ENUMs | 3 additions | `aisle` (location_type), `committed` (stock_status), `backordered` (stock_status) |
+| RLS-Protected Tables | 39 | All tenant-scoped tables have `org_id` isolation policy |
 
 ### 2.7 Database Indexes
 
@@ -132,9 +142,9 @@
 
 ---
 
-## 3. All Database Tables (73 tables, 16 domains)
+## 3. All Database Tables (78 tables, 16 domains)
 
-### Domain 1: Organization & Users (12 tables)
+### Domain 1: Organization & Users (14 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
@@ -150,8 +160,10 @@
 | 10 | `user_role_assignments` | Tenant | Granular user-role scoping to org levels |
 | 11 | `user_sessions` | Tenant | Auth session tokens with expiry |
 | 12 | `user_preferences` | Tenant | Language, theme, timezone, notification prefs |
+| 13 | `entities` | Tenant | Function-level entities (Warehouse under LOG-WHS, Vehicle under LOG-TRN) |
+| 14 | `entity_attributes` | Tenant | Dynamic key-value properties on entities (capacity, fuel type, etc.) |
 
-### Domain 2: Master Data & Product Catalogue (7 tables)
+### Domain 2: Master Data & Product Catalogue (8 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
@@ -162,33 +174,34 @@
 | 17 | `product_substitutes` | Junction | Therapeutic/generic/brand/equivalency substitutions |
 | 18 | `product_attachments` | Tenant | SOPs, photos, MSDS documents per product |
 | 19 | `dosage_forms` | Reference | 22 drug dosage forms with emoji icons and storage rules |
+| 20 | `justification_codes` | Reference | MSF ordering justifications: P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) |
 
 ### Domain 3: Procurement & Suppliers (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 20 | `suppliers` | Tenant | Vendor/supplier registry with contact and tax info |
-| 21 | `supplier_contracts` | Tenant | Contract terms, discounts, currency, exclusivity |
-| 22 | `purchase_orders` | Tenant | PO header with approval workflow (pending/approved/rejected) |
-| 23 | `po_line_items` | Tenant | PO detail (product, qty ordered/received, unit price, line total) |
+| 21 | `suppliers` | Tenant | Vendor/supplier registry with contact and tax info |
+| 22 | `supplier_contracts` | Tenant | Contract terms, discounts, currency, exclusivity |
+| 23 | `purchase_orders` | Tenant | PO header with approval workflow (pending/approved/rejected) |
+| 24 | `po_line_items` | Tenant | PO detail (product, qty ordered/received, unit price, line total) |
 
 ### Domain 4: Warehouse & Locations (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 24 | `warehouses` | Tenant | Central, sub-warehouse, transit, quarantine types with geo/contact |
-| 25 | `locations` | Tenant | Hierarchical zone/rack/bin/shelf/area with cold/hazard/secure flags |
-| 26 | `location_constraints` | Tenant | Temperature, humidity, capacity, pharma/food grade constraints |
-| 27 | `warehouse_documents` | Tenant | Licenses, permits, certificates with expiry tracking |
+| 25 | `warehouses` | Tenant | Central, sub-warehouse, transit, quarantine types with geo/contact |
+| 26 | `locations` | Tenant | Hierarchical zone/aisle/rack/bin/shelf/area with cold/hazard/secure flags |
+| 27 | `location_constraints` | Tenant | Temperature, humidity, capacity, pharma/food grade constraints |
+| 28 | `warehouse_documents` | Tenant | Licenses, permits, certificates with expiry tracking |
 
 ### Domain 5: Stock & Batches (4 tables)
 
 | # | Table | Type | Description |
 |---|---|---|---|
-| 28 | `batches` | Tenant | Batch/lot/serial records with expiry and manufacturer |
-| 29 | `stock_levels` | Tenant | Current positions (product x warehouse x location x batch) |
-| 30 | `stock_movements` | Tenant | Append-only ledger (receipt, issue, transfer, adjustment, return, disposal) |
-| 31 | `stock_snapshots` | Tenant | Periodic snapshots for AMC calculation (daily/weekly/monthly) |
+| 29 | `batches` | Tenant | Batch/lot/serial records with expiry and manufacturer |
+| 30 | `stock_levels` | Tenant | Current positions (product x warehouse x location x batch) with status (on_hand, reserved, committed, in_transit, backordered, etc.) |
+| 31 | `stock_movements` | Tenant | Append-only ledger (receipt, issue, transfer, adjustment, return, disposal) |
+| 32 | `stock_snapshots` | Tenant | Periodic snapshots for AMC calculation (daily/weekly/monthly) |
 
 ### Domain 6: Goods Receipt & Issue (9 tables)
 
@@ -291,26 +304,28 @@
 
 | Metric | Count |
 |---|---|
-| Tables | 73 (26 initial + 46 extended + 1 dosage forms) |
-| Tenant-scoped (RLS) | 37 with `org_id` enforced |
-| Reference/lookup | 8 shared across tenants |
+| Tables | 78 (26 initial + 46 extended + 1 dosage forms + 5 master catalogue) |
+| Tenant-scoped (RLS) | 39 with `org_id` enforced |
+| Reference/lookup | 10 shared across tenants (incl. justification_codes, dosage_forms, disposal_methods) |
 | Junction/child | 28 inherited via FK |
-| Rows of seed data | 1,161 lines of SQL, 74 INSERT statements |
+| Rows of seed data | ~1,690 lines of SQL, 120+ INSERT statements |
 | Custom ENUM types | 8 (`uom_category`, `item_type`, `entity_status`, `warehouse_type`, `location_type`, `movement_type`, `doc_type`, `stock_status`) |
-| Database functions | 3 (`uuid_generate_v7`, `app.current_org_id`, `app.current_user_id`, `rls_org_policy`) |
+| Database functions | 7 (`uuid_generate_v7`, `app.current_org_id`, `app.current_user_id`, `app.current_program_id`, `app.current_org_level_id`, `app.current_department_id`, `app.set_isolation_context`) |
 
 ---
 
 ## 4. File Inventory
 
-### `packages/data-models/sql/migrations/` (3 files)
+### `packages/data-models/sql/migrations/` (5 files)
 
 | File | Tables | Lines |
 |---|---|---|
 | `001_initial_schema.sql` | 26 | 520 |
 | `002_extended_schema.sql` | 46 | 816 |
 | `003_product_icons_warehouse_maps.sql` | 1 (alterations) | 195 |
-| **Total** | **73** | **1,531** |
+| `004_finer_grained_rls_isolation.sql` | — | 161 |
+| `005_master_catalogue_extension.sql` | 5 (alterations) | ~180 |
+| **Total** | **78** | **~1,872** |
 
 ### `packages/data-models/sql/queries/` (16 files, 137 queries)
 
@@ -334,31 +349,13 @@
 | `audit.sql` | 4 | 27 |
 | **Total** | **137** | **822** |
 
-### `config/templates/` (21 files)
+### `config/templates/` (54 files)
 
-**CSV Templates (12):**
-- `asset_registration_template.xlsx.csv`
-- `disposal_form_template.xlsx.csv`
-- `distribution_template.xlsx.csv`
-- `goods_receipt_template.xlsx.csv`
-- `inspection_checklist_template.xlsx.csv`
-- `organization_import_template.xlsx.csv`
-- `product_import_template.xlsx.csv`
-- `stock_adjustment_template.xlsx.csv`
-- `stock_count_template.xlsx.csv`
-- `stock_issue_template.xlsx.csv`
-- `stock_transfer_template.xlsx.csv`
-- `user_import_template.xlsx.csv`
+**CSV Templates (24):**
+- Original 12 + `amc_report_template.xlsx.csv`, `asset_allocation_template.xlsx.csv`, `asset_transfer_template.xlsx.csv`, `dispense_form_template.xlsx.csv`, `donation_form_template.xlsx.csv`, `emergency_supply_template.xlsx.csv`, `narcotic_log_template.xlsx.csv`, `purchase_request_template.xlsx.csv`, `return_form_template.xlsx.csv`, `stock_card_template.xlsx.csv`, `stock_withdrawal_template.xlsx.csv`, `temperature_log_template.xlsx.csv`
 
-**JSON Form Templates (8):**
-- `disposal_form.json`
-- `distribution_form.json`
-- `goods_receipt_form.json`
-- `product_registration_form.json`
-- `stock_count_form.json`
-- `stock_issue_form.json`
-- `user_registration_form.json`
-- `warehouse_registration_form.json`
+**JSON Form Templates (29):**
+- Original 8 + `amc_report_form.json`, `asset_allocation_form.json`, `asset_loss_form.json`, `asset_transfer_form.json`, `dispense_form.json`, `donation_form.json`, `emergency_supply_form.json`, `monthly_consumption_form.json`, `monthly_report_form.json`, `narcotic_log_form.json`, `newly_acquired_asset_form.json`, `pharmacy_supervision_checklist.json`, `purchase_request_form.json`, `return_form.json`, `stock_card_form.json`, `stock_in_form_child.json`, `stock_in_form_mother.json`, `stock_out_form_child.json`, `stock_out_form_mother.json`, `stock_withdrawal_form.json`, `temperature_log_form.json`
 
 **Documentation (1):**
 - `README.md` (284 lines — form field reference)

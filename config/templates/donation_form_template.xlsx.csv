@@ -1,0 +1,6 @@
+# [Organization Name] Donation Receipt Template
+# Instructions: Record inbound donations from external donors.
+# Donation Number: _______________    Donor: _______________    Date: _______________
+sku,product_name,batch_number,expiry_date,quantity,uom,condition,estimated_unit_value_usd,remarks
+MED-AMOX-500,Amoxicillin 500mg Capsules,,,100,EA,Good,0.15,"Sample donation row"
+SUP-LTX-MED,Latex Examination Gloves,,,50,BX,Good,3.50,

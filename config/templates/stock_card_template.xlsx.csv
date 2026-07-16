@@ -1,0 +1,17 @@
+# [Organization Name] Stock Card Template
+# Instructions: Monthly record of stock movements for each product.
+# One file per product per warehouse. Fill in receipts, issues, adjustments, and closing balance.
+# Product: _______________    Warehouse: _______________    Year: _______________
+month,opening_balance,quantity_received,quantity_issued,quantity_adjusted,closing_balance,days_out_of_stock,remarks
+1,,,,,,,
+2,,,,,,,
+3,,,,,,,
+4,,,,,,,
+5,,,,,,,
+6,,,,,,,
+7,,,,,,,
+8,,,,,,,
+9,,,,,,,
+10,,,,,,,
+11,,,,,,,
+12,,,,,,,

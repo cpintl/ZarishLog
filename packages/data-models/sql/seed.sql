@@ -1158,4 +1158,253 @@ UPDATE organizations SET
   date_format = 'YYYY-MM-DD'
 WHERE id = '00000000-0000-0000-0000-000000000001';
 
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 21. ADDITIONAL ORGANIZATIONS (Master Catalogue ORG_001–ORG_007)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO organizations (id, name, code, country, default_currency) VALUES
+  ('00000000-0000-0000-0000-000000000010', 'United Nations',                     'UN',    'Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000020', 'World Health Organization',          'WHO',   'Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000030', 'Médecins Sans Frontières',           'MSF',   'Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000040', 'IFRC',                               'IFRC',  'Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000050', 'World Food Programme',               'WFP',   'Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000060', 'UNICEF',                             'UNICEF','Global', 'USD'),
+  ('00000000-0000-0000-0000-000000000070', 'International Committee of Red Cross','ICRC',  'Global', 'USD')
+ON CONFLICT (code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 22. STANDARD PROGRAMS (Master Catalogue — PRG-* codes)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO programs (org_id, code, name, description) VALUES
+  ('00000000-0000-0000-0000-000000000001', 'PRG-HLT', 'Health',              'Health program covering general medicine, NCDs, SRH, mental health'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-WASH','Water Sanitation & Hygiene', 'WASH infrastructure, hygiene promotion, and supplies'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-NUT', 'Nutrition',           'Therapeutic feeding, supplementation, and nutrition surveillance'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-PRO', 'Protection',          'Child protection, GBV prevention, psychosocial support'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-SHL', 'Shelter',             'Emergency shelter, transitional housing, and NFI distribution'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-LOG', 'Logistics',           'Cross-cutting logistics coordination and supply chain support'),
+  ('00000000-0000-0000-0000-000000000001', 'PRG-SUP', 'Supply Chain',        'Supply chain management, procurement, and fleet operations')
+ON CONFLICT (org_id, code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 23. STANDARD DEPARTMENTS (Master Catalogue — hierarchical codes)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO departments (org_id, name, code) VALUES
+  -- Health cluster
+  ('00000000-0000-0000-0000-000000000001', 'General Medicine',                          'HLT-GEN'),
+  ('00000000-0000-0000-0000-000000000001', 'Non-Communicable Diseases',                 'HLT-NCD'),
+  ('00000000-0000-0000-0000-000000000001', 'Sexual & Reproductive Health',              'HLT-SRH'),
+  ('00000000-0000-0000-0000-000000000001', 'Mental Health',                             'HLT-MH'),
+  ('00000000-0000-0000-0000-000000000001', 'Pharmaceutical',                            'HLT-PHA'),
+  ('00000000-0000-0000-0000-000000000001', 'Laboratory',                                'HLT-LAB'),
+  -- Logistics cluster
+  ('00000000-0000-0000-0000-000000000001', 'Logistics — Procurement',                   'LOG-PRC'),
+  ('00000000-0000-0000-0000-000000000001', 'Logistics — Warehousing',                   'LOG-WHS'),
+  ('00000000-0000-0000-0000-000000000001', 'Logistics — Transport & Fleet',             'LOG-TRN'),
+  ('00000000-0000-0000-0000-000000000001', 'Logistics — Fuel',                          'LOG-FLT')
+ON CONFLICT (org_id, code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 24. FUNCTIONS (Master Catalogue — process-level codes)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'WHS-REC', 'Receiving', 'Goods receipt and inbound inspection'
+FROM departments d WHERE d.code = 'LOG-WHS' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'WHS-PUT', 'Put-Away', 'Put-away and bin-to-stock allocation'
+FROM departments d WHERE d.code = 'LOG-WHS' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'WHS-PIC', 'Picking', 'Order picking and staging'
+FROM departments d WHERE d.code = 'LOG-WHS' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'WHS-PAC', 'Packing', 'Packing and dispatch preparation'
+FROM departments d WHERE d.code = 'LOG-WHS' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'WHS-DSP', 'Dispatch', 'Final dispatch and outbound shipping'
+FROM departments d WHERE d.code = 'LOG-WHS' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PHA-SEL', 'Selection', 'Pharmaceutical product selection and formulary management'
+FROM departments d WHERE d.code = 'HLT-PHA' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PHA-STK', 'Stock Management', 'Pharmacy inventory control and stock management'
+FROM departments d WHERE d.code = 'HLT-PHA' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PHA-ORD', 'Ordering', 'Pharmaceutical ordering and procurement coordination'
+FROM departments d WHERE d.code = 'HLT-PHA' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PHA-DIS', 'Dispensing', 'Medicine dispensing and patient counseling'
+FROM departments d WHERE d.code = 'HLT-PHA' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PHA-SUP', 'Supplier Management', 'Pharmaceutical supplier evaluation and contracting'
+FROM departments d WHERE d.code = 'HLT-PHA' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PRC-ORD', 'Order Management', 'Purchase order creation, approval, and tracking'
+FROM departments d WHERE d.code = 'LOG-PRC' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'PRC-CON', 'Contract Management', 'Supplier contract administration and compliance'
+FROM departments d WHERE d.code = 'LOG-PRC' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'TRN-DSP', 'Fleet Dispatch', 'Vehicle scheduling, routing, and dispatch'
+FROM departments d WHERE d.code = 'LOG-TRN' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'TRN-MNT', 'Fleet Maintenance', 'Vehicle maintenance and repair scheduling'
+FROM departments d WHERE d.code = 'LOG-TRN' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'FLT-STK', 'Fuel Stock Management', 'Fuel receipt, storage, and dispensing'
+FROM departments d WHERE d.code = 'LOG-FLT' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'LAB-TST', 'Lab Testing', 'Sample collection, testing, and results reporting'
+FROM departments d WHERE d.code = 'HLT-LAB' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'LAB-STK', 'Lab Stock Management', 'Lab reagent and consumable inventory management'
+FROM departments d WHERE d.code = 'HLT-LAB' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO functions (org_id, department_id, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', d.id, 'GEN-CNS', 'General Consultation', 'Outpatient consultation and primary care'
+FROM departments d WHERE d.code = 'HLT-GEN' AND d.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 25. ENTITIES (Master Catalogue — objects within functions)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO entities (org_id, function_id, entity_type, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', f.id, 'warehouse', 'WH-CXB-CWH', 'Cox Bazar Central Warehouse', 'Primary central warehouse for CPI Bangladesh operations'
+FROM functions f WHERE f.code = 'WHS-REC' AND f.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO entities (org_id, function_id, entity_type, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', f.id, 'warehouse', 'WH-CXB-SWH1', 'Sub-Warehouse Camp 4', 'Satellite warehouse at Camp 4 distribution point'
+FROM functions f WHERE f.code = 'WHS-REC' AND f.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO entities (org_id, function_id, entity_type, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', f.id, 'warehouse', 'WH-CXB-COLD', 'Cold Chain Hub', 'Dedicated cold chain storage for vaccines and temperature-sensitive items'
+FROM functions f WHERE f.code = 'WHS-REC' AND f.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO entities (org_id, function_id, entity_type, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', f.id, 'vehicle', 'VH-CXB-001', 'Toyota Land Cruiser (CXB-001)', 'Field operations vehicle based at Cox Bazar'
+FROM functions f WHERE f.code = 'TRN-DSP' AND f.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+INSERT INTO entities (org_id, function_id, entity_type, code, name, description)
+SELECT '00000000-0000-0000-0000-000000000001', f.id, 'vehicle', 'VH-CXB-002', 'Truck Isuzu 3-ton (CXB-002)', 'Cargo transport truck for supply runs'
+FROM functions f WHERE f.code = 'TRN-DSP' AND f.org_id = '00000000-0000-0000-0000-000000000001'
+ON CONFLICT (org_id, code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 26. ENTITY ATTRIBUTES (dynamic properties of entities)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Warehouse capacity attributes
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'total_capacity_m2', '1200', 'number', 1, true
+FROM entities e WHERE e.code = 'WH-CXB-CWH'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'cold_chain_capable', 'true', 'boolean', 2, true
+FROM entities e WHERE e.code = 'WH-CXB-CWH'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'has_generator', 'true', 'boolean', 3, false
+FROM entities e WHERE e.code = 'WH-CXB-CWH'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'security_guard', 'true', 'boolean', 4, false
+FROM entities e WHERE e.code = 'WH-CXB-CWH'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'operating_hours', 'Sun-Thu 8:00-17:00, Sat 9:00-13:00', 'text', 5, false
+FROM entities e WHERE e.code = 'WH-CXB-CWH'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+-- Vehicle attributes
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'registration_number', 'CXB-001 / DHAKA-METRO-A-1234', 'text', 1, true
+FROM entities e WHERE e.code = 'VH-CXB-001'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'fuel_type', 'diesel', 'text', 2, true
+FROM entities e WHERE e.code = 'VH-CXB-001'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'capacity_kg', '2500', 'number', 3, true
+FROM entities e WHERE e.code = 'VH-CXB-001'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+INSERT INTO entity_attributes (entity_id, attribute_name, attribute_value, attribute_type, sort_order, is_required)
+SELECT e.id, 'last_maintenance_date', '2026-06-15', 'date', 4, false
+FROM entities e WHERE e.code = 'VH-CXB-001'
+ON CONFLICT (entity_id, attribute_name) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 27. JUSTIFICATION CODES (MSF ordering justifications)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+INSERT INTO justification_codes (code, name, description, category, sort_order) VALUES
+  ('P', 'Recurring / Resupply',  'Recurring / Routine Resupply — scheduled orders based on AMC',        'recurring', 1),
+  ('M', 'Campaign',              'Campaign — time-bound mass campaign (e.g., vaccination, distribution)','campaign',  2),
+  ('E', 'Emergency',             'Emergency — acute shortage, disaster, or unexpected demand surge',     'emergency', 3),
+  ('F', 'Forecast',              'Forecast — seasonal or projected increase based on trend analysis',    'forecast',  4),
+  ('A', 'Asset',                 'Asset — procurement of capital equipment or durable assets',           'asset',     5),
+  ('S', 'Special',               'Special — one-off, pilot, or research-related procurement',            'special',   6)
+ON CONFLICT (code) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 28. UOM CONVERSION FACTORS
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Set base UoMs and conversion factors within each category
+UPDATE units_of_measure SET conversion_factor = 1.0,   base_uom_id = id WHERE abbreviation = 'EA';   -- Each = base for count
+UPDATE units_of_measure SET conversion_factor = 100.0, base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'EA') WHERE abbreviation = 'BX';   -- 100 per box
+UPDATE units_of_measure SET conversion_factor = 1000.0,base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'EA') WHERE abbreviation = 'CTN';  -- 1000 per carton
+UPDATE units_of_measure SET conversion_factor = 1.0,   base_uom_id = id WHERE abbreviation = 'KG';   -- Kg = base for weight
+UPDATE units_of_measure SET conversion_factor = 0.001, base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'KG') WHERE abbreviation = 'G';
+UPDATE units_of_measure SET conversion_factor = 1.0,   base_uom_id = id WHERE abbreviation = 'L';    -- Liter = base for volume
+UPDATE units_of_measure SET conversion_factor = 0.001, base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'L') WHERE abbreviation = 'ML';
+UPDATE units_of_measure SET conversion_factor = 12.0,  base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'EA') WHERE abbreviation = 'DZ';   -- 12 per dozen
+UPDATE units_of_measure SET conversion_factor = 2.0,   base_uom_id = (SELECT id FROM units_of_measure WHERE abbreviation = 'EA') WHERE abbreviation = 'PR';   -- 2 per pair
+
 COMMIT;

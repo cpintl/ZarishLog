@@ -1,0 +1,8 @@
+# [Organization Name] Stock Withdrawal Requisition Template
+# Instructions: Request stock withdrawal from warehouse for program use.
+# Requisition No: _______________    Date: _______________    Requested By: _______________
+# Department: _______________    Program: _______________    Justification Code: _______________
+sku,product_name,quantity_required,uom,purpose,pending_stock,approved_qty,remarks
+MED-AMOX-500,Amoxicillin 500mg Capsules,500,EA,"Monthly clinic supply",4500,,
+SUP-GAUZE,Gauze Swabs Sterile 10x10cm,100,BX,"Dressing material",300,,
+NUT-RUTF,RUTF Sachet 92g,300,SA,"Nutrition program — SAM cases",50,,

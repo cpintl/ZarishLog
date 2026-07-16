@@ -1,0 +1,28 @@
+{
+  "formId": "EMG-SUP",
+  "title": "Emergency Supply Request Form",
+  "description": "Rapid request for emergency supplies in acute shortage or disaster situations",
+  "fields": [
+    { "name": "requestNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "requestedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "requestedBy", "type": "user", "required": true },
+    { "name": "emergencyType", "type": "select", "options": ["Natural Disaster", "Conflict", "Disease Outbreak", "Population Displacement", "Supply Chain Failure", "Other"], "required": true },
+    { "name": "urgencyLevel", "type": "select", "options": ["Critical (within 24h)", "High (within 72h)", "Medium (within 1 week)"], "required": true },
+    { "name": "affectedPopulation", "type": "number", "required": true },
+    { "name": "location", "type": "text", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "justificationCode", "type": "select", "source": "justification_codes", "required": false },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "quantityNeeded", "type": "number", "required": true },
+        { "name": "quantityAvailable", "type": "number" },
+        { "name": "preferredSupplier", "type": "text" }
+      ]
+    },
+    { "name": "approvedBy", "type": "user", "required": false },
+    { "name": "approvalStatus", "type": "select", "options": ["Pending", "Approved", "Partially Approved", "Rejected"] }
+  ]
+}

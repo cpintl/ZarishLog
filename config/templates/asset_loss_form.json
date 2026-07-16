@@ -1,0 +1,22 @@
+{
+  "formId": "AST-LOSS",
+  "title": "Asset Lost / Damaged Report",
+  "description": "Report asset loss, theft, or damage for investigation and write-off",
+  "fields": [
+    { "name": "assetId", "type": "select", "source": "assets", "required": true },
+    { "name": "incidentDate", "type": "date", "required": true },
+    { "name": "reportedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "incidentType", "type": "select", "options": ["Lost", "Stolen", "Damaged", "Destroyed", "Write-Off"], "required": true },
+    { "name": "lastKnownLocation", "type": "text" },
+    { "name": "lastCustodian", "type": "user" },
+    { "name": "estimatedValue", "type": "number" },
+    { "name": "policeReportFiled", "type": "boolean", "note": "Required for theft" },
+    { "name": "policeReportNumber", "type": "text" },
+    { "name": "insuranceClaim", "type": "boolean" },
+    { "name": "insuranceClaimNumber", "type": "text" },
+    { "name": "description", "type": "textarea", "required": true },
+    { "name": "actionTaken", "type": "textarea" },
+    { "name": "approvedBy", "type": "user" },
+    { "name": "supportingDocuments", "type": "file-upload", "multiple": true }
+  ]
+}

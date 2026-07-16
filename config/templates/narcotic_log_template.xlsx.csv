@@ -1,0 +1,6 @@
+# [Organization Name] Narcotic / Controlled Substance Log Template
+# Instructions: Record all controlled substance transactions with witness signature.
+# Pharmacy: _______________   Pharmacist: _______________   Witness: _______________
+date,sku,product_name,batch_number,transaction_type,reference_no,opening_balance,quantity_change,closing_balance,patient_id,prescriber,remarks
+2026-07-01,MED-MOR-10,Morphine 10mg Inj, MOR-2026-B,Dispense,PRESC-001,50,-5,45,PAT-1234,Dr. Rahman,"Routine dispensing"
+2026-07-02,MED-MOR-10,Morphine 10mg Inj, MOR-2026-B,Dispense,PRESC-002,45,-10,35,PAT-1235,Dr. Hasan,

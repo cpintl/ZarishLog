@@ -1,0 +1,29 @@
+{
+  "formId": "DISP",
+  "title": "Dispense Form",
+  "description": "Patient-level medicine dispensing record for pharmacy",
+  "fields": [
+    { "name": "dispenseNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "dispensedAt", "type": "datetime", "required": true, "default": "now" },
+    { "name": "pharmacistId", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "patientId", "type": "text", "required": true },
+    { "name": "patientName", "type": "text", "required": true },
+    { "name": "patientAge", "type": "number" },
+    { "name": "patientGender", "type": "select", "options": ["Male", "Female", "Other"] },
+    { "name": "diagnosis", "type": "text" },
+    { "name": "prescriptionNumber", "type": "text" },
+    {
+      "name": "items",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "batchNo", "type": "text", "requiredIf": "product.batchTracked" },
+        { "name": "dosageForm", "type": "select", "source": "dosageForms" },
+        { "name": "strength", "type": "text" },
+        { "name": "quantityPrescribed", "type": "number", "required": true },
+        { "name": "quantityDispensed", "type": "number", "required": true },
+        { "name": "instructions", "type": "textarea" }
+      ]
+    }
+  ]
+}

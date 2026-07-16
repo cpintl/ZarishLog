@@ -1,0 +1,58 @@
+{
+  "formId": "PHM-CHK",
+  "title": "Pharmacy Supervision Checklist",
+  "description": "Routine supervision checklist for pharmacy compliance assessment",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "pharmacyName", "type": "text", "required": true },
+    { "name": "supervisionDate", "type": "date", "required": true, "default": "now" },
+    { "name": "supervisorId", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "pharmacistInCharge", "type": "text" },
+    {
+      "name": "storageConditions",
+      "type": "group",
+      "fields": [
+        { "name": "temperatureLogsMaintained", "type": "boolean", "required": true },
+        { "name": "coldChainEquipmentFunctional", "type": "boolean", "required": true },
+        { "name": "medicinesStoredAtCorrectTemp", "type": "boolean", "required": true },
+        { "name": "narcoticsSecureCabinet", "type": "boolean", "required": true },
+        { "name": "expiredStockSegregated", "type": "boolean", "required": true }
+      ]
+    },
+    {
+      "name": "inventoryManagement",
+      "type": "group",
+      "fields": [
+        { "name": "stockCardsUpdated", "type": "boolean", "required": true },
+        { "name": "physicalCountMatchesSystem", "type": "boolean" },
+        { "name": "fefoFollowed", "type": "boolean", "required": true },
+        { "name": "nearExpiryIdentified", "type": "boolean" },
+        { "name": "reservedStockSeparated", "type": "boolean" }
+      ]
+    },
+    {
+      "name": "dispensingPractices",
+      "type": "group",
+      "fields": [
+        { "name": "prescriptionsVerified", "type": "boolean", "required": true },
+        { "name": "dispensingRecordsComplete", "type": "boolean", "required": true },
+        { "name": "patientCounselingProvided", "type": "boolean" },
+        { "name": "controlledSubstanceLogAccurate", "type": "boolean", "required": true }
+      ]
+    },
+    {
+      "name": "documentation",
+      "type": "group",
+      "fields": [
+        { "name": "grnFilesComplete", "type": "boolean" },
+        { "name": "srfFilesComplete", "type": "boolean" },
+        { "name": "returnRecordsComplete", "type": "boolean" },
+        { "name": "disposalRecordsComplete", "type": "boolean" }
+      ]
+    },
+    { "name": "overallScore", "type": "number", "calculated": "average(checklist)" },
+    { "name": "findings", "type": "textarea" },
+    { "name": "recommendations", "type": "textarea" },
+    { "name": "followUpDate", "type": "date" }
+  ]
+}

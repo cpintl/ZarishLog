@@ -1,0 +1,30 @@
+{
+  "formId": "PR",
+  "title": "Purchase Request Form",
+  "description": "Internal purchase request to initiate procurement process",
+  "fields": [
+    { "name": "prNumber", "type": "text", "required": true, "auto": "sequence" },
+    { "name": "requestedAt", "type": "date", "required": true, "default": "now" },
+    { "name": "requestedBy", "type": "user", "required": true, "auto": "currentUser" },
+    { "name": "departmentId", "type": "select", "source": "departments", "required": true },
+    { "name": "programId", "type": "select", "source": "programs", "required": true },
+    { "name": "justificationCode", "type": "select", "source": "justification_codes", "required": true },
+    { "name": "priority", "type": "select", "options": ["Low", "Medium", "High", "Critical"], "required": true },
+    { "name": "deliveryLocation", "type": "text", "required": true },
+    { "name": "expectedUseDate", "type": "date" },
+    { "name": "budgetCode", "type": "text" },
+    {
+      "name": "lines",
+      "type": "table",
+      "columns": [
+        { "name": "productId", "type": "select", "source": "products", "required": true },
+        { "name": "quantity", "type": "number", "required": true },
+        { "name": "estimatedUnitCost", "type": "number" },
+        { "name": "suggestedSupplier", "type": "text" }
+      ]
+    },
+    { "name": "approvedBy", "type": "user" },
+    { "name": "approvalStatus", "type": "select", "options": ["Pending", "Approved", "Rejected"], "default": "Pending" },
+    { "name": "notes", "type": "textarea" }
+  ]
+}

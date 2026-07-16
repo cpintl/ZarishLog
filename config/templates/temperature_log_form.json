@@ -1,0 +1,25 @@
+{
+  "formId": "TEMP-LOG",
+  "title": "Temperature Log",
+  "description": "Daily temperature monitoring for cold chain and storage areas",
+  "fields": [
+    { "name": "warehouseId", "type": "select", "source": "warehouses", "required": true },
+    { "name": "locationId", "type": "select", "source": "locations", "required": true },
+    { "name": "equipmentId", "type": "text", "required": false, "note": "Fridge/freezer/logger ID if applicable" },
+    { "name": "logDate", "type": "date", "required": true, "default": "now" },
+    { "name": "recordedBy", "type": "user", "required": true, "auto": "currentUser" },
+    {
+      "name": "readings",
+      "type": "table",
+      "columns": [
+        { "name": "time", "type": "time", "required": true },
+        { "name": "temperatureC", "type": "number", "required": true, "suffix": "°C" },
+        { "name": "minThreshold", "type": "number", "note": "Configurable per location" },
+        { "name": "maxThreshold", "type": "number", "note": "Configurable per location" },
+        { "name": "alarmStatus", "type": "select", "options": ["Normal", "Warning", "Alarm"] },
+        { "name": "actionTaken", "type": "text" }
+      ]
+    },
+    { "name": "alerts", "type": "textarea", "note": "Any temperature excursion incidents" }
+  ]
+}
