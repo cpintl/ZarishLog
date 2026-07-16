@@ -1,18 +1,45 @@
-# ZarishLog Template Files — User Guide
+# [Organization Name] Template Files — User Guide
 
-This folder contains CSV templates that you can fill in to import data into the ZarishLog platform. These templates are designed for non-technical users — no coding required.
+This folder contains CSV templates that you can fill in to import data into the [Organization Name] platform. These templates are designed for non-technical users — no coding required.
+
+---
+
+## Before You Start
+
+The templates in this folder use **placeholder variables** wrapped in square brackets. You **must** replace these placeholders with your organization's actual information before using the templates.
+
+| Placeholder | What to Replace With | Example |
+|---|---|---|
+| `[Organization Name]` | Your organization's full legal name | International Rescue Committee |
+| `[org_code]` | Your organization's short code (2-10 characters, no spaces) | IRC |
+| `[org_logo_url]` | Full URL to your organization's logo | https://www.example.com/logo.png |
+
+> **How to replace placeholders:** Open the template in a text editor (VS Code, Notepad++) or spreadsheet program and use **Find and Replace** (Ctrl+H / Cmd+H). Search for `[Organization Name]` and replace with your organization's name. Repeat for `[org_code]` and `[org_logo_url]`.
 
 ---
 
 ## Quick Start
 
 1. **Download** the template you need from this folder.
-2. **Open** it in Excel, Google Sheets, or any spreadsheet program.
-3. **Fill in** the rows with your data. Each column header tells you what to put in.
-4. **Save** as a `.csv` file (Comma Separated Values). In Excel, choose *Save As → CSV UTF-8 (Comma delimited)*.
-5. **Upload** the file to ZarishLog — your logistics officer or system admin can import it.
+2. **Replace all placeholders** with your organization's details (see Before You Start above).
+3. **Open** it in Excel, Google Sheets, or any spreadsheet program.
+4. **Fill in** the rows with your data. Each column header tells you what to put in.
+5. **Save** as a `.csv` file (Comma Separated Values). In Excel, choose *Save As → CSV UTF-8 (Comma delimited)*.
+6. **Upload** the file to the platform — your logistics officer or system admin can import it.
 
 > **Important:** Do not change the column header row. The system needs those exact column names to read your data. Do not delete the instruction lines starting with `#` — these are notes for you, the system ignores them.
+
+---
+
+## Branding Customization
+
+| Item | Where to Customize |
+|---|---|
+| Template headers (line 1 of each CSV) | Replace `[Organization Name]` in the `#` comment line |
+| Organization hierarchy example data | `organization_import_template.xlsx.csv` — replace `[org_code]` and all org names |
+| Asset tag prefixes | `asset_registration_template.xlsx.csv` — replace `[org_code]` in example tags |
+| Custodian email examples | `asset_registration_template.xlsx.csv` — replace `@example.org` emails |
+| Logo URL (if used by system) | Replace `[org_logo_url]` in imported data where referenced |
 
 ---
 
@@ -74,7 +101,7 @@ This folder contains CSV templates that you can fill in to import data into the 
 
 ### 4. Product Import (`product_import_template.xlsx.csv`)
 
-**Purpose:** Add new products to the ZarishLog master product catalog.
+**Purpose:** Add new products to the [Organization Name] master product catalog.
 
 **Who fills it out:** Program managers, logistics coordinators, procurement officers.
 
@@ -103,6 +130,7 @@ This folder contains CSV templates that you can fill in to import data into the 
 - Level 2 (Country Office): `parent_code` = the HQ code.
 - Level 3 (Project Office): `parent_code` = the country office code.
 - Level 4 (Program Site): `parent_code` = the project office code.
+- Replace all `[org_code]` placeholders with your organization's short code before filling in real data.
 
 **Validation rules:**
 - `code` must be unique.
@@ -155,7 +183,8 @@ This folder contains CSV templates that you can fill in to import data into the 
 
 **How to use:**
 - One row per physical asset. Each asset needs a unique `asset_tag`.
-- Use the naming convention: `ORG-TYPE-NUMBER` (e.g., CPI-LAP-001).
+- Use the naming convention: `[org_code]-TYPE-NUMBER` (e.g., `[org_code]`-LAP-001).
+- Replace all `[org_code]` placeholders with your organization's short code before filling in real data.
 - Assign a custodian (the person responsible for the asset) using their email.
 - Choose a `status`: `in_use`, `in_storage`, `under_maintenance`, `disposed`, or `lost`.
 
@@ -248,4 +277,8 @@ This folder contains CSV templates that you can fill in to import data into the 
 
 ## Need Help?
 
-Contact your ZarishLog system administrator or logistics lead. They can help validate your data before import and troubleshoot any errors.
+Contact your [Organization Name] system administrator or logistics lead. They can help validate your data before import and troubleshoot any errors.
+
+---
+
+*Powered by ZarishLog (https://zarishlog.org)*

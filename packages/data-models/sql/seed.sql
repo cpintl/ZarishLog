@@ -1048,4 +1048,114 @@ WHERE p.sku = 'SUP-LTX-MED' AND w.code = 'CXB-CWH' AND sl.product_id = p.id AND 
   AND NOT EXISTS (SELECT 1 FROM reorder_recommendations WHERE product_id = p.id AND warehouse_id = w.id AND reviewed = false)
 LIMIT 1;
 
+-- ─── Product Enhancements: Dosage Forms, Generic Names, Drug DB Ref URLs ──
+
+-- Drugs
+UPDATE products SET dosage_form_code = 'CAP', generic_name = 'Amoxicillin trihydrate 500mg', brand_name = 'Amoxil, Moxilin', storage_conditions = 'Store below 30°C', reference_urls = '[{"label":"medex.bd","url":"https://medex.bd/drugs/amoxicillin"},{"label":"WHO EML","url":"https://list.essentialmeds.org/medicines/6"}]'
+WHERE sku = 'MED-AMOX-500' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET dosage_form_code = 'TAB', generic_name = 'Paracetamol 500mg', brand_name = 'Panadol, Tylenol', storage_conditions = 'Store below 30°C', reference_urls = '[{"label":"medex.bd","url":"https://medex.bd/drugs/paracetamol"},{"label":"WHO EML","url":"https://list.essentialmeds.org/medicines/7"}]'
+WHERE sku = 'MED-PCM-500' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET dosage_form_code = 'TAB', generic_name = 'Artemether 20mg + Lumefantrine 120mg', brand_name = 'Coartem, Riamet', storage_conditions = 'Store below 30°C', reference_urls = '[{"label":"medex.bd","url":"https://medex.bd/drugs/artemether-lumefantrine"}]'
+WHERE sku = 'MED-ART-100' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET dosage_form_code = 'PWD', generic_name = 'Oral Rehydration Salts (WHO formulation)', brand_name = 'ORS, Pedialyte', storage_conditions = 'Store in cool dry place', reference_urls = '[{"label":"WHO ORS","url":"https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease"}]'
+WHERE sku = 'MED-ORS' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET dosage_form_code = 'CAP', generic_name = 'Vitamin A (Retinol) 200000 IU', brand_name = 'A-Vital', storage_conditions = 'Store below 25°C, protect from light', reference_urls = '[{"label":"WHO Vit A","url":"https://www.who.int/publications/i/item/9789241501767"}]'
+WHERE sku = 'MED-VIT-A' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- Medical Supplies (dosage_form not applicable for supplies, leave null)
+UPDATE products SET generic_name = 'Latex examination gloves, sterile', brand_name = 'Sempermed, Ansell', storage_conditions = 'Store in cool dry place'
+WHERE sku = 'SUP-LTX-MED' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET generic_name = 'Disposable syringe 5ml Luer Lock', storage_conditions = 'Store in sterile packaging, below 40°C'
+WHERE sku = 'SUP-SYG-5ML' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET generic_name = 'Sterile gauze swabs 10x10cm 8-ply', storage_conditions = 'Store in sterile packaging'
+WHERE sku = 'SUP-GAUZE' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- Nutrition
+UPDATE products SET dosage_form_code = 'PWD', generic_name = 'Ready-to-Use Therapeutic Food (peanut-based)', brand_name = 'Plumpy\'Nut, Plumpy\'Sup', storage_conditions = 'Store below 30°C, no refrigeration needed', reference_urls = '[{"label":"WHO RUTF","url":"https://www.who.int/publications/i/item/9789241512435"}]'
+WHERE sku = 'NUT-RUTF' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET dosage_form_code = 'PWD', generic_name = 'F100 Therapeutic Milk formulation', storage_conditions = 'Mix with water, use within 24hrs of reconstitution'
+WHERE sku = 'NUT-F100' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- WASH supplies
+UPDATE products SET generic_name = 'Chlorine-based water purification tablets (Sodium Dichloroisocyanurate)', storage_conditions = 'Store in airtight container, below 30°C'
+WHERE sku = 'WASH-TAB-CHLOR' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- Equipment
+UPDATE products SET generic_name = 'Aneroid sphygmomanometer adult cuff', storage_conditions = 'Store in protective case'
+WHERE sku = 'EQP-BP-MANUAL' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET generic_name = 'Acoustic stethoscope dual-head', storage_conditions = 'Store clean, avoid extreme temperatures'
+WHERE sku = 'EQP-STETH' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE products SET generic_name = 'Non-contact infrared thermometer', storage_conditions = 'Store at 10-40°C'
+WHERE sku = 'EQP-THERM-IR' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- ─── Warehouse Geographic Coordinates (for map view / route planning) ─────
+
+UPDATE warehouses SET
+  latitude = 21.4272,
+  longitude = 91.9781,
+  google_maps_url = 'https://maps.google.com/?q=21.4272,91.9781',
+  contact_phone = '+8801712345601',
+  operating_hours = 'Sun-Thu 8:00-17:00, Sat 9:00-13:00',
+  has_generator = TRUE,
+  has_cctv = TRUE,
+  has_fire_system = TRUE,
+  security_guard = TRUE
+WHERE code = 'CXB-CWH' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE warehouses SET
+  latitude = 21.4100,
+  longitude = 91.9600,
+  google_maps_url = 'https://maps.google.com/?q=21.4100,91.9600',
+  contact_phone = '+8801712345602',
+  operating_hours = 'Sun-Thu 8:00-17:00',
+  has_generator = TRUE,
+  has_cctv = FALSE,
+  has_fire_system = TRUE,
+  security_guard = FALSE
+WHERE code = 'CXB-SWH-1' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE warehouses SET
+  latitude = 23.8103,
+  longitude = 90.4125,
+  google_maps_url = 'https://maps.google.com/?q=23.8103,90.4125',
+  contact_phone = '+8801712345603',
+  operating_hours = '24 hours (shift-based)',
+  has_generator = TRUE,
+  has_cctv = TRUE,
+  has_fire_system = TRUE,
+  security_guard = TRUE
+WHERE code = 'CXB-TRN' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+UPDATE warehouses SET
+  latitude = 21.4250,
+  longitude = 91.9760,
+  google_maps_url = 'https://maps.google.com/?q=21.4250,91.9760',
+  contact_phone = '+8801712345604',
+  operating_hours = 'Sun-Thu 6:00-20:00',
+  has_generator = TRUE,
+  has_cctv = TRUE,
+  has_fire_system = TRUE,
+  security_guard = TRUE
+WHERE code = 'CXB-COLD' AND org_id = '00000000-0000-0000-0000-000000000001';
+
+-- ─── Organization Branding ───────────────────────────────────────────────
+
+UPDATE organizations SET
+  logo_url = 'https://example.org/logo.png',
+  website = 'https://example.org',
+  country = 'Bangladesh',
+  default_currency = 'USD',
+  timezone = 'Asia/Dhaka',
+  date_format = 'YYYY-MM-DD'
+WHERE id = '00000000-0000-0000-0000-000000000001';
+
 COMMIT;

@@ -1,0 +1,24 @@
+{
+  "formId": "STK_CNT",
+  "title": "Physical Stock Count Form",
+  "fields": [
+    { "name": "count_number", "type": "text", "auto": "sequence" },
+    { "name": "warehouse_id", "type": "select", "source": "warehouses", "required": true },
+    { "name": "count_date", "type": "date", "required": true },
+    { "name": "count_type", "type": "select", "options": ["full", "cycle", "spot", "annual"] },
+    { "name": "counted_by", "type": "text" },
+    { "name": "verified_by", "type": "text" },
+    { "name": "notes", "type": "textarea" },
+    {
+      "name": "items",
+      "type": "table",
+      "columns": [
+        { "name": "sku", "type": "select", "source": "products", "required": true },
+        { "name": "location_code", "type": "text" },
+        { "name": "batch_number", "type": "text" },
+        { "name": "expected_quantity", "type": "number" },
+        { "name": "counted_quantity", "type": "number", "required": true }
+      ]
+    }
+  ]
+}

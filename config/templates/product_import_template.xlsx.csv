@@ -1,4 +1,4 @@
-# ZarishLog Master Product Import Template
+# [Organization Name] Master Product Import Template
 # Instructions: Fill in one row per product. Required fields: sku, name, category_name, uom_abbreviation, item_type
 # category_name must match existing categories
 # uom_abbreviation must match existing UoMs

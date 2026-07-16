@@ -1,0 +1,15 @@
+{
+  "formId": "USER_REG",
+  "title": "User Registration / Import",
+  "fields": [
+    { "name": "email", "type": "email", "required": true },
+    { "name": "password", "type": "password", "required": true, "minLength": 8 },
+    { "name": "name", "type": "text", "required": true },
+    { "name": "job_title", "type": "text" },
+    { "name": "phone", "type": "tel" },
+    { "name": "role_id", "type": "select", "source": "roles", "required": true },
+    { "name": "org_level_id", "type": "select", "source": "org_levels" },
+    { "name": "department_id", "type": "select", "source": "departments" },
+    { "name": "is_active", "type": "checkbox", "default": true }
+  ]
+}
