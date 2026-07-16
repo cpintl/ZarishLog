@@ -1,19 +1,41 @@
-ZL-000001,A-Cold (Bromhexine Hydrochloride) 4 mg/5 ml Syrup,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000001
-Name: A-Cold (Bromhexine Hydrochloride) 4 mg/5 ml Syrup
-Cat: Pharmaceutical Stock",,,,ZL-000001
-ZL-000002,A-Cof (Dextromethorphan + Pseudoephedrine + Triprolidine) (10 mg+30 mg+1.25 mg)/5 ml Syrup,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000002
-Name: A-Cof (Dextromethorphan + Pseudoephedrine + Triprolidine) (10 mg+30 mg+1.25 mg)/5 ml Syrup
-Cat: Pharmaceutical Stock",,,,ZL-000002
-ZL-000003,A-Clox (Cloxacillin Sodium) 500 mg/vial Injection,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000003
-Name: A-Clox (Cloxacillin Sodium) 500 mg/vial Injection
-Cat: Pharmaceutical Stock",,,,ZL-000003
-ZL-000004,A-Clox (Cloxacillin Sodium) 250 mg/vial Injection,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000004
-Name: A-Clox (Cloxacillin Sodium) 250 mg/vial Injection
-Cat: Pharmaceutical Stock",,,,ZL-000004
-ZL-000005,A-Clox (Cloxacillin Sodium) 125 mg/5 ml Powder for Suspension,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000005
-Name: A-Clox (Cloxacillin Sodium) 125 mg/5 ml Powder for Suspension
-Cat: Pharmaceutical Stock",,,,ZL-000005
-ZL-000006,A-Clox (Cloxacillin Sodium) 500 mg Capsule,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000006
-Name: A-Clox (Cloxacillin Sodium) 500 mg Capsule
-Cat: Pharmaceutical Stock",,,,ZL-000006
-ZL-000007,A-Care (Betacarotene + Vitamin C + Vitamin E) 6 mg+200 mg+50 mg Tablet,,,,D,Drugs,,,,,Pharmaceutical Stock,,Yes,No,,,,,,Active,,,,2025-12-28,Manus AI,"Code: ZL-000007
+sku,name,category_name,uom_abbreviation,item_type,description,is_batch_tracked,is_expiry_tracked,is_cold_chain,is_hazardous
+MED-AMOX-500,Amoxicillin 500mg Capsules,Medicines & Drugs,EA,drug,Broad-spectrum antibiotic,TRUE,TRUE,FALSE,FALSE
+MED-PCM-500,Paracetamol 500mg Tablets,Medicines & Drugs,EA,drug,Analgesic and antipyretic,TRUE,TRUE,FALSE,FALSE
+MED-ART-100,Artemether 20mg+Lumefantrine 120mg,Medicines & Drugs,EA,drug,Antimalarial combination therapy,TRUE,TRUE,FALSE,FALSE
+MED-ORS,WHO Oral Rehydration Salts,Medicines & Drugs,PK,drug,For diarrhea management,TRUE,TRUE,FALSE,FALSE
+MED-VIT-A,Vitamin A Capsules 200000 IU,Medicines & Drugs,EA,drug,High-dose vitamin A supplement,TRUE,TRUE,FALSE,FALSE
+SUP-LTX-MED,Latex Examination Gloves (Box 100),Medical Supplies,BX,medical_supply,Sterile latex examination gloves,TRUE,TRUE,FALSE,FALSE
+SUP-SYG-5ML,Syringe 5ml (Box 100),Medical Supplies,BX,medical_supply,Disposable syringe 5ml,TRUE,TRUE,FALSE,FALSE
+SUP-GAUZE,Gauze Swabs Sterile 10x10cm (Box 100),Medical Supplies,BX,medical_supply,Sterile gauze swabs,TRUE,TRUE,FALSE,FALSE
+SUP-MASK-SRG,Surgical Mask (Box 50),Medical Supplies,BX,medical_supply,Disposable surgical face masks,TRUE,TRUE,FALSE,FALSE
+SUP-BANDAGE,Crepe Bandage 10cm x 4.5m,Medical Supplies,EA,medical_supply,Elastic crepe bandage,TRUE,TRUE,FALSE,FALSE
+SUP-CATH-FOLEY,Foley Catheter 16FR,Medical Supplies,EA,medical_supply,Silicone foley catheter,FALSE,TRUE,FALSE,FALSE
+EQP-BP-MANUAL,Manual Blood Pressure Monitor,Medical Equipment,EA,equipment,Aneroid sphygmomanometer,FALSE,FALSE,FALSE,FALSE
+EQP-STETH,Stethoscope Dual Head,Medical Equipment,EA,equipment,Dual-head acoustic stethoscope,FALSE,FALSE,FALSE,FALSE
+EQP-THERM-IR,Infrared Thermometer,Medical Equipment,EA,equipment,Non-contact infrared thermometer,FALSE,FALSE,FALSE,FALSE
+EQP-OX-PULSE,Pulse Oximeter,Medical Equipment,EA,equipment,Finger pulse oximeter,FALSE,FALSE,FALSE,FALSE
+EQP-REF-COLD,Solar-Powered Refrigerator,Medical Equipment,EA,equipment,For vaccine cold chain storage,FALSE,FALSE,TRUE,FALSE
+NUT-RUTF,RUTF Sachet 92g,Cartons,CTN,nutrition,Ready-to-Use Therapeutic Food,TRUE,TRUE,FALSE,FALSE
+NUT-F100,F100 Therapeutic Milk (Box 12),Nutrition,BX,nutrition,Therapeutic milk for severe malnutrition,TRUE,TRUE,FALSE,FALSE
+NUT-LNS,LNS (Lipid-Based Nutrient Supplement),Nutrition,CTN,nutrition,Lipid-based nutrient supplement,TRUE,TRUE,FALSE,FALSE
+WASH-SOAP-BAR,Soap Bar 200g,WASH Supplies,EA,material,Laundry and handwashing soap,FALSE,FALSE,FALSE,FALSE
+WASH-BKT-10L,Plastic Bucket 10L,WASH Supplies,EA,material,Collapsible water bucket with tap,FALSE,FALSE,FALSE,FALSE
+WASH-JERRY-20L,Jerry Can 20L,WASH Supplies,EA,material,Plastic jerry can for water transport,FALSE,FALSE,FALSE,FALSE
+WASH-TAB-CHLOR,Chlorine Tablets (Bottle 300),WASH Supplies,BX,material,Water purification tablets,TRUE,FALSE,FALSE,TRUE
+WASH-AQUA-TAB,AquaTab 33mg (Box 1000),WASH Supplies,BX,material,Water purification tablets 33mg,TRUE,FALSE,FALSE,TRUE
+WASH-MOSQ-NET,Insecticide Mosquito Net,Office & Admin,EA,material,Long-lasting insecticidal net,FALSE,FALSE,FALSE,FALSE
+WASH-TARP,Tarpaulin 4x6m,Office & Admin,EA,material,Weather-resistant shelter tarp,FALSE,FALSE,FALSE,FALSE
+GEN-BLAN-KIT,Blanket Kit (Emergency),Office & Admin,ST,material,Thermal emergency blankets kit,FALSE,FALSE,FALSE,FALSE
+GEN-KITCHEN-SET,Kitchen Set Family,Office & Admin,ST,material,Family kitchen set 4 persons,FALSE,FALSE,FALSE,FALSE
+GEN-DIGNITY-KIT,Dignity Kit Women,Office & Admin,ST,material,Female hygiene and dignity kit,FALSE,FALSE,FALSE,FALSE
+GEN-SOLAR-LAMP,Solar Lamp with USB,Office & Admin,EA,equipment,Portable solar powered LED lamp,FALSE,FALSE,FALSE,FALSE
+ADMN-PAPER-A4,Office Paper A4 Box,Office & Admin,BX,consumable,Printer paper A4 5000 sheets,FALSE,FALSE,FALSE,FALSE
+ADMN-TONER,Toner Cartridge HP 85A,Office & Admin,EA,consumable,Laser printer toner cartridge,FALSE,FALSE,FALSE,FALSE
+ADMN-DESK,Office Desk 120x60cm,Office & Admin,EA,asset,Standard office desk,FALSE,FALSE,FALSE,FALSE
+ADMN-CHAIR,Office Chair Ergonomic,Office & Admin,EA,asset,Ergonomic office chair,FALSE,FALSE,FALSE,FALSE
+ADMN-LAPTOP,Laptop Computer 15.6 inch,Office & Admin,EA,asset,Business laptop with accessories,FALSE,FALSE,FALSE,FALSE
+ADMN-TABLET,Tablet 10 inch,Office & Admin,EA,asset,Android tablet for field data collection,FALSE,FALSE,FALSE,FALSE
+ADMN-VHF,VHF Radio Handheld,Office & Admin,EA,asset,Handheld VHF radio for field communication,FALSE,FALSE,FALSE,FALSE
+ADMN-POWER-BANK,Power Bank 20000mAh,Office & Admin,EA,equipment,Solar-compatible power bank,FALSE,FALSE,FALSE,FALSE
+INSTR-SCALE-DIG,Digital Weighing Scale 150kg,Medical Equipment,EA,instrument,Digital scale for nutrition screening,FALSE,FALSE,FALSE,FALSE
+INSTR-MUAC,MUAC Measuring Tape,Medical Supplies,EA,instrument,Mid-upper arm circumference tape,FALSE,FALSE,FALSE,FALSE

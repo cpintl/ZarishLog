@@ -1,76 +1,201 @@
-# ZarishLog — Local Setup Guide
+# ZarishLog — Development Sandbox Setup Guide
 
-Follow these steps in order. Everything here is free.
+> **Versions pinned:** Go 1.26.4 · Node.js 22.x LTS · pnpm 11.x · PostgreSQL 18.4 · Keycloak 26.6 · Redis 8 · MinIO latest · Meilisearch latest
 
-## Prerequisites
-- Node.js 20+ (`nvm install` will pick up `.nvmrc`)
-- pnpm 9+ (`npm i -g pnpm`)
-- Docker Desktop (or Docker Engine on Linux)
+---
 
-## 1. Clone and install
+## 0. Quick Start (3 commands)
 
 ```bash
-git clone https://github.com/<your-org>/zarishlog.git
+git clone https://github.com/cpintl/zarishlog.git
 cd zarishlog
-cp .env.example .env
-pnpm install
+bash scripts/zarishlog-setup.sh --yes
 ```
 
-## 2. Start infrastructure
+The bootstrap script auto-detects your machine, installs missing prerequisites, configures Git, pulls Docker images, installs VS Code extensions, and sets up the project environment.
+
+---
+
+## 1. Manual Prerequisites Installation
+
+If you prefer to install tools manually or the bootstrap script doesn't support your OS, follow below:
+
+### 1.1 Essential Tools
+
+| Tool | Version | Install Command (Linux) | Install Command (macOS) |
+|------|---------|------------------------|-------------------------|
+| **Go** | `1.26.4` | [Download](https://go.dev/dl/go1.26.4.linux-amd64.tar.gz) + extract to `/usr/local/go` | `brew install go@1.26` |
+| **Node.js** | `22.x LTS` | `curl -fsSL https://deb.nodesource.com/setup_22.x \| sudo -E bash - && sudo apt install -y nodejs` | `brew install node@22` |
+| **pnpm** | `11.x` | `corepack enable && corepack prepare pnpm@11 --activate` | `corepack enable && corepack prepare pnpm@11 --activate` |
+| **Docker** | Latest CE | [Docker Desktop for Linux](https://docs.docker.com/engine/install/) | [Docker Desktop for Mac](https://docs.docker.com/desktop/mac/install/) |
+| **Docker Compose** | `v2.32+` | Included with Docker Desktop | Included with Docker Desktop |
+| **psql** | `18` | `sudo apt install postgresql-client-18` | `brew install postgresql@18` |
+
+### 1.2 Optional Go Tools
 
 ```bash
+# golangci-lint (linter)
+curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.2
+
+# sqlc (type-safe SQL code generator)
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.27.0
+
+# gofumpt (stricter Go formatter)
+go install mvdan.cc/gofumpt@v0.7.0
+```
+
+---
+
+## 2. Environment Setup
+
+### 2.1 Configure Environment
+
+```bash
+cp .env.example .env
+# Edit .env if needed (defaults work for local dev)
+```
+
+### 2.2 Start Infrastructure Services
+
+```bash
+make docker-up
+# Or manually:
 docker compose up -d
 ```
 
-This starts Postgres (5432), Redis (6379), MinIO (9000/9001 console), and Keycloak (8080). Give Keycloak ~30 seconds to finish starting on first run.
+This starts:
+| Service | Port | Purpose |
+|---------|------|---------|
+| **PostgreSQL 18** | `5432` | Primary database |
+| **Redis 8** | `6379` | Cache + job queue |
+| **MinIO** | `9000` (API), `9001` (Console) | Object storage |
+| **Keycloak 26** | `8080` | Auth (OIDC/OAuth2) |
+| **Meilisearch** | `7700` | Full-text search |
 
-## 3. Set up the database
-
-```bash
-pnpm db:generate     # generates the Prisma client from schema.prisma
-pnpm db:migrate       # creates all tables
-pnpm db:seed          # loads roles, reference data, org hierarchy, and the product catalogue
-```
-
-You should see console output like:
-```
-Seeded 9 roles and 40 permissions.
-Seeded 9 UoMs and 6 product categories.
-Seeded organization hierarchy: 1 org, 3 org levels, 7 programs, 1 warehouse, 5 locations.
-Imported 18 products, skipped 0 malformed rows.
-Seed complete.
-```
-
-> The 18 imported products come from the sample `config/metadata/master_product_list.csv`. Replace this file with the full 22,000+ item export when available, double-check the column mapping at the top of `packages/data-models/seed/seed.ts`, and re-run `pnpm db:seed` (it's idempotent — safe to re-run).
-
-## 4. Run the app
+### 2.3 Run Database Migrations
 
 ```bash
-pnpm dev
+make db-migrate
+# This runs: psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/migrations/001_initial_schema.sql
 ```
 
-This starts both the API and web app via Turborepo:
-- API: http://localhost:4000 (Swagger docs at `/docs`)
-- Web: http://localhost:3000
-
-Visit http://localhost:3000/products — you should see the seeded catalogue rendered in a table. This is the Phase 1/2 milestone from `docs/BLUEPRINT.md`: seeded database → API → UI, working end to end.
-
-## 5. Inspect the database (optional)
+### 2.4 Seed Master Data
 
 ```bash
-pnpm db:studio
+make db-seed
+# Loads: roles, permissions, UoMs, sample organization, products
 ```
 
-Opens Prisma Studio, a free GUI browser for the database, at http://localhost:5555.
+### 2.5 Install Frontend Dependencies
 
-## Troubleshooting
+```bash
+cd apps/web && pnpm install && cd ../..
+```
 
-| Symptom | Fix |
-|---|---|
-| `pnpm db:migrate` fails to connect | Confirm `docker compose ps` shows `postgres` as healthy; wait a few seconds after `docker compose up -d` |
-| Products page shows "No products found" | Confirm `pnpm db:seed` ran successfully and the API is running on port 4000 |
-| Keycloak admin console unreachable | It can take 20–40s to boot on first start; check `docker compose logs keycloak` |
-| Port already in use | Change `WEB_PORT`/`API_PORT` in `.env` |
+---
 
-## Next steps
-See `docs/BLUEPRINT.md` for the full phased plan — Phase 2 (Core API & Business Logic) and Phase 3 (Web Console) build directly on this foundation.
+## 3. Start Development Servers
+
+### Option A: Split Terminals (Recommended)
+
+```bash
+# Terminal 1 — Go API Server
+cd apps/api && go run ./cmd/api
+# → http://localhost:8080/api/v1/health
+
+# Terminal 2 — Next.js Frontend
+cd apps/web && pnpm dev
+# → http://localhost:3000
+```
+
+### Option B: VS Code Tasks
+
+Open VS Code, press `Ctrl+Shift+P`, select **Tasks: Run Task**, then choose:
+
+- **Docker: Start All Services**
+- **DB: Run Migrations**
+- **Go: Test All**
+- **Web: Dev Server**
+
+### Option C: Make
+
+```bash
+make dev    # Starts both API and Web
+```
+
+---
+
+## 4. Verify Setup
+
+### 4.1 Health Check
+
+```bash
+curl http://localhost:8080/api/v1/health
+# Expected: {"status":"healthy","db":"connected"}
+```
+
+### 4.2 List Products
+
+```bash
+curl http://localhost:8080/api/v1/products
+# Expected: {"data":[...]}
+```
+
+### 4.3 Frontend
+
+Visit http://localhost:3000 — you should see the ZarishLog landing page.
+Visit http://localhost:3000/products — you should see the seeded product catalogue.
+
+### 4.4 Run Tests
+
+```bash
+# Go tests
+cd apps/api && go test ./... -v -race -count=1
+
+# Frontend tests
+cd apps/web && pnpm test
+
+# Run all via make
+make test
+```
+
+---
+
+## 5. Access Management Consoles
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| **Keycloak Admin** | http://localhost:8080/admin | `admin` / `zarishlog_dev_password` |
+| **MinIO Console** | http://localhost:9001 | `zarishlog` / `zarishlog_dev_password` |
+| **Meilisearch** | http://localhost:7700 | Key: `zarishlog_search_key` |
+
+---
+
+## 6. Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `.env` | Environment variables (local overrides) |
+| `.env.example` | Template with all variables documented |
+| `docker-compose.yml` | Infrastructure service definitions |
+| `apps/api/sqlc.yaml` | SQL code generation config |
+| `Makefile` | Common development tasks |
+| `go.work` | Go workspace (multi-module) |
+| `.vscode/settings.json` | VS Code settings (Go, SQL, formatting) |
+| `.vscode/tasks.json` | VS Code build/test/deploy tasks |
+| `.vscode/launch.json` | Debug configurations |
+| `.vscode/extensions.json` | Recommended extensions |
+
+---
+
+## 7. Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `psql: connection refused` | Docker not running | `make docker-up` |
+| `go: command not found` | Go not in PATH | Add `export PATH=$PATH:/usr/local/go/bin` to `~/.profile` |
+| `pnpm: command not found` | corepack not enabled | `corepack enable && corepack prepare pnpm@11 --activate` |
+| Docker permission denied | User not in docker group | `sudo usermod -aG docker $USER && newgrp docker` |
+| Go build fails | Missing dependencies | `cd apps/api && go mod tidy` |
+| Database migration fails | PostgreSQL not ready | Wait 5s after `docker compose up -d` and retry |
+| Port already in use | Conflict with existing service | Change port in `.env` and `docker-compose.yml` |

@@ -1,130 +1,144 @@
-# ZarishLog — Delivery Blueprint
+# ZarishLog — Build Blueprint
 
-This blueprint turns the PRD into a buildable, phased plan. It assumes a **non-coder founder working with an AI pair-programmer** (Claude Code / Claude Cowork / GitHub Copilot / Gemini / Codex / OpenCode, etc.) rather than a hired engineering team, so each phase is scoped to be deliverable through specification + AI-assisted implementation + review, not manual coding.
+**Tech Stack:** Go 1.26 + Gin 1.12 · Next.js 15 + React 19 · PostgreSQL 18 + sqlc + sqlx · Keycloak 26 · Dexie.js + Workbox · Docker Compose · Terraform · GitHub Actions
 
-## 0. Working Model
+---
 
-1. **You specify** — describe the module/behavior in plain language, referencing this PRD.
-2. **AI Coding Agents builds** — generates schema, API, and UI code directly in the monorepo, running tests as it goes.
-3. **You review** — check the running app (screenshots, demo data), not the code.
-4. **Iterate** — refine via conversation, not manual edits.
-5. **Ship** — GitHub Actions handles build/test/deploy on merge to `main`, gated by a manual "Approve" click in GitHub Environments (satisfies the GUI-driven CI/CD requirement).
+## Phase 0 — Foundation (Week 1)
 
-Each phase below ends with a **demoable milestone** — something you can click through, not just a checklist.
+- [x] Master Catalogue design (200+ entities, 12 domains)
+- [x] Architecture decisions (Go/Gin over NestJS, sqlc over Prisma)
+- [x] Monorepo structure scaffold
+- [x] AGENTS.md and sandbox environment
+- [x] Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch)
+- [x] .env / .env.example with all services
+- [x] GitHub CI workflow (go vet + test, pnpm lint + typecheck + build)
+- [x] Basic Makefile for local dev
 
-## Phase 1 — Foundation (Repo, Schema, Infra)
+## Phase 1 — Database & Data Models (Week 2)
 
-**Goal:** Empty-but-real system running locally with the full data model in place.
+- [ ] SQL schema — all 200+ tables with:
+  - UUIDv7 primary keys
+  - `org_id` for multi-tenancy
+  - Audit columns (`created_by`, `updated_by`, `created_at`, `updated_at`)
+  - RLS policies on every tenant table
+- [ ] sqlc configuration + type-safe Go query generation
+- [ ] Master data seeding (UoM, categories, statuses, roles, permissions)
+- [ ] Sample org hierarchy seed (L1–L4)
+- [ ] Sample product catalogue seed (18+ items from CSV)
+- [ ] Indexes for performance-critical queries (stock_levels, movements)
 
-- [ ] Initialize Turborepo monorepo with `apps/web`, `apps/api`, `apps/mobile`, `packages/*` per README structure
-- [ ] Provision PostgreSQL (Docker Compose locally; Supabase/Neon free tier for shared dev)
-- [ ] Implement full schema: Organizations, Org Levels (L1–L4), Programs, Departments, Item Master, Categories, UoM, Warehouses, Locations, Stock Levels, Stock Movements, Batches, Users, Roles, Permissions, Audit Log
-- [ ] Set up Prisma/Drizzle migrations + seed scripts
-- [ ] Import master catalogue from `master_product_list.csv` + reconciled catalogue docs into the new Item Master (dedupe pass)
-- [ ] Stand up Keycloak (or Supabase Auth) with the 9 roles pre-configured
-- [ ] Docker Compose for local dev: Postgres, Redis, MinIO, Keycloak
-- [ ] GitHub repo + Actions skeleton (lint, typecheck, test on PR)
+## Phase 2 — Go API Core (Week 3)
 
-**Milestone:** `docker compose up` boots the full stack; you can log in as GLOBAL_ADMIN and see the imported catalogue in a raw admin table.
+- [ ] Go module init (`github.com/cpintl/zarishlog-api`)
+- [ ] Configuration layer (viper/envconfig)
+- [ ] Database connection pool (sqlx)
+- [ ] Middleware: auth (OIDC/JWT validation), RBAC, audit logging, tenant context
+- [ ] Health check endpoint
+- [ ] Error handling middleware (structured JSON errors)
+- [ ] Request validation (bindings)
+- [ ] Pagination helpers
 
-## Phase 2 — Core API & Business Logic
+## Phase 3 — Product/Catalogue Module (Week 4)
 
-- [ ] Product/Item CRUD + search/filter endpoints
-- [ ] Warehouse & location management endpoints
-- [ ] Stock level query endpoints (by item/warehouse/batch)
-- [ ] Goods Receipt (GRN) procedure with batch/expiry capture
-- [ ] Goods Issue (SRF) procedure with FEFO-suggested picking
-- [ ] Transfer and Adjustment procedures with reason codes and approval gating
-- [ ] AMC/FMC calculation service + reorder-point engine
-- [ ] CSV import/export procedures
-- [ ] RBAC middleware enforcing the role×scope×action matrix on every endpoint
-- [ ] Audit logging middleware (auto-captures actor, before/after state)
+- [ ] Category CRUD (handler → service → repository)
+- [ ] Product CRUD (handler → service → repository)
+- [ ] UoM CRUD
+- [ ] Bulk import CSV/XLSX with validation
+- [ ] Search endpoint (with Meilisearch integration)
+- [ ] Unit tests (testify + sqlmock)
+- [ ] Integration tests (testcontainers-go)
 
-**Milestone:** Full CRUD + core stock lifecycle testable via API client (Postman/Bruno), with permission checks demonstrably blocking out-of-scope actions.
+## Phase 4 — Warehouse & Location Module (Week 5)
 
-## Phase 3 — Web Console (Dashboard, Products, Warehouses)
+- [ ] Warehouse CRUD
+- [ ] Location hierarchy (zone/rack/bin) CRUD
+- [ ] Location constraints (ambient, cold chain, hazardous, secure)
+- [ ] Storage condition validation
+- [ ] Warehouse association with org levels
 
-- [ ] Next.js app shell, role-based navigation
-- [ ] Dashboard: inventory summary, low-stock widget, recent activity, key charts
-- [ ] Product list/detail/add/edit/delete + CSV import/export UI
-- [ ] Warehouse list/detail, location hierarchy view, capacity visualization
+## Phase 5 — Stock & Inventory Module (Week 6)
 
-**Milestone:** A warehouse officer can log in, browse the catalogue, and manage warehouse structure end-to-end in the browser.
+- [ ] GRN (Goods Receipt Note) — receive stock with batch/expiry
+- [ ] SRF (Stock Request Form) — issue stock with FEFO enforcement
+- [ ] Inter-warehouse transfer
+- [ ] Stock adjustment with reason codes
+- [ ] Stock ledger (append-only movements)
+- [ ] Stock levels (materialized view)
+- [ ] Batch/serial genealogy tracking
+- [ ] Barcode/QR generation
 
-## Phase 4 — Inventory Operations UI
+## Phase 6 — Quality Assurance Module (Week 7)
 
-- [ ] Stock level view (filterable by warehouse/item/batch/status)
-- [ ] GRN, SRF, Transfer, Adjustment forms
-- [ ] Batch/serial tracking interface
-- [ ] Barcode/QR scanning interface (web + mobile camera)
+- [ ] QA inspection on receipt
+- [ ] Pass/fail/quarantine disposition
+- [ ] Quarantine area management (RLS enforced)
+- [ ] Expiry monitoring + alert configuration
+- [ ] Corrective action / disposal records
+- [ ] QA checklist templates
 
-**Milestone:** A full goods-receipt-to-issue cycle can be performed through the UI, and stock levels update correctly with FEFO applied.
+## Phase 7 — Distribution & Asset Management (Week 8)
 
-## Phase 5 — QA, Distribution & Asset Management
+- [ ] Distribution/delivery forms with program tracking
+- [ ] Multi-program allocation
+- [ ] Returns and disposal workflow
+- [ ] Asset register with lifecycle states
+- [ ] Asset transfer/custody-change workflow
+- [ ] Depreciation schedule calculation
+- [ ] Maintenance/service history
 
-- [ ] QA inspection form + quarantine management
-- [ ] Distribution/delivery form with program allocation
-- [ ] Returns & disposal workflow
-- [ ] Asset register UI (separate from consumable inventory), custody transfer, maintenance log
+## Phase 8 — Replenishment & Forecasting (Week 9)
 
-**Milestone:** Items can be received, QA-approved, distributed to a program, and a durable asset can be tracked through its custody lifecycle.
+- [ ] AMC calculation (3/6/12-month rolling window)
+- [ ] Buffer stock and reorder point calculation
+- [ ] FMC (Forecasted Monthly Consumption)
+- [ ] Low-stock/overstock/sleeping-stock alerts
+- [ ] ML forecasting microservice (Prophet)
 
-## Phase 6 — Reporting, Notifications & User Management
+## Phase 9 — User & Access Management (Week 10)
 
-- [ ] Inventory status, movement, valuation, audit-trail reports
-- [ ] Low-stock, expiry, utilization dashboards; PDF export
-- [ ] Notification rules engine + email delivery (free-tier transactional email) + in-app center
-- [ ] User management UI: add/edit, role assignment, activity log, password/MFA management
+- [ ] User CRUD with role assignment per org scope
+- [ ] Permission matrix (module × action) enforcement
+- [ ] Self-service password reset
+- [ ] MFA support
+- [ ] Full activity/audit log
 
-**Milestone:** An admin can configure alerts, and a country rep can pull a compliance report without touching the database.
+## Phase 10 — Offline-First & PWA (Week 11)
 
-## Phase 7 — Offline-First & Mobile
+- [ ] Dexie.js IndexedDB schema matching server tables
+- [ ] Workbox service worker with cache strategies
+- [ ] Background Sync API for offline writes
+- [ ] Conflict resolution (append-only event log)
+- [ ] Sync status indicator UI
+- [ ] Mobile offline (Expo + SQLite)
 
-- [ ] Local-first data layer (RxDB/PowerSync + IndexedDB on web, SQLite on mobile)
-- [ ] Service worker + PWA manifest for installable web app
-- [ ] Sync engine with conflict resolution (append-only ledger for stock transactions)
-- [ ] Offline mode indicator + sync status monitoring
-- [ ] Expo mobile app sharing business-logic package with web; barcode scanning via device camera
+## Phase 11 — Reporting & Analytics (Week 12)
 
-**Milestone:** A storekeeper can complete a full receive/issue cycle on a phone with airplane mode on, then watch it sync cleanly when reconnected.
+- [ ] Metabase dashboards (stock status, movement, valuation)
+- [ ] Stock turnover analysis
+- [ ] Expiry dashboard
+- [ ] Donor/compliance report templates
+- [ ] Export to PDF/CSV
 
-## Phase 8 — Hardening, Testing & Deployment
+## Phase 12 — Deployment & Infrastructure (Week 13-14)
 
-- [ ] Unit tests for business logic (FEFO, AMC/FMC, permission matrix)
-- [ ] Integration tests for core workflows (GRN → stock → issue → report)
-- [ ] Load testing at 22,000+ item / multi-year transaction volume
-- [ ] Security review (RBAC boundaries, tenant isolation, dependency audit)
-- [ ] Terraform modules for self-host / cloud / hybrid deployment
-- [ ] Production GitHub Actions pipeline with manual approval gate
-- [ ] Monitoring (Beszel/Uptime Kuma) and backup automation (pg_dump to object storage on schedule)
+- [ ] Docker multi-stage builds (Go binary, Next.js static)
+- [ ] Terraform: VPC, RDS, ElastiCache, ECS/EKS
+- [ ] GitHub Actions: build → push → deploy (staging + production)
+- [ ] GitHub Environments with manual approval gates
+- [ ] Monitoring setup (Uptime Kuma, OpenObserve)
+- [ ] Load testing (k6)
 
-**Milestone:** One-click (Actions "Run workflow") deploy to a staging environment, promotable to production with a single approval click.
+---
 
-## Phase 9 — Documentation & Handover
+## Key Milestones
 
-- [ ] API documentation (OpenAPI/Swagger, auto-generated from NestJS)
-- [ ] User guide (per role) and Admin guide
-- [ ] Deployment guide (self-host, cloud, hybrid)
-- [ ] Training materials (short screen-recordings preferred over long PDFs)
-- [ ] Final packaged release (tagged GitHub release + Docker images)
-
-## Always-Free Resource Map
-
-| Need | Free-tier option |
-|---|---|
-| Postgres hosting | Supabase (500MB free) / Neon (0.5GB free, branching) / self-host on a free-tier VPS |
-| App/API hosting | Vercel (frontend, free hobby tier) / Railway or Fly.io (small free allowance) / self-host |
-| Object storage | Cloudflare R2 (10GB free) / self-hosted MinIO |
-| Auth | Supabase Auth free tier / self-hosted Keycloak / OAuth2 (google) / Firebase Auth (no usage limits, just compute) |
-| Email | Resend (3,000 emails/month free) |
-| CI/CD | GitHub Actions (2,000 free minutes/month on private repos, unlimited on public) |
-| Monitoring | Beszel / Uptime Kuma (self-hosted, free) |
-| BI dashboards | Metabase CE (self-hosted, free) |
-| DNS/CDN/TLS | Cloudflare free tier |
-
-This keeps the entire pilot deployment (single organization, a handful of warehouses) runnable at **$0–5/month** (a small VPS is typically the only unavoidable cost if not using PaaS free tiers).
-
-## Related Documents
-- `README.md` — quick start and stack summary
-- `PRODUCT_REQUIREMENTS_DOCUMENT.md` — full functional/non-functional scope
-- `ARCHITECTURE.md` — technical design detail
+| Milestone | Phase | What it looks like |
+|---|---|---|
+| **Catalogue Online** | P1–P3 | API serves products; web shows product table |
+| **Warehouse Operational** | P4–P5 | GRN, issue, transfer work end-to-end |
+| **QA Active** | P6 | Inspections, quarantine, expiry alerts |
+| **Assets Tracked** | P7 | Asset lifecycle from acquisition to disposal |
+| **AI Forecasting** | P8 | AMC/FMC calculations drive reorder suggestions |
+| **Offline Capable** | P10 | Field ops work fully offline, sync on reconnect |
+| **Production Ready** | P12 | CI/CD, monitoring, IaC, load tested |

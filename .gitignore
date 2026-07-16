@@ -1,12 +1,46 @@
+# Go
+apps/api/bin/
+apps/api/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work.sum
+vendor/
+
+# Node / pnpm
 node_modules/
 .pnpm-store/
 dist/
 .next/
 out/
 .turbo/
+*.tsbuildinfo
+
+# Environment
 .env
 .env.local
+.env.*.local
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
 *.log
 coverage/
-.DS_Store
-packages/data-models/prisma/migrations/dev/
+
+# Docker
+pgdata/
+redisdata/
+miniodata/
+meilidata/
+
+# Database
+packages/data-models/sql/schema.sql  # generated from migrations

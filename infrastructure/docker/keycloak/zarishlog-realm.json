@@ -1,0 +1,59 @@
+{
+  "realm": "zarishlog",
+  "enabled": true,
+  "displayName": "ZarishLog",
+  "accessTokenLifespan": 3600,
+  "refreshTokenLifespan": 86400,
+  "sslRequired": "none",
+  "roles": {
+    "realm": [
+      { "name": "GLOBAL_ADMIN", "description": "Full system administration" },
+      { "name": "COUNTRY_REP", "description": "View-all, reporting" },
+      { "name": "WAREHOUSE_OFFICER", "description": "Full warehouse operations" },
+      { "name": "WAREHOUSE_STOREKEEPER", "description": "Stock operations" },
+      { "name": "DEPT_MANAGER", "description": "Department manager" },
+      { "name": "DEPT_OFFICER", "description": "Department officer" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "zarishlog-api",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "changeme",
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false
+    },
+    {
+      "clientId": "zarishlog-web",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": ["http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:3000"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@zarishlog.org",
+      "firstName": "Global",
+      "lastName": "Admin",
+      "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
+      "realmRoles": ["GLOBAL_ADMIN"]
+    },
+    {
+      "username": "warehouse_officer",
+      "enabled": true,
+      "email": "warehouse@zarishlog.org",
+      "firstName": "Warehouse",
+      "lastName": "Officer",
+      "credentials": [{ "type": "password", "value": "warehouse123", "temporary": false }],
+      "realmRoles": ["WAREHOUSE_OFFICER"]
+    }
+  ]
+}

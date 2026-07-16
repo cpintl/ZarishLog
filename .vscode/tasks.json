@@ -1,0 +1,87 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker: Start All Services",
+      "type": "shell",
+      "command": "docker compose up -d",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Stop All Services",
+      "type": "shell",
+      "command": "docker compose down",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Restart PostgreSQL",
+      "type": "shell",
+      "command": "docker compose restart postgres",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Run Migrations",
+      "type": "shell",
+      "command": "psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/schema.sql",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Seed Data",
+      "type": "shell",
+      "command": "psql -h localhost -U zarishlog -d zarishlog -f packages/data-models/sql/seed.sql",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Go: Generate sqlc Queries",
+      "type": "shell",
+      "command": "sqlc generate -f apps/api/sqlc.yaml",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Go: Lint",
+      "type": "shell",
+      "command": "golangci-lint run ./...",
+      "options": { "cwd": "${workspaceFolder}/apps/api" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Go: Test All",
+      "type": "shell",
+      "command": "go test ./... -v -race -count=1",
+      "options": { "cwd": "${workspaceFolder}/apps/api" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Web: Dev Server",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": { "cwd": "${workspaceFolder}/apps/web" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Web: Lint",
+      "type": "shell",
+      "command": "pnpm lint",
+      "options": { "cwd": "${workspaceFolder}/apps/web" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Web: Typecheck",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "options": { "cwd": "${workspaceFolder}/apps/web" },
+      "group": "none",
+      "problemMatcher": []
+    }
+  ]
+}

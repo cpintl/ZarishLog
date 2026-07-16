@@ -1,3 +1,6 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - "apps/web"
+  - "apps/mobile"
+  - "packages/ui"
+  - "packages/data-models"
+  - "packages/business-logic"

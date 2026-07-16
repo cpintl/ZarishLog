@@ -1,0 +1,114 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "go.toolsManagement.autoUpdate": true,
+  "go.useLanguageServer": true,
+  "go.gopath": "",
+  "go.goroot": "",
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--fast"],
+  "go.formatTool": "gofumpt",
+  "go.buildTags": "",
+  "go.testFlags": ["-v", "-race"],
+  "go.coverOnSingleTest": true,
+  "go.coverageOptions": "showCoveredCode",
+  "sqltools.connections": [
+    {
+      "name": "ZarishLog Local",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "port": 5432,
+      "database": "zarishlog",
+      "username": "zarishlog",
+      "password": "zarishlog_dev_password"
+    }
+  ],
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.insertSpaces": false,
+    "editor.tabSize": 4
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "tailwindCSS.experimental.classRegex": [],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "postcss.validate": false,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "emmet.includeLanguages": {
+    "typescriptreact": "html"
+  },
+  "prettier.requireConfig": true,
+  "prettier.configPath": ".prettierrc",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "markdown"
+  ],
+  "cSpell.words": [
+    "ZarishLog",
+    "zarishlog",
+    "FEFO",
+    "AMC",
+    "FMC",
+    "GRN",
+    "SRF",
+    "sqlc",
+    "sqlx",
+    "Meilisearch",
+    "Keycloak",
+    "Metabase",
+    "MinIO",
+    "Dexie",
+    "GORM",
+    "gofumpt",
+    "golangci",
+    "godotenv",
+    "testify",
+    "uuidv7",
+    "oidc",
+    "oauth2",
+    "postgres"
+  ],
+  "docker.containers.showReadMore": false,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.env.linux": {
+    "PATH": "${workspaceFolder}/scripts:${env:PATH}"
+  },
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.iconTheme": "material-icon-theme",
+  "window.title": "${dirty}${activeEditorMedium}${separator}ZarishLog"
+}
