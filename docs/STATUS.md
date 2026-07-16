@@ -11,7 +11,7 @@
 | Phase | Status | Key Deliverables |
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
-| Phase 1 — Database & Data Models | ✅ Complete | 79 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
+| Phase 1 — Database & Data Models | ✅ Complete | 76 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
 | Phase 2 — Go API Core | ✅ Complete | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints, structured error handling (`internal/response/`), request validation (`internal/validator/`, custom UUIDv7/enum/date validators), pagination helpers (`internal/pagination/`, page/page_size with LIMIT/OFFSET on all list endpoints), audit logging middleware (`internal/middleware/audit.go`), error middleware (`internal/middleware/error.go`) |
 | Phase 3 — Product/Catalogue Module | ✅ Complete | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM CRUD (List/Get/Create/Update/Delete), bulk CSV import with duplicate detection, PostgreSQL ILIKE search (name/SKU/description/brand/manufacturer), structured validation + pagination + error helpers, 12 unit tests (testify + sqlmock) |
 | Phase 4 — Warehouse & Location Module | ✅ Complete | Warehouse CRUD (List/Get/Create/Update/Delete), Location CRUD (List/Get/Create/Update/Delete with hierarchy tree), Location constraints (get/upsert with ON CONFLICT), location_type validator, 13 unit tests (testify + sqlmock) |
@@ -147,7 +147,7 @@
 
 ---
 
-## 3. All Database Tables (79 tables, 16 domains)
+## 3. All Database Tables (76 tables, 16 domains)
 
 ### Domain 1: Organization & Users (14 tables)
 
