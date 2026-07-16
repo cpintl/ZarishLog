@@ -128,6 +128,26 @@ func main() {
 				qa.GET("/checklists", handler.ListChecklistTemplates(db))
 				qa.GET("/checklists/:id", handler.GetChecklistTemplate(db))
 			}
+			assets := protected.Group("/assets")
+			assets.Use(middleware.RequireRole("admin", "warehouse_manager", "logistics_officer"))
+			{
+				assets.POST("", handler.CreateAsset(db))
+				assets.GET("", handler.ListAssets(db))
+				assets.GET("/:id", handler.GetAsset(db))
+				assets.PUT("/:id", handler.UpdateAsset(db))
+				assets.DELETE("/:id", handler.DeleteAsset(db))
+				assets.POST("/:id/custody", handler.TransferCustody(db))
+				assets.POST("/:id/maintenance", handler.CreateAssetMaintenance(db))
+				assets.GET("/:id/maintenance", handler.ListAssetMaintenance(db))
+			}
+
+			distributions := protected.Group("/distributions")
+			distributions.Use(middleware.RequireRole("admin", "warehouse_manager", "logistics_officer"))
+			{
+				distributions.POST("", handler.CreateDistribution(db))
+				distributions.GET("", handler.ListDistributions(db))
+				distributions.GET("/:id", handler.GetDistribution(db))
+			}
 		}
 	}
 

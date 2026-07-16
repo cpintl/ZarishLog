@@ -127,8 +127,17 @@ POST   /api/v1/qa/inspections/:id/disposition  # Create disposition
 POST   /api/v1/qa/checklists             # Create checklist template with items
 GET    /api/v1/qa/checklists             # List checklist templates (paginated)
 GET    /api/v1/qa/checklists/:id         # Get checklist template with items
-GET    /api/v1/assets                    # [STUB]
-POST   /api/v1/assets/transfer           # [STUB]
+POST   /api/v1/distributions             # Create distribution with line items + beneficiaries
+GET    /api/v1/distributions             # List distributions (paginated)
+GET    /api/v1/distributions/:id         # Get distribution + items + beneficiaries
+POST   /api/v1/assets                    # Create asset
+GET    /api/v1/assets                    # List assets (paginated)
+GET    /api/v1/assets/:id                # Get asset + custody history + maintenance
+PUT    /api/v1/assets/:id                # Update asset
+DELETE /api/v1/assets/:id                # Delete asset
+POST   /api/v1/assets/:id/custody        # Transfer custody
+POST   /api/v1/assets/:id/maintenance    # Create maintenance record
+GET    /api/v1/assets/:id/maintenance    # List maintenance records
 GET    /api/v1/reports/stock-status      # [STUB]
 GET    /api/v1/reports/valuation         # [STUB]
 GET    /api/v1/reports/expiry            # [STUB]

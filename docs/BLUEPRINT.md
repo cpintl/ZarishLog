@@ -83,13 +83,14 @@
 
 ## Phase 7 — Distribution & Asset Management (Week 8)
 
-- [ ] Distribution/delivery forms with program tracking
+- [x] Distribution creation with line items + beneficiaries — `internal/handler/distribution.go`
+- [x] Asset register (CRUD) with lifecycle states — `internal/handler/assets.go`
+- [x] Asset custody-transfer workflow — `POST /assets/:id/custody`
+- [x] Maintenance/service history — `POST/GET /assets/:id/maintenance`
+- [x] Unit tests (testify + sqlmock, 17 tests)
 - [ ] Multi-program allocation
 - [ ] Returns and disposal workflow
-- [ ] Asset register with lifecycle states
-- [ ] Asset transfer/custody-change workflow
 - [ ] Depreciation schedule calculation
-- [ ] Maintenance/service history
 
 ## Phase 8 — Replenishment & Forecasting (Week 9)
 
