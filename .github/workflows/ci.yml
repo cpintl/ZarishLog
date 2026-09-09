@@ -6,10 +6,17 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GO_VERSION: "1.26.4"
   NODE_VERSION: "22"
-  PNPM_VERSION: "11"
+  PNPM_VERSION: "11.24.0"
 
 jobs:
   backend:
@@ -87,25 +94,18 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: apps/web
 
-      # Lint disabled: needs ESLint config setup (next lint is interactive without it)
-      # - name: Lint
-      #   run: pnpm lint
+      - name: Lint
+        run: pnpm lint
+        working-directory: apps/web
 
       - name: Typecheck
         run: pnpm typecheck
         working-directory: apps/web
 
+      - name: Unit tests
+        run: pnpm test
+        working-directory: apps/web
+
       - name: Build
         run: pnpm build
         working-directory: apps/web
-
-  # Deploy job - uncomment when production infra is configured
-  # deploy:
-  #   needs: [backend, frontend]
-  #   if: github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-latest
-  #   environment: production
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Deploy
-  #       run: echo "Deploy step goes here"

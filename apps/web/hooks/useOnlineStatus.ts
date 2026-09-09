@@ -9,6 +9,18 @@ export function useOnlineStatus() {
   const [pendingCount, setPendingCount] = useState(0);
   const [syncing, setSyncing] = useState(false);
 
+  const syncNow = useCallback(async () => {
+    if (syncing || !isOnline()) return;
+    setSyncing(true);
+    try {
+      const result = await processQueue("/api/v1");
+      setPendingCount(await getPendingMutationCount());
+      return result;
+    } finally {
+      setSyncing(false);
+    }
+  }, [syncing]);
+
   useEffect(() => {
     setOnline(isOnline());
 
@@ -29,19 +41,7 @@ export function useOnlineStatus() {
       unsubOffline();
       clearInterval(interval);
     };
-  }, []);
-
-  const syncNow = useCallback(async () => {
-    if (syncing || !isOnline()) return;
-    setSyncing(true);
-    try {
-      const result = await processQueue("/api/v1");
-      setPendingCount(await getPendingMutationCount());
-      return result;
-    } finally {
-      setSyncing(false);
-    }
-  }, [syncing]);
+  }, [syncNow]);
 
   return { online, pendingCount, syncing, syncNow };
 }
