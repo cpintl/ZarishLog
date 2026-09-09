@@ -53,22 +53,22 @@ importers:
         version: 4.4.5
       dexie-react-hooks:
         specifier: ^1.1.7
-        version: 1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.7)
+        version: 1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.8)
       idb:
         specifier: ^8.0.0
         version: 8.0.3
       next:
         specifier: ^15.0.2
-        version: 15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       next-pwa:
         specifier: ^5.6.0
-        version: 5.6.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(esbuild@0.28.1)(lightningcss@1.27.0)(next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(postcss@8.5.19)(supports-color@8.1.1)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
+        version: 5.6.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(esbuild@0.28.1)(lightningcss@1.27.0)(next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postcss@8.5.19)(supports-color@8.1.1)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
       react:
-        specifier: ^19.0.0
-        version: 19.2.7
+        specifier: ^19.2.8
+        version: 19.2.8
       react-dom:
-        specifier: ^19.0.0
-        version: 19.2.7(react@19.2.7)
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
       workbox-background-sync:
         specifier: ^7.1.0
         version: 7.4.1
@@ -90,7 +90,7 @@ importers:
         version: 3.3.7(supports-color@8.1.1)
       '@testing-library/react':
         specifier: ^16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 16.3.3(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/node':
         specifier: ^22.7.5
         version: 22.20.1
@@ -5140,10 +5140,10 @@ packages:
   react-devtools-core@5.3.2:
     resolution: {integrity: sha512-crr9HkVrDiJ0A4zot89oS0Cgv0Oa4OG1Em4jit3P3ZxZSKPMYyMjfwMqgcJna9o625g8oN87rBm8SWWrSTBZxg==}
 
-  react-dom@19.2.7:
-    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
+  react-dom@19.2.8:
+    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
-      react: ^19.2.7
+      react: ^19.2.8
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -5175,6 +5175,10 @@ packages:
 
   react@19.2.7:
     resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+    engines: {node: '>=0.10.0'}
+
+  react@19.2.8:
+    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -8431,12 +8435,12 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
-  '@testing-library/react@16.3.3(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@testing-library/react@16.3.3(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@testing-library/dom': 10.4.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.17
 
@@ -9645,11 +9649,11 @@ snapshots:
 
   detect-newline@3.1.0: {}
 
-  dexie-react-hooks@1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.7):
+  dexie-react-hooks@1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.8):
     dependencies:
       '@types/react': 19.2.17
       dexie: 4.4.5
-      react: 19.2.7
+      react: 19.2.8
 
   dexie@4.4.5: {}
 
@@ -11788,12 +11792,12 @@ snapshots:
 
   nested-error-stacks@2.0.1: {}
 
-  next-pwa@5.6.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(esbuild@0.28.1)(lightningcss@1.27.0)(next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(postcss@8.5.19)(supports-color@8.1.1)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19)):
+  next-pwa@5.6.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(esbuild@0.28.1)(lightningcss@1.27.0)(next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postcss@8.5.19)(supports-color@8.1.1)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19)):
     dependencies:
       babel-loader: 8.4.1(@babel/core@7.29.7(supports-color@8.1.1))(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
       clean-webpack-plugin: 4.0.0(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
       globby: 11.1.0
-      next: 15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      next: 15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       terser-webpack-plugin: 5.6.1(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
       workbox-webpack-plugin: 6.6.0(@types/babel__core@7.20.5)(supports-color@8.1.1)(webpack@5.108.4(esbuild@0.28.1)(lightningcss@1.27.0)(postcss@8.5.19))
       workbox-window: 6.6.0
@@ -11815,15 +11819,15 @@ snapshots:
       - uglify-js
       - webpack
 
-  next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  next@15.5.20(@babel/core@7.29.7(supports-color@8.1.1))(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 15.5.20
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001806
       postcss: 8.4.31
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      styled-jsx: 5.1.6(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      styled-jsx: 5.1.6(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.8)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.20
       '@next/swc-darwin-x64': 15.5.20
@@ -12232,9 +12236,9 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  react-dom@19.2.7(react@19.2.7):
+  react-dom@19.2.8(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
       scheduler: 0.27.0
 
   react-is@16.13.1: {}
@@ -12298,6 +12302,8 @@ snapshots:
   react-refresh@0.17.0: {}
 
   react@19.2.7: {}
+
+  react@19.2.8: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -12844,10 +12850,10 @@ snapshots:
 
   structured-headers@0.4.1: {}
 
-  styled-jsx@5.1.6(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.7):
+  styled-jsx@5.1.6(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.8):
     dependencies:
       client-only: 0.0.1
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@8.1.1)
 
