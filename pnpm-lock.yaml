@@ -49,11 +49,11 @@ importers:
   apps/web:
     dependencies:
       dexie:
-        specifier: ^4.0.8
-        version: 4.4.4
+        specifier: ^4.4.5
+        version: 4.4.5
       dexie-react-hooks:
         specifier: ^1.1.7
-        version: 1.1.7(@types/react@19.2.17)(dexie@4.4.4)(react@19.2.7)
+        version: 1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.7)
       idb:
         specifier: ^8.0.0
         version: 8.0.3
@@ -2995,8 +2995,8 @@ packages:
       dexie: ^3.2 || ^4.0.1-alpha
       react: '>=16'
 
-  dexie@4.4.4:
-    resolution: {integrity: sha512-jIwsYI8Os2hgnqc6O49YwFDKGc5v5QjGx0wPVp543ip1F53VFAKMLthV2pQosQcVTv3eAskTWYspOx195PM0FQ==}
+  dexie@4.4.5:
+    resolution: {integrity: sha512-wWCHdihT3dmlUSuNhn5mMZDWSpG0suxjAni7YjjiZdzabZcKmy3uNZGZ7AeYYXBoLbpSXX35fikPLkPC44Osiw==}
 
   didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
@@ -9645,13 +9645,13 @@ snapshots:
 
   detect-newline@3.1.0: {}
 
-  dexie-react-hooks@1.1.7(@types/react@19.2.17)(dexie@4.4.4)(react@19.2.7):
+  dexie-react-hooks@1.1.7(@types/react@19.2.17)(dexie@4.4.5)(react@19.2.7):
     dependencies:
       '@types/react': 19.2.17
-      dexie: 4.4.4
+      dexie: 4.4.5
       react: 19.2.7
 
-  dexie@4.4.4: {}
+  dexie@4.4.5: {}
 
   didyoumean@1.2.2: {}
 
