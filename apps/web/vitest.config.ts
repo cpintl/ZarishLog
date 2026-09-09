@@ -12,7 +12,6 @@ export default defineConfig({
     clearMocks: true,
     fakeTimers: {
       toFake: [],
-      doNotFake: ["setTimeout", "setInterval", "requestAnimationFrame"],
     },
     testTimeout: 5000,
   },

@@ -2,3 +2,6 @@ packages:
   - "apps/web"
   - "apps/mobile"
   - "packages/ui"
+allowBuilds:
+  esbuild: true
+  sharp: true

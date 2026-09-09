@@ -8,7 +8,7 @@
 
 ZarishLog is an **open-source, offline-first, multi-tenant** platform unifying warehouse management (WMS), inventory management (IMS), procurement, quality assurance, distribution, and fixed-asset tracking for humanitarian and development organizations operating across multi-level (L1 Global → L2 Country Office → L3 Project Office → L4 Program Site) structures.
 
-> Companion docs: [`SETUP.md`](./SETUP.md) · [`CONFIGURE.md`](./CONFIGURE.md) · [`BLUEPRINT.md`](./docs/BLUEPRINT.md) · [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md) · [`STATUS.md`](./docs/STATUS.md) · [`MAINTAINERS.md`](./MAINTAINERS.md) · [`GLOSSARY.md`](./config/reference_data/GLOSSARY.md) · [`PRODUCT_REQUIREMENTS_DOCUMENT.md`](./docs/PRODUCT_REQUIREMENTS_DOCUMENT.md)
+> Companion docs: [`SETUP.md`](./SETUP.md) · [`CONFIGURE.md`](./CONFIGURE.md) · [`BLUEPRINT.md`](./docs/BLUEPRINT.md) · [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md) · [`STATUS.md`](./docs/STATUS.md) · [`MAINTAINERS.md`](./MAINTAINERS.md) · [`GLOSSARY.md`](./config/reference_data/GLOSSARY.md) · [`PRODUCT_REQUIREMENTS_DOCUMENT.md`](./docs/PRODUCT_REQUIREMENTS_DOCUMENT.md) · [`PLATFORM_INTEGRATION.md`](./docs/PLATFORM_INTEGRATION.md)
 
 ---
 
@@ -120,7 +120,7 @@ See [`SETUP.md`](./SETUP.md) for detailed setup instructions. A 1912-product mas
 
 ## 6. Status
 
-Sandbox environment is scaffolded. Master Catalogue designed (1912 products across 65+ categories in expanded CSV catalogue). Phase 0 (Foundation) complete, Phase 1 (Database) complete, Phase 2 (API Core) complete, Phases 3–5 (Catalogue, Warehouse, Stock) partially built. See [`STATUS.md`](./docs/STATUS.md) for detailed phase tracking.
+Sandbox environment is scaffolded. The local architecture is based on Docker Compose and repository-managed PostgreSQL migrations; Supabase and Vercel are not runtime dependencies until an owner-approved integration is configured. Master Catalogue designed (1912 products across 65+ categories in expanded CSV catalogue). Phase 0 (Foundation) complete, Phase 1 (Database) complete, Phase 2 (API Core) complete, Phases 3–5 (Catalogue, Warehouse, Stock) partially built. See [`STATUS.md`](./docs/STATUS.md) and [`PLATFORM_INTEGRATION.md`](./docs/PLATFORM_INTEGRATION.md) for detailed status and platform runbooks.
 
 ## 7. License
 
