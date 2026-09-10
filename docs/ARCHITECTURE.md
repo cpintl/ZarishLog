@@ -19,7 +19,7 @@
        │                    Client Layer                           │
        │  ┌────────────┐   ┌──────────────┐   ┌────────────────┐  │
        │  │ Web PWA     │   │ Mobile (Expo)│   │ Metabase (BI)  │  │
-       │  │ Next.js 15  │   │ React Native │   │                │  │
+       │  │ Next.js 16  │   │ React Native │   │                │  │
        │  │ Dexie.js    │   │ SQLite       │   │                │  │
        │  └──────┬──────┘   └──────┬───────┘   └───────┬────────┘  │
        └─────────┼─────────────────┼────────────────────┼──────────┘
@@ -57,7 +57,7 @@
 |---|---|---|
 | Backend API | Go 1.26 + Gin 1.12 | Performance, single binary deploy, goroutine concurrency for sync |
 | Type-safe SQL | sqlc + sqlx | Generate Go code from SQL; zero-cost abstraction, no ORM magic |
-| Web Frontend | Next.js 15 + React 19 | PWA support, App Router, large ecosystem |
+| Web Frontend | Next.js 16 + React 19 | PWA support, App Router, large ecosystem |
 | Mobile | Expo/React Native | Code sharing with web via shared components |
 | Database | PostgreSQL 18 | RLS, UUIDv7, JSONB, mature replication |
 | Auth | Keycloak 26 | OIDC/OAuth2, RBAC, MFA, SSO |
@@ -67,6 +67,8 @@
 | BI | Metabase CE | Point-and-click over Postgres |
 | Job Queue | Redis + custom Go workers | AMC calc, expiry alerts, notifications |
 | ML Engine | Go microservice (Prophet bindings) | Forecasting, anomaly detection |
+
+> **Available updates (not yet adopted):** Go 1.27, Node.js 26.x LTS, pnpm 12.x, sqlc 1.31, golangci-lint 2.x, Next.js 16.x, Tailwind CSS 4.x. See `SETUP.md` for pinned versions.
 
 ## 4. API Design
 

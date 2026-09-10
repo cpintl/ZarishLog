@@ -1,6 +1,8 @@
 # ZarishLog — Development Sandbox Setup Guide
 
-> **Versions pinned:** Go 1.26.4 · Node.js 22.x LTS · pnpm 11.x · PostgreSQL 18.4 · Keycloak 26.6 · Redis 8 · MinIO latest · Meilisearch latest
+> **Versions pinned:** Go 1.26.4 · Node.js 22.x LTS · pnpm 11.x · PostgreSQL 18.4 · Keycloak 26.7 · Redis 8 · MinIO latest · Meilisearch latest
+>
+> **Available updates (not yet adopted):** Go 1.27 (Aug 2026) · Node.js 26.x LTS (Krypton) · pnpm 12.x (Rust rewrite) · sqlc 1.31 · golangci-lint 2.x · Keycloak 26.7.3 · Next.js 16.x · Tailwind CSS 4.x
 
 ---
 
@@ -19,12 +21,6 @@ The bootstrap script auto-detects your machine, installs missing prerequisites, 
 ```
 
 The same flow is available from VS Code via the Sandbox tasks in the Tasks menu: `Sandbox: Start`, `Sandbox: Stop`, `Sandbox: Reset`, `Sandbox: Health`.
-
-```bash
-bash scripts/sandbox-start.sh
-```
-
-The same flow is available from VS Code via the "Sandbox: Start" task.
 
 ---
 
@@ -47,10 +43,10 @@ If you prefer to install tools manually or the bootstrap script doesn't support 
 
 ```bash
 # golangci-lint (linter)
-curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.2
+curl -fsSL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.13.2
 
 # sqlc (type-safe SQL code generator)
-go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.27.0
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
 
 # gofumpt (stricter Go formatter)
 go install mvdan.cc/gofumpt@v0.7.0
@@ -203,13 +199,84 @@ make test
 
 ---
 
-## 7. Troubleshooting
+## 7. VS Code — Full GUI DevOps Setup
+
+### Recommended Extensions
+
+When you open the project, VS Code will prompt you to install recommended extensions. Click **Install All**.
+
+Key extensions: Go, Prettier, ESLint, Tailwind CSS IntelliSense, SQLTools + PostgreSQL driver, GitLens, Docker, GitHub Actions.
+
+### VS Code Tasks
+
+Press `Ctrl+Shift+P` → **Tasks: Run Task**:
+
+| Task | What It Does |
+|------|--------------|
+| **Sandbox: Start** | Starts all services + API + Web servers (default build task) |
+| **Sandbox: Stop** | Stops all services and servers |
+| **Sandbox: Reset** | Deletes all data and starts fresh |
+| **Sandbox: Health** | Checks if all services are running |
+| **DB: Run Migrations** | Creates/updates database tables |
+| **DB: Seed Data** | Loads sample products, orgs, users |
+| **Go: Generate sqlc Queries** | Regenerates Go code from SQL queries |
+| **Go: Lint** | Checks Go code for errors |
+| **Go: Test All** | Runs all Go tests |
+| **Web: Dev Server** | Starts Next.js dev server |
+| **Web: Lint** | Checks frontend code for errors |
+| **Web: Typecheck** | Checks TypeScript types |
+
+### Debug Configurations (F5)
+
+| Config | What It Does |
+|--------|--------------|
+| **API Server (Go)** | Starts the Go API with a debugger |
+| **Web (Next.js)** | Starts the Next.js dev server |
+| **Go Test (Package)** | Debugs tests in the currently open file |
+
+### Format-on-Save
+
+VS Code automatically formats on save: Go files with `gofumpt`, JS/TS/CSS/JSON with Prettier, ESLint auto-fix for JS/TS.
+
+---
+
+## 8. OpenCode — AI-Assisted DevOps
+
+OpenCode is an AI coding assistant configured for this project via `AGENTS.md` and `.opencode/mcp.json`.
+
+### MCP Tool Servers
+
+| Tool | What the AI Can Do |
+|------|-------------------|
+| **PostgreSQL** | Query the database directly |
+| **GitHub** | Read issues, create PRs, search code |
+| **Docker** | Manage containers |
+| **Filesystem** | Read and write project files |
+
+### Custom Commands
+
+Define custom slash commands in `.opencode/commands/`:
+
+```markdown
+---
+description: Run all tests and show failures
+agent: build
+---
+
+Run the full test suite. If any tests fail, show the failure messages and suggest fixes.
+```
+
+Save as `.opencode/commands/test.md` and run with `/test` in OpenCode.
+
+---
+
+## 9. Troubleshooting
 
 | Symptom                    | Cause                          | Fix                                                       |
 | -------------------------- | ------------------------------ | --------------------------------------------------------- |
 | `psql: connection refused` | Docker not running             | `make docker-up`                                          |
 | `go: command not found`    | Go not in PATH                 | Add `export PATH=$PATH:/usr/local/go/bin` to `~/.profile` |
-| `pnpm: command not found`  | corepack not enabled           | `corepack enable && corepack prepare pnpm@11 --activate`  |
+| `pnpm: command not found`  | corepack not enabled           | `corepack enable && corepack prepare pnpm@12 --activate`  |
 | Docker permission denied   | User not in docker group       | `sudo usermod -aG docker $USER && newgrp docker`          |
 | Go build fails             | Missing dependencies           | `cd apps/api && go mod tidy`                              |
 | Database migration fails   | PostgreSQL not ready           | Wait 5s after `docker compose up -d` and retry            |

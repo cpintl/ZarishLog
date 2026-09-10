@@ -4,7 +4,7 @@
 
 [![CI Pipeline](https://github.com/cpintl/zarishlog/actions/workflows/ci.yml/badge.svg)](https://github.com/cpintl/zarishlog/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Stack: Go + Next.js](https://img.shields.io/badge/Stack-Go%201.26%20%7C%20Next.js%2015%20%7C%20PostgreSQL%2018-blue)](https://github.com/cpintl/zarishlog)
+[![Stack: Go + Next.js](https://img.shields.io/badge/Stack-Go%201.26%20%7C%20Next.js%2016%20%7C%20PostgreSQL%2018-blue)](https://github.com/cpintl/zarishlog)
 
 ZarishLog is an **open-source, offline-first, multi-tenant** platform unifying warehouse management (WMS), inventory management (IMS), procurement, quality assurance, distribution, and fixed-asset tracking for humanitarian and development organizations operating across multi-level (L1 Global → L2 Country Office → L3 Project Office → L4 Program Site) structures.
 
@@ -40,7 +40,7 @@ ZarishLog solves this with one canonical master catalogue, one multi-tenant data
 | Layer              | Choice                                         |
 | ------------------ | ---------------------------------------------- |
 | **Backend**        | Go 1.26 + Gin 1.12 (REST API)                  |
-| **Frontend**       | Next.js 15 + React 19 PWA (Workbox + Dexie.js) |
+| **Frontend**       | Next.js 16 + React 19 PWA (Workbox + Dexie.js) |
 | **Mobile**         | Expo/React Native                              |
 | **Database**       | PostgreSQL 18 (sqlc + sqlx, RLS multi-tenant)  |
 | **Auth**           | Keycloak 26 (OIDC/OAuth2)                      |
@@ -56,7 +56,7 @@ ZarishLog solves this with one canonical master catalogue, one multi-tenant data
 zarishlog/
 ├── apps/
 │   ├── api/              # Go + Gin REST API (backend)
-│   ├── web/              # Next.js 15 PWA (frontend)
+│   ├── web/              # Next.js 16 PWA (frontend)
 │   └── mobile/           # Expo/React Native (field ops)
 ├── packages/
 │   ├── data-models/      # SQL migrations, sqlc queries, Go types

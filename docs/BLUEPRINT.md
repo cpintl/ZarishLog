@@ -1,6 +1,6 @@
 # ZarishLog — Build Blueprint
 
-**Tech Stack:** Go 1.26 + Gin 1.12 · Next.js 15 + React 19 · PostgreSQL 18 + sqlc + sqlx · Keycloak 26 · Dexie.js + Workbox · Docker Compose · Terraform · GitHub Actions
+**Tech Stack:** Go 1.26 + Gin 1.12 · Next.js 16 + React 19 · PostgreSQL 18 + sqlc + sqlx · Keycloak 26 · Dexie.js + Workbox · Docker Compose · Terraform · GitHub Actions
 
 ---
 

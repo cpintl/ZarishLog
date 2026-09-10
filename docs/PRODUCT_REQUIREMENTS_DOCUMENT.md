@@ -1,6 +1,6 @@
 # ZarishLog — Product Requirements Document (PRD)
 
-**Version:** 2.0 · **Status:** Build-ready · **Stack:** Go 1.26 / Gin 1.12 / PostgreSQL 18 / Next.js 15 / React 19
+**Version:** 2.0 · **Status:** Build-ready · **Stack:** Go 1.26 / Gin 1.12 / PostgreSQL 18 / Next.js 16 / React 19
 
 ---
 
@@ -117,7 +117,7 @@ ZarishLog is a unified, offline-first, multi-tenant SaaS platform for humanitari
 |---|---|
 | Backend | Go 1.26 + Gin 1.12 — generated sqlc code in `internal/db/` |
 | Database | PostgreSQL 18 + sqlc + sqlx |
-| Frontend | Next.js 15 + React 19 PWA |
+| Frontend | Next.js 16 + React 19 PWA |
 | Mobile | Expo/React Native |
 | Auth | Keycloak 26 (OIDC/OAuth2) |
 | Offline | Dexie.js + Workbox + Background Sync |

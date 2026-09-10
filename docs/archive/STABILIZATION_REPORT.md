@@ -1,5 +1,7 @@
 # ZarishLog Stabilization Report
 
+> **Status:** Historical record. This document captures a completed stabilization effort from 2026-09-09 and is maintained for reference only.
+
 **Date:** 2026-09-09
 **Branch:** `chore/stabilize-platform`
 **Commit:** `57e4469`

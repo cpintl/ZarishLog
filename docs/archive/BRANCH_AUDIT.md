@@ -1,5 +1,7 @@
 # ZarishLog Branch Audit
 
+> **Status:** Historical record. This document captures a completed audit from 2026-09-09 and is maintained for reference only.
+
 **Audit date:** 2026-09-09
 **Final mainline:** `62481f4` — `chore: update Next.js 15 and PostCSS`
 

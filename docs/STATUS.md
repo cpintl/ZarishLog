@@ -1,7 +1,7 @@
 # ZarishLog — Project Status Dashboard
 
 **Generated:** 2026-07-16
-**Stack:** Go 1.26 + Gin 1.12 · PostgreSQL 18 + sqlc + sqlx · Next.js 15 + React 19 PWA · Keycloak 26 · Docker Compose · Terraform
+**Stack:** Go 1.26 + Gin 1.12 · PostgreSQL 18 + sqlc + sqlx · Next.js 16 + React 19 PWA · Keycloak 26 · Docker Compose · Terraform
 **Repository:** `github.com/cpintl/zarishlog` (monorepo)
 
 ---

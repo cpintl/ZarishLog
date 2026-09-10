@@ -24,7 +24,7 @@ set -euo pipefail
 # All versions are pinned here. Update these when upgrading the stack.
 readonly GO_VERSION="1.26.4"
 readonly GO_DOWNLOAD_BASE="https://go.dev/dl"
-readonly NODE_MAJOR="22"
+readonly NODE_MAJOR="24"
 readonly PNPM_VERSION="11"
 readonly GOLANGCI_LINT_VERSION="1.64.2"
 readonly SQLC_VERSION="1.27.0"

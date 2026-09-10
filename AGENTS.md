@@ -1,126 +1,161 @@
-# ZarishLog — Agent Instructions
+# ZarishLog — AI Agent Guide
 
-## Project Identity
-ZarishLog is an open-source, offline-first, multi-tenant humanitarian logistics, supply chain & asset management platform.
+This repo is a monorepo for an offline-first, multi-tenant humanitarian logistics platform. Keep changes aligned with the architecture and the developer docs below.
 
-## Stack
-- **Backend:** Go 1.26 + Gin 1.12 (REST API), sqlc + database/sql (type-safe SQL generation), PostgreSQL 18
-- **Frontend:** Next.js 15 + React 19 PWA (Workbox + Dexie.js for offline-first)
-- **Mobile:** Expo/React Native (shares business logic)
-- **Infrastructure:** Docker Compose, Terraform, GitHub Actions
-- **Auth:** Keycloak 26 (OIDC/OAuth2)
-- **Search:** Meilisearch
-- **Analytics:** Metabase
-- **ML Engine:** Go microservice (Prophet forecasting, anomaly detection)
+## High-signal docs
 
-## Monorepo Structure
-```
-zarishlog/
-├── apps/
-│   ├── api/              # Go + Gin REST API (backend)
-│   ├── web/              # Next.js 15 PWA (frontend)
-│   └── mobile/           # Expo/React Native (field ops)
-├── packages/
-│   ├── data-models/      # SQL migrations, sqlc queries, Go types
-│   ├── business-logic/   # Shared Go business rules (FEFO, AMC, etc.)
-│   └── ui/               # Shared React components (design system)
-├── infrastructure/
-│   ├── docker/           # Dockerfiles
-│   ├── terraform/        # IaC modules
-│   └── kubernetes/       # k3s manifests (future)
-├── docs/                 # Architecture, PRD, Blueprint docs
-├── config/               # CSV metadata, templates, location data
-├── .github/workflows/    # CI/CD pipelines
-└── scripts/              # Build, seed, utility scripts
-```
+Start with these when context is needed:
 
-## Key Conventions
-- **Go:** Standard project layout, Gin handlers in `internal/handler/`, sqlc-generated code in `internal/db/`
-- **SQL:** All queries in `.sql` files under `packages/data-models/queries/`, type-safe Go via sqlc generate. Generated code (`internal/db/`) is checked into the repo.
-- **CRUD:** Handlers embed SQL directly via sqlx (repository layer was removed as dead code — handlers and repo duplicated the same query logic)
-- **Frontend:** App Router, server components by default, client components for interactivity
-- **Offline:** Dexie.js IndexedDB wrapper + Workbox service worker + Background Sync API
-- **Multi-tenancy:** RLS policies on every table using `org_id`, enforced at DB level via `app.current_org_id()` session function
-- **Database:** UUIDv7 primary keys, audit columns (`created_by`, `updated_by`, `created_at`, `updated_at`) on every table
-- **Testing:** Go `testing` package + testify, Vitest for frontend
+- [README.md](README.md)
+- [SETUP.md](SETUP.md)
+- [CONFIGURE.md](CONFIGURE.md)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/STATUS.md](docs/STATUS.md)
+- [MAINTAINERS.md](MAINTAINERS.md)
+- [config/reference_data/GLOSSARY.md](config/reference_data/GLOSSARY.md)
 
-## Sandbox Setup Script
+Do not duplicate project documentation in AGENTS instructions; link to the canonical file instead.
 
-```bash
-# Full bootstrap (detects OS, installs Go/Node/Docker/psql, sets up Git hooks, VS Code)
-./scripts/zarishlog-setup.sh --yes
+## Repo layout
 
-# Flags:
-#   --yes            Auto-approve all installations
-#   --install-go     Force install/upgrade Go
-#   --install-node   Force install/upgrade Node.js
-#   --install-docker Install Docker if missing
-#   --check-only     Prerequisite check only (no installs)
+- [apps/api](apps/api): Go REST API using Gin, sqlc, and PostgreSQL.
+- [apps/web](apps/web): Next.js 16 PWA frontend.
+- [apps/mobile](apps/mobile): Expo/React Native client (scaffold only).
+- [packages/data-models](packages/data-models): SQL migrations, queries, and shared schema artifacts.
+- [packages/business-logic](packages/business-logic): shared Go business rules (FEFO, AMC).
+- [packages/ui](packages/ui): reusable frontend UI components (scaffold only).
+- [scripts](scripts): local bootstrap, sandbox, validation, and build helpers.
 
-# Note: On Linux Mint, the script detects the Ubuntu codename
-# for Docker repos. Run 'make db-migrate' after setup runs.
-```
+## Toolchain versions
 
-## Makefile (Development Toolkit)
+| Tool     | Version                   | Notes                                          |
+| -------- | ------------------------- | ---------------------------------------------- |
+| Go       | 1.26 (CI pins 1.26.4)    | `go.work` ties `apps/api` + `packages/business-logic` |
+| Node.js  | 24 (`.nvmrc`)             | CI uses 24 — `apps/web/package.json` requires `>=24` |
+| pnpm     | 12.0 (packageManager)     | `corepack enable && corepack prepare pnpm@12 --activate` |
+| Postgres | 18 (Docker)               | Local dev password: `zarishlog_dev_password`   |
+| Docker Compose | v2.32+               | See `docker-compose.yml` for all services       |
+
+## Go workspace
+
+`go.work` at the repo root links two Go modules:
+- `apps/api` (Gin + sqlc + sqlx + go-playground/validator)
+- `packages/business-logic` (pure business rules, no HTTP)
+
+Run Go commands from the module directory, not the repo root (e.g., `cd apps/api && go test ./...`).
+
+## sqlc workflow (critical)
+
+SQL queries live in `packages/data-models/sql/queries/*.sql`. sqlc generates typed Go code into `apps/api/internal/db/`.
+
+After editing any `.sql` query file:
 
 ```bash
-make help               # Show all commands
-make setup              # Run full bootstrap script
-make docker-up          # Start all services (PostgreSQL, Redis, MinIO, Keycloak, Meilisearch)
-make docker-down        # Stop all services
-make dev                # Start API (:8080) + Web (:3000) in dev mode
-make build              # Build Go binary + frontend
-make build-docker       # Build Docker images
-make test               # Run all tests (Go + frontend)
-make test-go            # Go tests only
-make test-web           # Frontend tests only
-make lint               # Lint all code
-make db-migrate         # Run SQL migrations (in order: 001..006)
-make db-seed            # Seed master data
-make db-reset           # Drop, recreate, migrate, seed
-make validate           # Validate config files (CSV, JSON)
-make publish            # Build + push Docker images
+cd apps/api && sqlc generate
 ```
 
-## Sandbox Scripts (in `scripts/`)
+Config: `apps/api/sqlc.yaml`. Generated files (`*.sql.go`, `models.go`, `querier.go`) are checked in — commit them.
 
-| Script | Purpose |
-|---|---|
-| `zarishlog-setup.sh` | Bootstrap dev environment (auto-install deps) |
-| `dev.sh` | Start infra + install deps + migrate + seed |
-| `build.sh` | Build Go binary, frontend, Docker images |
-| `test.sh` | Interactive test runner (Go, frontend, integration) |
-| `validate-config.sh` | Validate CSV/JSON config files |
+Schema migrations live in `packages/data-models/sql/migrations/` and are numbered sequentially (001–006). Apply in filename order.
 
-## Documentation
+## API conventions
 
-| Doc | Purpose |
-|---|---|
-| `SETUP.md` | Step-by-step dev environment setup |
-| `CONFIGURE.md` | Configuration reference (CSV templates, env vars, Docker) |
-| `README.md` | Project overview, stack, quick start |
-| `MAINTAINERS.md` | Release process, CI/CD, adding new modules |
-| `config/reference_data/GLOSSARY.md` | Standardized terminology and abbreviations |
-| `docs/BLUEPRINT.md` | Build phases and deliverables roadmap |
-| `docs/ARCHITECTURE.md` | System architecture and API design |
-| `docs/STATUS.md` | Current build status and phase tracking |
-| `docs/PRODUCT_REQUIREMENTS_DOCUMENT.md` | Product requirements and PRD |
+### Response helpers (`internal/response/`)
 
-## Agent Workflow
-1. Read relevant files first
-2. Understand existing patterns before making changes
-3. Run `go vet ./apps/api/...` after Go code changes
-4. Run `go build ./apps/api/cmd/api` to verify compilation
-5. If modifying SQL migrations, update the Go Product model to match
-6. If adding queries, add them to `packages/data-models/sql/queries/`, then run `cd apps/api && sqlc generate`
-7. Keep documentation in sync with code changes
-8. Never commit secrets or API keys
-9. Follow Go standard project layout for backend changes
-10. Follow Next.js App Router conventions for frontend changes
-11. After any migration change, run `make db-migrate` to verify
-12. Update STATUS.md phase table when completing/fixing phases
-13. New shared packages should be created in `internal/`:
-    - `internal/response/` — structured error codes and JSON response helpers
-    - `internal/validator/` — custom validators for UUIDv7, enums, dates
-    - `internal/pagination/` — pagination param parsing and LIMIT/OFFSET helpers
-14. When adding a new handler, always use response.JSON/response.Error* and validator.BindAndValidate
+Use the `response` package for all JSON responses:
+- `response.OK(c, data)` — 200 with `{"data": ...}`
+- `response.Created(c, data)` — 201 with `{"data": ...}`
+- `response.Paginated(c, data, total, page, pageSize)` — 200 with `{"data": [...], "total": N, "page": N, ...}`
+- `response.NotFound(c, msg)`, `response.BadRequest(c, msg)`, `response.InternalError(c, msg)` — error responses with `{"code": "...", "message": "..."}`
+- `response.Validation(c, details)` — 422 with field errors
+
+### Validation (`internal/validator/`)
+
+Use `validator.BindAndValidate(c, &req)` to bind JSON and validate in one step. Custom tags:
+- `uuid7` — UUIDv7 format (required for all entity IDs)
+- `date` — `YYYY-MM-DD` format
+- `item_type`, `movement_type`, `wh_type`, `loc_type`, `uom_category` — domain enums
+- `opt_uuid7`, `opt_date` — optional versions of the above
+
+### Route structure
+
+All API routes live under `/api/v1`. Protected routes require OIDC JWT via `middleware.Auth()`. Role-based access is enforced per route group via `middleware.RequireRole(...)`.
+
+### Middleware stack (applied in order)
+
+1. `gin.Recovery()` + `gin.Logger()`
+2. `middleware.ErrorHandler()`
+3. `middleware.CORS()`
+4. `middleware.Tenant()` — extracts org from JWT, sets RLS context
+5. `middleware.Auth(cfg)` — on protected groups only
+6. `middleware.Audit(db)` — on protected groups only
+
+### Multi-tenancy
+
+Every tenant-scoped table uses `org_id` with Row-Level Security. Do not bypass this pattern. The `middleware.Tenant()` handler sets the PostgreSQL session variable that RLS policies read.
+
+## Frontend conventions
+
+- **Framework**: Next.js 16 App Router, React 19, TypeScript 5.9, Tailwind CSS 4.
+- **PWA**: Service worker via Workbox (`sw.ts`), offline support via Dexie.js + IndexedDB (`lib/db.ts`).
+- **Tests**: Vitest + jsdom. Test files live in `lib/**/*.test.ts(x)` and `hooks/**/*.test.ts(x)` — these paths are configured in `vitest.config.ts`.
+- **Lint**: ESLint 9 flat config extending `next/core-web-vitals`.
+- **Formatting**: Prettier with double quotes, trailing commas, 100 char width, LF line endings (`.prettierrc`).
+- **Path alias**: `@/` maps to the web app root (configured in `vitest.config.ts` resolve alias).
+
+## Testing
+
+### Go tests
+
+```bash
+cd apps/api && go test ./... -v -race -count=1          # full suite
+cd apps/api && go test ./... -short -count=1             # fast (skip integration)
+cd packages/business-logic && go test ./... -v -count=1  # business rules only
+```
+
+Tests are colocated with source files (e.g., `handler/stock_test.go`). CI runs with a live Postgres service container — some tests may need a database.
+
+### Frontend tests
+
+```bash
+cd apps/web && pnpm test          # vitest run
+cd apps/web && pnpm lint          # eslint
+cd apps/web && pnpm typecheck     # tsc --noEmit
+```
+
+### CI validation order (`.github/workflows/ci.yml`)
+
+Backend: `go vet` → `go test -race` → `go build`
+Frontend: `pnpm lint` → `pnpm typecheck` → `pnpm test` → `pnpm build`
+
+Run `make lint` or `make test` from the repo root to validate everything.
+
+## Pre-commit hook
+
+`.githooks/pre-commit` runs `go vet` on `apps/api` and checks for merge conflict markers in `.go`, `.ts`, `.tsx`, `.md`, `.sql` files. Git hooks are not auto-installed — run `git config core.hooksPath .githooks` to enable.
+
+## Change workflow
+
+1. Read the relevant code and docs before editing.
+2. Match the existing patterns in the affected module.
+3. Prefer small, focused changes over broad refactors.
+4. If changing SQL or schema, update the migration file and any matching Go types or queries. Regenerate with `sqlc generate`.
+5. Run the smallest relevant validation command after the change.
+6. If the work affects phase status or architecture assumptions, keep [docs/STATUS.md](docs/STATUS.md) and the linked docs accurate.
+
+## Guardrails
+
+- Do not add ad hoc repositories or duplication when the repo already uses direct SQL and typed query patterns.
+- Do not create fake app structure or new frameworks that are inconsistent with the existing monorepo.
+- Do not treat config files or serialized templates as disposable; they are part of the project's operational model.
+- Prefer root-cause fixes and minimal edits.
+- Never commit secrets, tokens, or environment files. `.env` is gitignored.
+
+## Good examples to follow
+
+- API handlers and validation patterns in [apps/api/internal/handler](apps/api/internal/handler)
+- Response and error conventions in [apps/api/internal/response/response.go](apps/api/internal/response/response.go)
+- Database and migration conventions in [packages/data-models/sql](packages/data-models/sql)
+- Business logic patterns in [packages/business-logic](packages/business-logic)
+- Product/module status and roadmap in [docs/STATUS.md](docs/STATUS.md)
+- Local environment setup in [SETUP.md](SETUP.md)

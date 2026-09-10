@@ -40,7 +40,7 @@ services:
       - miniodata:/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.7
     restart: unless-stopped
     command: start-dev --import-realm
     environment:

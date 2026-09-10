@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.2.0",
   "description": "ZarishLog — Unified Humanitarian Logistics, Supply Chain & Asset Management Platform",
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@12.0.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "dev": "cd apps/web && pnpm dev",
