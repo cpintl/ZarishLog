@@ -24,7 +24,7 @@
   "go.gopath": "",
   "go.goroot": "",
   "go.lintTool": "golangci-lint",
-  "go.lintFlags": ["--fast"],
+  "go.lintFlags": [],
   "go.formatTool": "gofumpt",
   "go.buildTags": "",
   "go.testFlags": ["-v", "-race"],
@@ -56,7 +56,6 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "tailwindCSS.experimental.classRegex": [],
   "tailwindCSS.includeLanguages": {
     "typescript": "javascript",
     "typescriptreact": "javascript"

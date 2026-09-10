@@ -47,6 +47,12 @@ __pycache__/
 # Local archives
 .archive/
 
+# Sandbox runtime
+.sandbox/
+
+# Data volumes (created by setup scripts)
+data/
+
 # Session artifacts
 session-*.md
 

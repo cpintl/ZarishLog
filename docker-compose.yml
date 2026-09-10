@@ -48,9 +48,9 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: zarishlog_dev_password
       KC_DB: dev-file
       KC_HOSTNAME: localhost
-      KC_HTTP_PORT: 8080
+      KC_HTTP_PORT: 8180
     ports:
-      - "8080:8080"
+      - "8180:8180"
     volumes:
       - ./infrastructure/docker/keycloak:/opt/keycloak/data/import:ro
 

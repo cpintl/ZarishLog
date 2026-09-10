@@ -1,8 +1,8 @@
 # ZarishLog — Development Sandbox Setup Guide
 
-> **Versions pinned:** Go 1.26.4 · Node.js 22.x LTS · pnpm 11.x · PostgreSQL 18.4 · Keycloak 26.7 · Redis 8 · MinIO latest · Meilisearch latest
+> **Versions pinned:** Go 1.26.4 · Node.js 24.x LTS · pnpm 12.x · PostgreSQL 18.4 · Keycloak 26.7 · Redis 8 · MinIO latest · Meilisearch latest
 >
-> **Available updates (not yet adopted):** Go 1.27 (Aug 2026) · Node.js 26.x LTS (Krypton) · pnpm 12.x (Rust rewrite) · sqlc 1.31 · golangci-lint 2.x · Keycloak 26.7.3 · Next.js 16.x · Tailwind CSS 4.x
+> **Available updates (not yet adopted):** Go 1.27 (Aug 2026) · Node.js 26.x LTS (Krypton) · Keycloak 26.7.3
 
 ---
 
@@ -33,8 +33,8 @@ If you prefer to install tools manually or the bootstrap script doesn't support 
 | Tool               | Version    | Install Command (Linux)                                                                            | Install Command (macOS)                                                |
 | ------------------ | ---------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | **Go**             | `1.26.4`   | [Download](https://go.dev/dl/go1.26.4.linux-amd64.tar.gz) + extract to `/usr/local/go`             | `brew install go@1.26`                                                 |
-| **Node.js**        | `22.x LTS` | `curl -fsSL https://deb.nodesource.com/setup_22.x \| sudo -E bash - && sudo apt install -y nodejs` | `brew install node@22`                                                 |
-| **pnpm**           | `11.x`     | `corepack enable && corepack prepare pnpm@11 --activate`                                           | `corepack enable && corepack prepare pnpm@11 --activate`               |
+| **Node.js**        | `24.x LTS` | `curl -fsSL https://deb.nodesource.com/setup_24.x \| sudo -E bash - && sudo apt install -y nodejs` | `brew install node@24`                                                 |
+| **pnpm**           | `12.x`     | `corepack enable && corepack prepare pnpm@12 --activate`                                           | `corepack enable && corepack prepare pnpm@12 --activate`               |
 | **Docker**         | Latest CE  | [Docker Desktop for Linux](https://docs.docker.com/engine/install/)                                | [Docker Desktop for Mac](https://docs.docker.com/desktop/mac/install/) |
 | **Docker Compose** | `v2.32+`   | Included with Docker Desktop                                                                       | Included with Docker Desktop                                           |
 | **psql**           | `18`       | `sudo apt install postgresql-client-18` (or `postgresql-client-16` if 18 unavailable)              | `brew install postgresql@18`                                           |
@@ -77,7 +77,7 @@ This starts:
 | **PostgreSQL 18** | `5432` | Primary database |
 | **Redis 8** | `6379` | Cache + job queue |
 | **MinIO** | `9000` (API), `9001` (Console) | Object storage |
-| **Keycloak 26** | `8080` | Auth (OIDC/OAuth2) |
+| **Keycloak 26** | `8180` | Auth (OIDC/OAuth2) |
 | **Meilisearch** | `7700` | Full-text search |
 
 ### 2.3 Run Database Migrations
@@ -175,7 +175,7 @@ make test
 
 | Service            | URL                         | Credentials                            |
 | ------------------ | --------------------------- | -------------------------------------- |
-| **Keycloak Admin** | http://localhost:8080/admin | `admin` / `zarishlog_dev_password`     |
+| **Keycloak Admin** | http://localhost:8180/admin | `admin` / `zarishlog_dev_password`     |
 | **MinIO Console**  | http://localhost:9001       | `zarishlog` / `zarishlog_dev_password` |
 | **Meilisearch**    | http://localhost:7700       | Key: `zarishlog_search_key`            |
 

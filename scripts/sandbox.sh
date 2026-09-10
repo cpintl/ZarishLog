@@ -152,7 +152,7 @@ start() {
   echo "  API:       http://localhost:8080"
   echo "  Web:       http://localhost:3000"
   echo "  MinIO:     http://localhost:9001"
-  echo "  Keycloak:  http://localhost:8080/admin"
+  echo "  Keycloak:  http://localhost:8180/admin"
   echo "  Meilisearch: http://localhost:7700"
 }
 
@@ -183,11 +183,19 @@ health() {
   echo "Container status:"
   compose_cmd ps
   echo ""
+  echo "Service health:"
+  echo -n "Postgres (5432): " && compose_cmd exec -T postgres pg_isready -U zarishlog >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo -n "API (8080): " && curl -sS --max-time 2 http://localhost:8080/api/v1/health >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo -n "Web (3000): " && curl -sS --max-time 2 http://localhost:3000 >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo -n "MinIO Console (9001): " && curl -sS --max-time 2 http://localhost:9001 >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo -n "Meilisearch (7700): " && curl -sS --max-time 2 http://localhost:7700 >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo -n "Keycloak (8180): " && curl -sS --max-time 2 http://localhost:8180 >/dev/null 2>&1 && echo "OK" || echo "DOWN"
+  echo ""
   echo "Service URLs:"
   echo "  API:       http://localhost:8080"
   echo "  Web:       http://localhost:3000"
   echo "  MinIO:     http://localhost:9001"
-  echo "  Keycloak:  http://localhost:8080/admin"
+  echo "  Keycloak:  http://localhost:8180/admin"
   echo "  Meilisearch: http://localhost:7700"
 }
 

@@ -27,7 +27,7 @@ func Load() *Config {
 		DatabaseURL:       getEnv("DATABASE_URL", "postgresql://zarishlog:zarishlog_dev_password@localhost:5432/zarishlog?sslmode=disable"),
 		APIPort:           getEnv("API_PORT", "8080"),
 		APIHost:           getEnv("API_HOST", "0.0.0.0"),
-		OIDCIssuer:        getEnv("OIDC_ISSUER", "http://localhost:8080/realms/zarishlog"),
+		OIDCIssuer:        getEnv("OIDC_ISSUER", "http://localhost:8180/realms/zarishlog"),
 		OIDCClientID:      getEnv("OIDC_CLIENT_ID", "zarishlog-api"),
 		OIDCClientSecret:  getEnv("OIDC_CLIENT_SECRET", "changeme"),
 		JWTSecret:         getEnv("JWT_SECRET", "change-me-in-production"),

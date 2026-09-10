@@ -68,7 +68,7 @@
 | Job Queue | Redis + custom Go workers | AMC calc, expiry alerts, notifications |
 | ML Engine | Go microservice (Prophet bindings) | Forecasting, anomaly detection |
 
-> **Available updates (not yet adopted):** Go 1.27, Node.js 26.x LTS, pnpm 12.x, sqlc 1.31, golangci-lint 2.x, Next.js 16.x, Tailwind CSS 4.x. See `SETUP.md` for pinned versions.
+> **Available updates (not yet adopted):** Go 1.27, Node.js 26.x LTS, Keycloak 26.7.3. See `SETUP.md` for pinned versions.
 
 ## 4. API Design
 

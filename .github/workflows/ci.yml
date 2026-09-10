@@ -70,6 +70,14 @@ jobs:
         env:
           DATABASE_URL: postgresql://zarishlog:zarishlog_ci_password@localhost:5432/zarishlog_test
 
+      - name: Go vet (business-logic)
+        run: go vet ./...
+        working-directory: packages/business-logic
+
+      - name: Go test (business-logic)
+        run: go test ./... -v -count=1
+        working-directory: packages/business-logic
+
       - name: Go build
         run: go build ./cmd/api
         working-directory: apps/api

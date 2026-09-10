@@ -58,7 +58,7 @@ Place screenshots here to help non-technical users. Suggested images:
 
 - VS Code Tasks menu showing `Sandbox: Start`
 - Browser showing the landing page at `http://localhost:3000`
-- Keycloak admin console at `http://localhost:8080`
+- Keycloak admin console at `http://localhost:8180`
 
 To add a screenshot:
 

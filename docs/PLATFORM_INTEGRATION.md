@@ -49,7 +49,7 @@ Until those answers are recorded, the safe action is read-only inspection and no
 
 ## Vercel onboarding runbook
 
-When the team owner is ready to connect a project, create or import the repository as a Vercel project, set the correct root directory (`apps/web` if deploying only the web app), pin Node 22 LTS (or 26 LTS when ready to upgrade) and pnpm 11.24.0, configure preview and production environment variables separately, and run the same lint/type-check/test/build gates before enabling production promotion. The deployment should expose a health or status route that can be checked after each release.
+When the team owner is ready to connect a project, create or import the repository as a Vercel project, set the correct root directory (`apps/web` if deploying only the web app), pin Node 24 LTS (or 26 LTS when ready to upgrade) and pnpm 12.0.0, configure preview and production environment variables separately, and run the same lint/type-check/test/build gates before enabling production promotion. The deployment should expose a health or status route that can be checked after each release.
 
 A Vercel project should not be invented or created automatically during this audit because the team currently has no projects and the intended root, domain, environment values, and production approval path are not yet confirmed.
 

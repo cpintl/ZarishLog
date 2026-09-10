@@ -1,6 +1,4 @@
-.PHONY: help dev build test lint setup docker-up docker-down db-up db-down \
-        db-migrate db-seed validate-config clean publish version \
-        sandbox-start sandbox-stop sandbox-reset sandbox-health
+.PHONY: build build-docker build-go build-web clean clean-all db-connect db-down db-migrate db-reset db-seed db-up dev docker-down docker-logs docker-ps docker-up help lint lint-go lint-web publish release sandbox-health sandbox-reset sandbox-start sandbox-stop setup test test-coverage test-go test-go-short test-integration test-web validate version
 
 VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT_HASH := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
@@ -64,7 +62,7 @@ docker-up:
 	@echo "  PostgreSQL: localhost:5432"
 	@echo "  Redis:      localhost:6379"
 	@echo "  MinIO:      localhost:9000 (API) / 9001 (Console)"
-	@echo "  Keycloak:   localhost:8080"
+	@echo "  Keycloak:   localhost:8180"
 	@echo "  Meilisearch: localhost:7700"
 
 docker-down:

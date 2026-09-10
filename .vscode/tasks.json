@@ -20,7 +20,7 @@
     {
       "label": "Sandbox: Open Services",
       "type": "shell",
-      "command": "echo 'Open browser to: http://localhost:3000 (web), http://localhost:8080 (api), http://localhost:9001 (minio), http://localhost:7700 (meilisearch)'",
+      "command": "echo 'Open browser to: http://localhost:3000 (web), http://localhost:8080 (api), http://localhost:8180 (keycloak), http://localhost:9001 (minio), http://localhost:7700 (meilisearch)'",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "none",
       "problemMatcher": []

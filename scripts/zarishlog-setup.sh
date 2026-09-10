@@ -25,9 +25,9 @@ set -euo pipefail
 readonly GO_VERSION="1.26.4"
 readonly GO_DOWNLOAD_BASE="https://go.dev/dl"
 readonly NODE_MAJOR="24"
-readonly PNPM_VERSION="11"
-readonly GOLANGCI_LINT_VERSION="1.64.2"
-readonly SQLC_VERSION="1.27.0"
+readonly PNPM_VERSION="12"
+readonly GOLANGCI_LINT_VERSION="2.13.2"
+readonly SQLC_VERSION="1.31.1"
 readonly GOFUMPT_VERSION="0.7.0"
 readonly DOCKER_COMPOSE_VERSION="2.32.0"
 readonly POSTGRES_CLIENT_VERSION="16"
@@ -576,8 +576,14 @@ echo "Running pre-commit checks..."
 
 # Go vet
 if command -v go &>/dev/null && [[ -f apps/api/go.mod ]]; then
-  echo "  → Go vet..."
+  echo "  → Go vet (apps/api)..."
   cd apps/api
+  go vet ./... 2>&1 | sed 's/^/    /' || exit 1
+  cd "$OLDPWD"
+fi
+if command -v go &>/dev/null && [[ -f packages/business-logic/go.mod ]]; then
+  echo "  → Go vet (packages/business-logic)..."
+  cd packages/business-logic
   go vet ./... 2>&1 | sed 's/^/    /' || exit 1
   cd "$OLDPWD"
 fi
@@ -661,7 +667,7 @@ setup_docker_env() {
       "postgres:18-alpine"
       "redis:8-alpine"
       "minio/minio:latest"
-      "quay.io/keycloak/keycloak:26.0"
+      "quay.io/keycloak/keycloak:26.7"
       "getmeili/meilisearch:latest"
     )
     for img in "${images[@]}"; do
@@ -695,12 +701,21 @@ setup_vscode() {
       "mtxr.sqltools"
       "mtxr.sqltools-driver-pg"
       "tamasfe.even-better-toml"
+      "aaron-bond.better-comments"
       "streetsidesoftware.code-spell-checker"
+      "eamodio.gitlens"
+      "mhutchie.git-graph"
+      "vivaxy.vscode-conventional-commits"
       "ms-azuretools.vscode-docker"
       "redhat.vscode-yaml"
       "yzhang.markdown-all-in-one"
+      "bierner.markdown-mermaid"
+      "davidanson.vscode-markdownlint"
       "pkief.material-icon-theme"
+      "irongeek.vscode-env"
       "github.vscode-github-actions"
+      "github.copilot"
+      "github.copilot-chat"
     )
 
     for ext in "${extensions[@]}"; do
