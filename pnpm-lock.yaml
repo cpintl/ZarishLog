@@ -229,8 +229,8 @@ importers:
   packages/ui:
     dependencies:
       react:
-        specifier: ^19.0.0
-        version: 19.2.7
+        specifier: ^19.2.8
+        version: 19.2.8
     devDependencies:
       tailwindcss:
         specifier: ^4.0.0
