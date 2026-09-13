@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "expo": "~52.0.0",
-    "react": "^19.0.0",
+    "react": "^19.2.8",
     "react-native": "^0.87.1",
     "expo-sqlite": "~15.0.0",
     "expo-camera": "~16.0.0",
