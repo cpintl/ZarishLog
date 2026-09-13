@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ZarishLog — Humanitarian Logistics, made calm</title>
+    <meta
+      name="description"
+      content="Offline-first, multi-tenant humanitarian logistics platform. Go + PostgreSQL backend, Next.js PWA frontend, no-code Config Studio. Open source."
+    />
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg" />
+    <meta property="og:title" content="ZarishLog — Humanitarian Logistics, made calm" />
+    <meta
+      property="og:description"
+      content="Offline-first, multi-tenant humanitarian logistics platform with a no-code Config Studio. Open source."
+    />
+    <meta property="og:image" content="./assets/og-banner.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0f766e" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="#top">
+          <img src="./assets/logo.svg" alt="ZarishLog logo" width="34" height="34" />
+          <span>ZarishLog</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#config-studio">Config Studio</a>
+          <a href="#stack">Stack</a>
+          <a class="btn btn-ghost" href="https://github.com/cpintl/ZarishLog" target="_blank" rel="noopener">
+            GitHub ↗
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero-grid"></div>
+      <div class="hero-inner">
+        <div class="hero-mark">
+          <img src="./assets/logo.svg" alt="ZarishLog logo" width="84" height="84" />
+          <h1>ZarishLog</h1>
+          <p class="tagline">Humanitarian logistics, made calm.</p>
+        </div>
+        <p class="hero-copy">
+          Offline-first, multi-tenant supply chain and asset management for relief operations on the ground.
+          Go + PostgreSQL backend, Next.js PWA frontend, and a no-code workspace that lets administrators
+          steer the entire configuration visually.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://github.com/cpintl/ZarishLog" target="_blank" rel="noopener">
+            View source on GitHub
+          </a>
+          <a class="btn btn-outline" href="#config-studio">See the Config Studio</a>
+        </div>
+        <ul class="hero-badges">
+          <li>Offline-first PWA</li>
+          <li>PostgreSQL + RLS multi-tenancy</li>
+          <li>Go + Gin API</li>
+          <li>No-code config</li>
+        </ul>
+      </div>
+      <img class="hero-banner" src="./assets/og-banner.png" alt="ZarishLog platform banner" />
+    </section>
+
+    <section class="band" aria-hidden="true"></section>
+
+    <main>
+      <section class="section" id="features">
+        <h2>What ZarishLog is</h2>
+        <p class="lead">
+          A humanitarian logistics and asset management platform built for teams that work without reliable
+          connectivity and must stay accountable to donors, regulators, and the people they serve.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Offline-first PWA</h3>
+            <p>
+              Receive, issue, transfer, and adjust stock with zero connectivity. A Workbox service worker and
+              IndexedDB queue every write and sync it when the network returns.
+            </p>
+          </article>
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Multi-tenant by construction</h3>
+            <p>
+              Every table carries an org_id and PostgreSQL Row-Level Security enforces isolation at the database
+              layer — enforced, not bolted on.
+            </p>
+          </article>
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Config-as-files</h3>
+            <p>
+              Master catalogues, form templates, roles, and reference data live as readable JSON, CSV, and
+              Markdown — version-controlled like code, loaded by <code>make db-seed</code>.
+            </p>
+          </article>
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Business rules in Go</h3>
+            <p>
+              FEFO picking, AMC and reorder calculations, and validation live in a shared Go module shared by the
+              web app, mobile app, and API.
+            </p>
+          </article>
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Offline-first sync</h3>
+            <p>
+              An append-only stock-movement ledger plus a retry-capped sync queue keeps every record truthful in
+              both directions.
+            </p>
+          </article>
+          <article class="card">
+            <span class="rule"></span>
+            <h3>Open source, free tiers</h3>
+            <p>
+              Every component — Postgres, Redis, MinIO, Keycloak, Meilisearch — has a genuinely free self-hosted
+              path.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-tint" id="config-studio">
+        <h2>A no-code workspace for configuration</h2>
+        <div class="studio">
+          <div class="studio-copy">
+            <p>
+              The <strong>Config Studio</strong> turns everything under <code>config/</code> and
+              <code>docs/</code> into interactive diagrams. Non-technical builders and administrators can browse
+              forms, master data, roles, business logic flows, and infrastructure dependencies — then edit and
+              save changes straight back to the files.
+            </p>
+            <ul class="ticks">
+              <li>Six live diagram views: overview, forms, metadata, business logic, setup, documents</li>
+              <li>CSV row editor, JSON form field wizard, Markdown editor</li>
+              <li>Atomic write-back to the repository, auto-refreshed views</li>
+            </ul>
+          </div>
+          <img src="./assets/og-banner.png" alt="Config Studio banner" class="studio-img" />
+        </div>
+      </section>
+
+      <section class="section" id="stack">
+        <h2>Technology stack</h2>
+        <div class="chips">
+          <span class="chip">Go 1.26 + Gin</span>
+          <span class="chip">PostgreSQL 18 · sqlc · sqlx</span>
+          <span class="chip">Next.js 16 PWA</span>
+          <span class="chip">Keycloak 26 (OIDC/RBAC)</span>
+          <span class="chip">Dexie.js + Workbox</span>
+          <span class="chip">Redis · MinIO · Meilisearch</span>
+          <span class="chip">React Flow diagrams</span>
+          <span class="chip">Docker Compose · Terraform</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <strong>ZarishLog</strong>
+          <p>Humanitarian logistics platform — open source. Built with care for field teams.</p>
+        </div>
+        <a class="btn btn-ghost" href="https://github.com/cpintl/ZarishLog" target="_blank" rel="noopener">
+          github.com/cpintl/ZarishLog ↗
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

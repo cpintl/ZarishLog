@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="ZarishLog banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0e2424" />
+      <stop offset="0.55" stop-color="#115e59" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- subtle grid -->
+  <g stroke="#ffffff" stroke-opacity="0.05" stroke-width="2">
+    <line x1="0" y1="210" x2="1200" y2="210" />
+    <line x1="0" y1="420" x2="1200" y2="420" />
+    <line x1="400" y1="0" x2="400" y2="630" />
+    <line x1="800" y1="0" x2="800" y2="630" />
+  </g>
+
+  <!-- logo mark -->
+  <g transform="translate(84 220)">
+    <rect width="132" height="132" rx="32" fill="url(#tile)" />
+    <path d="M34 34 H98 L34 98 H98" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <rect x="88" y="88" width="28" height="28" rx="9" fill="#fbbf24" />
+  </g>
+
+  <!-- wordmark -->
+  <text x="248" y="300" font-family="DejaVu Sans, sans-serif" font-size="68" font-weight="bold" fill="#ffffff" letter-spacing="1">ZarishLog</text>
+  <text x="86" y="404" font-family="DejaVu Sans, sans-serif" font-size="31" fill="#ccfbf1">Humanitarian Logistics · Supply Chain · Asset Management</text>
+
+  <!-- capability chip -->
+  <rect x="86" y="440" width="452" height="54" rx="27" fill="#0f172a" stroke="#fbbf24" stroke-width="2" />
+  <text x="120" y="474" font-family="DejaVu Sans, sans-serif" font-size="24" fill="#fbbf24" letter-spacing="2">OFFLINE-FIRST · OPEN SOURCE · MULTI-TENANT</text>
+
+  <!-- rising stock bars -->
+  <rect x="878" y="332" width="66" height="120" rx="18" fill="#f59e0b" />
+  <rect x="962" y="272" width="66" height="180" rx="18" fill="#14b8a6" />
+  <rect x="1046" y="212" width="66" height="240" rx="18" fill="#f8fafc" />
+  <circle cx="1010" cy="150" r="10" fill="#fbbf24" />
+
+  <!-- bottom accent -->
+  <rect x="0" y="600" width="1200" height="30" fill="#f59e0b" />
+</svg>

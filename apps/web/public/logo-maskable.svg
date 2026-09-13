@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ZarishLog maskable icon">
+  <defs>
+    <linearGradient id="zlgm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <!-- full-bleed background so the maskable safe zone is covered -->
+  <rect width="512" height="512" fill="#0f766e" />
+  <circle cx="256" cy="256" r="238" fill="url(#zlgm)" />
+  <path
+    d="M188 182 H324 L188 330 H324"
+    stroke="#ffffff"
+    stroke-width="44"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <rect x="320" y="320" width="72" height="72" rx="22" fill="#fbbf24" />
+</svg>

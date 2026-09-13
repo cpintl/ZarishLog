@@ -2,26 +2,45 @@
   "name": "ZarishLog",
   "short_name": "ZarishLog",
   "description": "Humanitarian Logistics, Supply Chain & Asset Management",
+  "id": "/",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#0f172a",
+  "theme_color": "#0f766e",
   "orientation": "portrait-primary",
   "categories": ["business", "logistics", "health"],
   "lang": "en",
   "icons": [
     {
+      "src": "/icons/maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-  "screenshots": []
+  "screenshots": [
+    {
+      "src": "/branding/og-banner.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
 }

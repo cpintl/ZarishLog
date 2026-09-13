@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ZarishLog logo">
+  <defs>
+    <linearGradient id="zlg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#zlg)" />
+  <path
+    d="M164 158 H348 L164 354 H348"
+    stroke="#ffffff"
+    stroke-width="52"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <rect x="344" y="344" width="84" height="84" rx="24" fill="#fbbf24" />
+  <rect x="368" y="352" width="20" height="36" rx="10" fill="#f59e0b" transform="rotate(-8 378 370)" opacity="0.9" />
+</svg>
