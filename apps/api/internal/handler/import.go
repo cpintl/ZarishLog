@@ -93,7 +93,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		for {
 			record, line, err := readCSVRecord(reader)
@@ -120,9 +120,13 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 				continue
 			}
 
-			var exists int
-			tx.Get(&exists, `SELECT COUNT(*) FROM products WHERE sku = $1 AND org_id = $2`, sku, orgID)
-			if exists > 0 {
+var exists int
+		if err := tx.Get(&exists, `SELECT COUNT(*) FROM products WHERE sku = $1 AND org_id = $2`, sku, orgID); err != nil {
+			result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("lookup error: %v", err)})
+			result.Skipped++
+			continue
+		}
+		if exists > 0 {
 				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("duplicate SKU: %s", sku)})
 				result.Skipped++
 				continue
@@ -169,7 +173,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		if len(result.Errors) > 0 {
-			tx.Rollback()
+			_ = tx.Rollback()
 			response.Validation(c, result)
 			return
 		}

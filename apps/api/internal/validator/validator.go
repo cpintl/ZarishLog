@@ -1,11 +1,12 @@
 package validator
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 var validate *validator.Validate
@@ -17,13 +18,18 @@ type FieldError struct {
 
 func init() {
 	validate = validator.New()
-	validate.RegisterValidation("uuid7", validateUUIDv7)
-	validate.RegisterValidation("date", validateDate)
-	validate.RegisterValidation("item_type", validateItemType)
-	validate.RegisterValidation("movement_type", validateMovementType)
-	validate.RegisterValidation("wh_type", validateWarehouseType)
-	validate.RegisterValidation("loc_type", validateLocationType)
-	validate.RegisterValidation("uom_category", validateUoMCategory)
+	register := func(tag string, fn validator.Func) {
+		if err := validate.RegisterValidation(tag, fn); err != nil {
+			panic(fmt.Sprintf("validator: failed to register %q: %v", tag, err))
+		}
+	}
+	register("uuid7", validateUUIDv7)
+	register("date", validateDate)
+	register("item_type", validateItemType)
+	register("movement_type", validateMovementType)
+	register("wh_type", validateWarehouseType)
+	register("loc_type", validateLocationType)
+	register("uom_category", validateUoMCategory)
 
 	validate.RegisterAlias("opt_uuid7", "omitempty,uuid7")
 	validate.RegisterAlias("opt_date", "omitempty,date")
@@ -69,10 +75,6 @@ func validateUoMCategory(fl validator.FieldLevel) bool {
 		"count": true, "weight": true, "volume": true, "length": true,
 		"dosage": true, "packaging": true,
 	}
-	return valid[fl.Field().String()]
-}
-
-func validateEnum(fl validator.FieldLevel, valid map[string]bool) bool {
 	return valid[fl.Field().String()]
 }
 

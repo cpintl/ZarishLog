@@ -40,7 +40,7 @@ func CreateDistribution(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		var distID string
 		err = tx.QueryRowx(

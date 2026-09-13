@@ -40,7 +40,7 @@ func TestImportProducts_Success(t *testing.T) {
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 	part, _ := writer.CreateFormFile("file", "products.csv")
-	part.Write([]byte(csvContent))
+	_, _ = part.Write([]byte(csvContent))
 	writer.Close()
 
 	mock.ExpectBegin()
@@ -109,7 +109,7 @@ DEF-2,Item Two,,,consumable
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 	part, _ := writer.CreateFormFile("file", "products.csv")
-	part.Write([]byte(csvContent))
+	_, _ = part.Write([]byte(csvContent))
 	writer.Close()
 
 	mock.ExpectBegin()
@@ -163,7 +163,7 @@ func TestImportProducts_DuplicateSKU(t *testing.T) {
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 	part, _ := writer.CreateFormFile("file", "products.csv")
-	part.Write([]byte(csvContent))
+	_, _ = part.Write([]byte(csvContent))
 	writer.Close()
 
 	mock.ExpectBegin()
@@ -200,7 +200,7 @@ OK-1,Good Item,consumable
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 	part, _ := writer.CreateFormFile("file", "products.csv")
-	part.Write([]byte(csvContent))
+	_, _ = part.Write([]byte(csvContent))
 	writer.Close()
 
 	mock.ExpectBegin()

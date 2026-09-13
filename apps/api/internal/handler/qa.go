@@ -36,7 +36,7 @@ func CreateInspection(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		var id string
 		err = tx.QueryRowx(
@@ -173,7 +173,7 @@ func CreateChecklistTemplate(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		var templateID string
 		err = tx.QueryRowx(

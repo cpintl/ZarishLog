@@ -39,7 +39,7 @@ func Audit(db *sqlx.DB) gin.HandlerFunc {
 		ua := c.Request.UserAgent()
 
 		go func() {
-			db.Exec(
+			_, _ = db.Exec(
 				`INSERT INTO audit_log (id, org_id, user_id, action, entity_type, entity_id, ip_address, user_agent, created_at)
 				 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
 				id, orgID, userID, action, entityType, entityID, ip, ua, time.Now(),

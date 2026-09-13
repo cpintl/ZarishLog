@@ -215,7 +215,7 @@ func TransferCustody(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		var currentCustodian *string
 		_ = tx.Get(&currentCustodian, `SELECT custodian_id FROM assets WHERE id=$1`, assetID)

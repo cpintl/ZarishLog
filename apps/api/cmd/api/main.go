@@ -20,7 +20,7 @@ var (
 )
 
 func main() {
-	godotenv.Load()
+	_ = godotenv.Load()
 
 	cfg := config.Load()
 

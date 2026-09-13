@@ -100,7 +100,7 @@ func CreateTransfer(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		req.Transfer.OrgID = orgID
 		req.Transfer.CreatedBy = userID
@@ -165,7 +165,7 @@ func CreateAdjustment(db *sqlx.DB) gin.HandlerFunc {
 			response.InternalError(c, "failed to begin transaction")
 			return
 		}
-		defer tx.Rollback()
+		defer func() { _ = tx.Rollback() }()
 
 		req.Adjustment.OrgID = orgID
 		req.Adjustment.CreatedBy = userID
