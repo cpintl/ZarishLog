@@ -27,6 +27,25 @@
 
 ---
 
+## 1b. Config Studio (Admin Configuration Workspace)
+
+Released alongside Phase 10 scaffolding as a no-code operations tool for
+non-technical builders and administrators.
+
+| Area | Status | Details |
+|---|---|---|
+| Interactive Graph Studio | ✅ Live at `/config-studio` | Six switchable domains: System Overview, Forms & Config, Master Data & Roles, Business Logic, Setup & Dependencies, Documents |
+| Diagram rendering | ✅ `@xyflow/react` 12 | Pan/zoom/drag canvas, typed node cards, mini-map, edge labels |
+| Editable configs | ✅ Write-back to files | CSV row/column editor (metadata + templates), JSON form field wizard (forms), JSON text editor (other configs), Markdown editor (docs) |
+| Realtime sync | ✅ | 8s polling of open files while idle; graph + drawer refresh after each save |
+| Sandboxing | ✅ | Reads scoped to the repo tree; writes restricted to `config/` and `docs/` |
+| Tests | ✅ | 25 vitest tests for the studio (parsers, CSV round-trip, markdown tables, graph builders, layered layout) |
+
+Source: `apps/web/lib/config-studio/`, `apps/web/app/api/config-studio/`,
+`apps/web/app/config-studio/`.
+
+---
+
 ## 2. Phase 1 Detailed Delivery Report
 
 ### 2.1 Migration Summary

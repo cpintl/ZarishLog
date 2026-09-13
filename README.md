@@ -198,6 +198,29 @@ Once running:
 - **MinIO (file storage):** http://localhost:9001
 - **Keycloak (user management):** http://localhost:8180
 
+### Config Studio (no-code admin workspace)
+
+The web app ships a visual, diagram-based workspace at **`/config-studio`** for
+non-technical builders and administrators. It turns everything under
+[`config/`](./config/) and [`docs/`](./docs/) into an interactive graph you can
+navigate and edit without writing code:
+
+- **Overview / Forms & Config / Master Data & Roles / Business Logic /
+  Setup & Dependencies / Documents** — six switchable live graphs (forms ↔
+  entities, roles, FEFO/AMC/GRN flows, Docker services + env, docs map).
+- **Click any node** to inspect the underlying file, then edit directly:
+  row/column editors for CSV master data, a field wizard for JSON form
+  templates, JSON and Markdown text editors.
+- **Save writes back to the repo files** (`config/` and `docs/`) through the
+  studio API; the graph and file views refresh automatically, and file views
+  stay in sync with on-disk changes via an 8-second poll while you are not
+  editing.
+- Read access is limited to the repository tree and writes are sandboxed to
+  `config/` and `docs/`.
+
+> The studio reads and writes the source of truth on disk, so changes are
+> visible to `make db-seed`, validation scripts, and git as normal file edits.
+
 See [`SETUP.md`](./SETUP.md) for full prerequisites and troubleshooting.
 
 ---

@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@xyflow/react": "^12.11.6",
     "dexie": "^4.4.5",
     "dexie-react-hooks": "^4.4.0",
     "idb": "^8.0.0",
