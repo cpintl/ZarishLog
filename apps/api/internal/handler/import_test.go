@@ -182,6 +182,69 @@ func TestImportProducts_DuplicateSKU(t *testing.T) {
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
+func TestImportProducts_CommentPrefixedSKUAndPhysicalRowNumbers(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	require.NoError(t, err)
+	defer mockDB.Close()
+
+	db := sqlx.NewDb(mockDB, "sqlmock")
+	router := setupImportRouter(db)
+
+	csvContent := `# comment line 1
+# comment line 2
+sku,name,item_type
+#HD-1,Hash Item,consumable
+BADROW
+OK-1,Good Item,consumable
+`
+	var buf bytes.Buffer
+	writer := multipart.NewWriter(&buf)
+	part, _ := writer.CreateFormFile("file", "products.csv")
+	part.Write([]byte(csvContent))
+	writer.Close()
+
+	mock.ExpectBegin()
+	mock.ExpectQuery(`SELECT COUNT\(\*\) FROM products WHERE`).
+		WithArgs("#HD-1", "org-123").
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
+	mock.ExpectExec(`INSERT INTO products`).
+		WithArgs("org-123", nil, nil, "#HD-1", "Hash Item", "", "consumable", "", "", "user-456", "user-456").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`SELECT COUNT\(\*\) FROM products WHERE`).
+		WithArgs("OK-1", "org-123").
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
+	mock.ExpectExec(`INSERT INTO products`).
+		WithArgs("org-123", nil, nil, "OK-1", "Good Item", "", "consumable", "", "", "user-456", "user-456").
+		WillReturnResult(sqlmock.NewResult(2, 1))
+	mock.ExpectRollback()
+
+	req, _ := http.NewRequest("POST", "/api/v1/products/import", &buf)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, w.Code)
+
+	var resp struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
+		Details struct {
+			Imported int           `json:"imported"`
+			Skipped  int           `json:"skipped"`
+			Errors   []ImportError `json:"errors"`
+		} `json:"details"`
+	}
+	err = json.Unmarshal(w.Body.Bytes(), &resp)
+	require.NoError(t, err)
+	assert.Equal(t, "VALIDATION_ERROR", resp.Code)
+	assert.Equal(t, 2, resp.Details.Imported)
+	assert.Equal(t, 1, resp.Details.Skipped)
+	require.Len(t, resp.Details.Errors, 1)
+	assert.Equal(t, 5, resp.Details.Errors[0].Row)
+
+	require.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestSearchProducts(t *testing.T) {
 	mockDB, mock, err := sqlmock.New()
 	require.NoError(t, err)

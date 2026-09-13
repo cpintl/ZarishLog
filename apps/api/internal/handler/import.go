@@ -56,7 +56,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 		reader.LazyQuotes = true
 		reader.FieldsPerRecord = -1
 
-		headers, err := readCSVRecord(reader)
+		headers, _, err := readCSVRecord(reader)
 		if err != nil {
 			response.BadRequest(c, "failed to read CSV headers")
 			return
@@ -95,21 +95,19 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 		}
 		defer tx.Rollback()
 
-		rowNum := 1
 		for {
-			record, err := readCSVRecord(reader)
+			record, line, err := readCSVRecord(reader)
 			if err == io.EOF {
 				break
 			}
 			if err != nil {
-				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "_", Error: fmt.Sprintf("parse error: %v", err)})
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "_", Error: fmt.Sprintf("parse error: %v", err)})
 				result.Skipped++
 				continue
 			}
 
-			rowNum++
 			if len(record) <= headerMap["sku"] || len(record) <= headerMap["name"] {
-				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "sku", Error: "row has fewer columns than the header"})
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: "row has fewer columns than the header"})
 				result.Skipped++
 				continue
 			}
@@ -117,7 +115,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 			name := strings.TrimSpace(record[headerMap["name"]])
 
 			if sku == "" || name == "" {
-				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "sku", Error: "sku and name are required"})
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: "sku and name are required"})
 				result.Skipped++
 				continue
 			}
@@ -125,7 +123,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 			var exists int
 			tx.Get(&exists, `SELECT COUNT(*) FROM products WHERE sku = $1 AND org_id = $2`, sku, orgID)
 			if exists > 0 {
-				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "sku", Error: fmt.Sprintf("duplicate SKU: %s", sku)})
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("duplicate SKU: %s", sku)})
 				result.Skipped++
 				continue
 			}
@@ -162,7 +160,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 				orgID, catID, uomID, sku, name, desc, itemType, brand, manufacturer, userID, userID,
 			)
 			if err != nil {
-				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "_", Error: fmt.Sprintf("insert error: %v", err)})
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "_", Error: fmt.Sprintf("insert error: %v", err)})
 				result.Skipped++
 				continue
 			}
@@ -232,18 +230,25 @@ func getCSVField(record []string, headerMap map[string]int, field string) string
 	return ""
 }
 
-// readCSVRecord returns the next non-comment row from a CSV stream. Rows whose
-// first non-whitespace cell starts with "#" are treated as comments and are
-// skipped, so templates may include instruction lines before the header row.
-func readCSVRecord(reader *csv.Reader) ([]string, error) {
+// readCSVRecord returns the next data row from a CSV stream together with its
+// physical line number. Rows are treated as comments only when the entire row
+// is a single cell whose first non-whitespace character starts with "#", so
+// templates may include instruction lines anywhere but a data row (e.g. a SKU
+// that begins with "#") is never mistaken for a comment.
+func readCSVRecord(reader *csv.Reader) ([]string, int, error) {
 	for {
 		record, err := reader.Read()
 		if err != nil {
-			return nil, err
+			if len(record) > 0 {
+				line, _ := reader.FieldPos(0)
+				return nil, line, err
+			}
+			return nil, 0, err
 		}
-		if len(record) > 0 && strings.HasPrefix(strings.TrimSpace(record[0]), "#") {
+		if len(record) == 1 && strings.HasPrefix(strings.TrimSpace(record[0]), "#") {
 			continue
 		}
-		return record, nil
+		line, _ := reader.FieldPos(0)
+		return record, line, nil
 	}
 }

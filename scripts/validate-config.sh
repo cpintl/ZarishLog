@@ -99,35 +99,57 @@ validate_csv() {
   
   # Check for duplicate SKUs (products only)
   if echo "$file" | grep -q "product"; then
-    local sku_col=1
-    if echo "$headers" | grep -qi "sku"; then
-      sku_col="$(echo "$headers" | tr ',' '\n' | grep -n -i "sku" | cut -d: -f1)"
-      local dupes=""
-      if command -v python3 >/dev/null 2>&1; then
-        dupes="$(python3 - "$file" <<'PY' 2>/dev/null || true
+    if command -v python3 >/dev/null 2>&1; then
+      local dupes
+      dupes="$(python3 - "$file" <<'PY' 2>/dev/null || true
 import csv, sys
 from pathlib import Path
+
 path = Path(sys.argv[1])
 with open(path, newline="", encoding="utf-8") as fh:
-    reader = csv.DictReader(fh)
-    if not reader.fieldnames or "sku" not in reader.fieldnames:
+    reader = csv.reader(fh)
+    sku_idx = None
+    for row in reader:
+        if not row or (len(row) == 1 and (row[0] or "").lstrip().startswith("#")):
+            continue
+        header = [c.strip().lower() for c in row]
+        if "sku" not in header:
+            print("SKIP: no sku column found")
+            sys.exit(0)
+        sku_idx = header.index("sku")
+        break
+    if sku_idx is None:
+        print("SKIP: no header row found")
         sys.exit(0)
     seen = {}
     for row in reader:
-        sku = (row.get("sku") or "").strip()
-        if sku:
-            seen[sku] = seen.get(sku, 0) + 1
-for sku, n in sorted(seen.items()):
-    if n > 1:
-        print(f"{sku} ({n}x)")
+        if not row or (len(row) == 1 and (row[0] or "").lstrip().startswith("#")):
+            continue
+        if sku_idx < len(row):
+            sku = row[sku_idx].strip()
+            if sku:
+                seen[sku] = seen.get(sku, 0) + 1
+    for sku, n in sorted(seen.items()):
+        if n > 1:
+            print(f"{sku} ({n}x)")
 PY
 )"
-      else
-        dupes="$(tail -n +2 "$file" | cut -d, -f"$sku_col" | sort | uniq -d | grep -v '^\s*$' || true)"
-      fi
-      if [[ -n "$dupes" ]]; then
+      if [[ "$dupes" == SKIP:* ]]; then
+        report_warning "${name}: Duplicate SKU check skipped: ${dupes#SKIP: }"
+      elif [[ -n "$dupes" ]]; then
         report_warning "${name}: Duplicate SKUs found:"
         echo "$dupes" | sed 's/^/      - /'
+      fi
+    else
+      local sku_col=1
+      if echo "$headers" | grep -qi "sku"; then
+        sku_col="$(echo "$headers" | tr ',' '\n' | grep -n -i "sku" | cut -d: -f1)"
+        local dupes
+        dupes="$(tail -n +2 "$file" | cut -d, -f"$sku_col" | sort | uniq -d | grep -v '^\s*$' || true)"
+        if [[ -n "$dupes" ]]; then
+          report_warning "${name}: Duplicate SKUs found:"
+          echo "$dupes" | sed 's/^/      - /'
+        fi
       fi
     fi
   fi
