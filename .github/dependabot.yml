@@ -12,6 +12,21 @@ updates:
       interval: weekly
     open-pull-requests-limit: 10
     versioning-strategy: increase
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: "/apps/mobile"
@@ -19,6 +34,21 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     versioning-strategy: increase
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "expo"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "expo-camera"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "expo-sqlite"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: "/packages/ui"
@@ -26,6 +56,11 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     versioning-strategy: increase
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: "/"
@@ -33,6 +68,9 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     versioning-strategy: increase
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: gomod
     directory: "/apps/api"
