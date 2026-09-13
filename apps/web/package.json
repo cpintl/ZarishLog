@@ -16,7 +16,7 @@
     "dexie-react-hooks": "^4.4.0",
     "idb": "^8.0.0",
     "next": "^16.0.0",
-    "react": "^19.2.8",
+    "react": "^19.3.0",
     "react-dom": "^19.2.8",
     "workbox-background-sync": "^7.1.0",
     "workbox-precaching": "^7.1.0",
