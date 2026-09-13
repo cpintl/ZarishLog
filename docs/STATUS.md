@@ -11,11 +11,11 @@
 | Phase | Status | Key Deliverables |
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
-| Phase 1 — Database & Data Models | ✅ Complete | 100 tables, 205 sqlc queries, 7 migrations, ~1,410-line seed data, RLS on 82 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
+| Phase 1 — Database & Data Models | ✅ Complete | 100 tables, 205 sqlc queries, 8 migrations, ~1,410-line seed data, RLS on 86 tenant tables (86 policies, 0 unprotected), config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
 | Phase 2 — Go API Core | ✅ Complete | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints, structured error handling (`internal/response/`), request validation (`internal/validator/`, custom UUIDv7/enum/date validators), pagination helpers (`internal/pagination/`, page/page_size with LIMIT/OFFSET on all list endpoints), audit logging middleware (`internal/middleware/audit.go`), error middleware (`internal/middleware/error.go`) |
 | Phase 3 — Product/Catalogue Module | ✅ Complete | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM CRUD (List/Get/Create/Update/Delete), bulk CSV import with duplicate detection, PostgreSQL ILIKE search (name/SKU/description/brand/manufacturer), structured validation + pagination + error helpers, 12 unit tests (testify + sqlmock) |
 | Phase 4 — Warehouse & Location Module | ✅ Complete | Warehouse CRUD (List/Get/Create/Update/Delete), Location CRUD (List/Get/Create/Update/Delete with hierarchy tree), Location constraints (get/upsert with ON CONFLICT), location_type validator, 13 unit tests (testify + sqlmock) |
-| Phase 5 — Stock & Inventory Module | ✅ Complete | GRN, Stock Issue (Create with line items), Transfer (Create with line items via transaction), Adjustment (Create with line items via transaction — computes difference), Stock Levels (List paginated), Stock Movements (List paginated), Batch Genealogy (GET trail with ordered movements), structured validation on all stock models, 5 new unit tests |
+| Phase 5 — Stock & Inventory Module | ✅ Complete | GRN, Stock Issue (Create with line items), Transfer (Create with line items via transaction), Adjustment (Create with line items via transaction — computes difference), Stock Levels (List paginated), Stock Movements (List paginated), Batch Genealogy (GET trail with ordered movements), structured validation on all stock models, 6 new unit tests. **Ledger fixes (2026-09-14):** each stock-changing operation is one transaction — header + line items + `stock_movements` append + `stock_levels` delta with an availability guard (400 on insufficient, full rollback); GRN accepts items and creates batches/movements/levels atomically |
 | Phase 6 — Quality Assurance | ✅ Complete | QA inspection CRUD, checklist templates (with items), dispositions, expiry monitoring, 12 unit tests |
 | Phase 7 — Distribution & Asset Management | ✅ Complete | Distribution CRUD (with line items + beneficiaries), asset register CRUD, custody transfer, maintenance history, 17 unit tests |
 | Phase 8 — Replenishment & Forecasting | ✅ Complete | AMC calculation (3/6/12-month from stock movements), reorder recommendations (auto-type/priority), forecast results CRUD, 9 unit tests |
@@ -366,7 +366,7 @@ Source: `apps/web/lib/config-studio/`, `apps/web/app/api/config-studio/`,
 | Metric | Count |
 |---|---|
 | Tables | 100 (78 base + 22 policy-related) |
-| Tenant-scoped (RLS) | 55 with `org_id` enforced |
+| Tenant-scoped (RLS) | 86 with `org_id` enforced (86 policies, 0 unprotected) — 28 child tables covered via parent-join policies (`008`) |
 | Reference/lookup | 13 shared across tenants |
 | Junction/child | 30 inherited via FK (incl. `donation_line_items` → `donations`, `recall_line_items` → `recalls`, `entity_attributes` → `entities`) |
 | Rows of seed data | ~1,407 lines (seed.sql) + 2,255 lines (006_master_product_seed.sql) + policy dictionaries in 007 |
@@ -377,7 +377,7 @@ Source: `apps/web/lib/config-studio/`, `apps/web/app/api/config-studio/`,
 
 ## 4. File Inventory
 
-### `packages/data-models/sql/migrations/` (7 files)
+### `packages/data-models/sql/migrations/` (8 files)
 
 | File | Tables | Lines |
 |---|---|---|
@@ -388,7 +388,8 @@ Source: `apps/web/lib/config-studio/`, `apps/web/app/api/config-studio/`,
 | `005_master_catalogue_extension.sql` | 3 (new tables) | 198 |
 | `006_add_safety_stock.sql` | 0 (alteration) | 13 |
 | `007_cpi_medical_policy_controls.sql` | 21 (3 dicts + 18 registers) | 641 |
-| **Total** | **100** | **~2,551** |
+| `008_tenant_isolation_hardening.sql` | 1 (`client_operations`) | dynamic RLS rewrite + child-table policies + `zarishlog_app` role + ledger revokes/indexes/CHECKs |
+| **Total** | **100+** | **~2,650+** |
 
 ### `packages/data-models/sql/queries/` (24 files, 205 queries)
 

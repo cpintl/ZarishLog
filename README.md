@@ -4,7 +4,7 @@
 
 [![CI Pipeline](https://github.com/cpintl/zarishlog/actions/workflows/ci.yml/badge.svg)](https://github.com/cpintl/zarishlog/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-brightgreen)](https://github.com/cpintl/zarishlog)
+[![Version 0.9.0](https://img.shields.io/badge/Version-0.9.0-yellow)](https://github.com/cpintl/zarishlog)
 
 ---
 
@@ -36,7 +36,7 @@ It is designed for the **CPI** operational model — organizations working acros
 | The same item is named differently in different spreadsheets | One standardized **product catalogue** (1,912 items across 65+ categories, with unique SKU codes for every item) |
 | No one can see real-time stock across all locations | A single source of truth with **role-based access** — each person sees what they are authorized to see, in real time |
 | Expiry dates and quality checks are tracked on paper | Built-in **FEFO** (first-expiry, first-out) issue logic, expiry alerts, QA inspection workflows |
-| Field offices lose internet access | Full **offline mode**: the web app works entirely in the browser with local storage; changes sync automatically when connectivity returns |
+| Field offices lose internet access | Full **offline mode** (in development): the web app is designed to work in the browser with local storage; write-queue sync to the server ledger is on the roadmap |
 | Tracking items across organizations, countries, and departments is chaotic | **Multi-tenant** data isolation — each organization has its own secure data space, enforced at the database level |
 | Manual stock counts are slow and error-prone | Guided **physical count** workflows with variance tracking |
 | Fixed assets (laptops, vehicles, furniture) live in separate spreadsheets | Integrated **asset management** with transfer tracking and depreciation awareness |
@@ -261,7 +261,7 @@ See [`CONFIGURE.md`](./CONFIGURE.md) for detailed configuration instructions.
 
 ## Project status
 
-ZarishLog is at **Version 1.0.0** ("Version 01"). All 12 planned phases of core development are complete:
+ZarishLog is at **Version 0.9.0** ("Release Candidate"). Phases 0–9 (foundation through user/access management) are complete; Phase 10 (offline-first PWA) is scaffolded, and Phases 11–12 (reporting, deployment) are not started. See [docs/STATUS.md](docs/STATUS.md) for the phase table and [docs/CODE-AUDIT.md](docs/CODE-AUDIT.md) for the audit trail.
 
 | Phase | Status |
 | --- | --- |

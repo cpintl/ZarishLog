@@ -232,22 +232,23 @@ GET    /api/v1/sync/pull                # [STUB]
 
 Key design:
 - `stock_movements` is append-only — `stock_levels` is derived from it
-- Every table with tenant data has `org_id` + RLS policy
+- Every table with tenant data has `org_id` + RLS policy (86 tables; child tables covered via parent-join policies — `008_tenant_isolation_hardening.sql`)
 - UUIDv7 for time-ordered primary keys (cluster-friendly)
 - Audit columns on every table
 
 ## 6. Multi-Tenancy & Security
 
-- RLS on every table using `app.current_org_id` session variable set per-request from JWT
-- Role × Scope × Action matrix (R01–R09) enforced via `middleware.RequireRole()` on every route group
-- Audit interceptor on every write (actor, timestamp, before/after, IP) — integration in progress
+- RLS on every table using `app.current_org_id` session variable, set per-request from JWT: `middleware.Tenant()` pins one pooled connection for the request, runs `SELECT app.set_isolation_context(org_id, program_id, org_level, department_id, user_id)` (session-scoped GUCs, cleared on exit), and the handler runs against that same `*sqlx.Conn`
+- Runtime DB role is `zarishlog_app` (least privilege, RLS-enforced); migrations/seed run as the owning `zarishlog` role
+- Role × Scope × Action matrix (R01–R09) enforced via `middleware.RequireRole()` on every route group; tenant `org_id` in create handlers is always overridden from the JWT (body value ignored)
+- Audit interceptor on every write (actor, timestamp, before/after, IP) — writes synchronously via the request connection; integration in progress
 - Transport: TLS everywhere
 
 ## 7. Offline-First Design
 
 1. **Local DB:** Dexie.js (IndexedDB) on web, SQLite on mobile — mirrors server schema
 2. **Writes go local-first:** GRN/issue/transfer/adjustment written to local event log immediately
-3. **Sync:** on reconnect, push event log → server appends to canonical ledger → pull merged state
+3. **Sync:** on reconnect, push event log → server appends to canonical ledger → pull merged state. Server idempotency surface exists (`client_operations` unique on `org_id, client_operation_id` — `008`); `/sync/push|pull` endpoints are not yet implemented
 4. **Conflict handling:** append-only movements merge cleanly; true conflicts flagged for supervisor
 
 ## 8. Deployment Topologies
