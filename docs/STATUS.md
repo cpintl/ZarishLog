@@ -110,9 +110,9 @@
 | Category | Count | Files |
 |---|---|---|
 | CSV Import Templates | 24 | Existing 12 + `stock_card`, `donation_form`, `amc_report`, `narcotic_log`, `temperature_log`, `dispense_form`, `emergency_supply`, `purchase_request`, `return_form`, `stock_withdrawal`, `asset_allocation`, `asset_transfer` |
-| JSON Form Templates | 29 | Existing 8 + `stock_in_form_mother`, `stock_in_form_child`, `stock_out_form_mother`, `stock_out_form_child`, `stock_card_form`, `donation_form`, `amc_report_form`, `monthly_consumption_form`, `monthly_report_form`, `emergency_supply_form`, `dispense_form`, `return_form`, `narcotic_log_form`, `temperature_log_form`, `stock_withdrawal_form`, `purchase_request_form`, `newly_acquired_asset_form`, `asset_allocation_form`, `asset_transfer_form`, `asset_loss_form`, `pharmacy_supervision_checklist` |
+| JSON Form Templates | 25 | Existing 8 + `stock_card_form`, `donation_form`, `amc_report_form`, `monthly_consumption_form`, `monthly_report_form`, `emergency_supply_form`, `dispense_form`, `return_form`, `narcotic_log_form`, `temperature_log_form`, `stock_withdrawal_form`, `purchase_request_form`, `newly_acquired_asset_form`, `asset_allocation_form`, `asset_transfer_form`, `asset_loss_form`, `pharmacy_supervision_checklist` |
 | README | 1 | Form field reference documentation |
-| **Total** | **54** | `config/templates/` |
+| **Total** | **50** | `config/templates/` |
 
 ### 2.5 Config Metadata Files
 
@@ -125,7 +125,7 @@
 | `departments.csv` | CSV | 3 department units (HPP Health Post Program, HOP Health Outreach Program, HSS Health System Strengthening) |
 | `programs.csv` | CSV | 6 thematic program areas |
 | `uom.csv` | CSV | 16 units of measure across 6 categories |
-| `warehouse.json` | JSON | 4-warehouse config with 17 locations, lat/lng, maps URLs, facility metadata |
+| `warehouse.json` | JSON | CPI Bangladesh site directory (1 L2 country office, 2 L3 project offices, 3 L4 program site offices) with lat/lng and maps URLs |
 | `roles.md` | Markdown | Human-readable R01-R12 role definitions + permission matrix |
 
 ### 2.6 Extended Schema Features
@@ -401,13 +401,13 @@
 | `policy_planning.sql` | 6 | 42 |
 | **Total** | **205** | **~1,278** |
 
-### `config/templates/` (54 files)
+### `config/templates/` (50 files)
 
 **CSV Templates (24):**
 - Original 12 + `amc_report_template.xlsx.csv`, `asset_allocation_template.xlsx.csv`, `asset_transfer_template.xlsx.csv`, `dispense_form_template.xlsx.csv`, `donation_form_template.xlsx.csv`, `emergency_supply_template.xlsx.csv`, `narcotic_log_template.xlsx.csv`, `purchase_request_template.xlsx.csv`, `return_form_template.xlsx.csv`, `stock_card_template.xlsx.csv`, `stock_withdrawal_template.xlsx.csv`, `temperature_log_template.xlsx.csv`
 
-**JSON Form Templates (29):**
-- Original 8 + `amc_report_form.json`, `asset_allocation_form.json`, `asset_loss_form.json`, `asset_transfer_form.json`, `dispense_form.json`, `donation_form.json`, `emergency_supply_form.json`, `monthly_consumption_form.json`, `monthly_report_form.json`, `narcotic_log_form.json`, `newly_acquired_asset_form.json`, `pharmacy_supervision_checklist.json`, `purchase_request_form.json`, `return_form.json`, `stock_card_form.json`, `stock_in_form_child.json`, `stock_in_form_mother.json`, `stock_out_form_child.json`, `stock_out_form_mother.json`, `stock_withdrawal_form.json`, `temperature_log_form.json`
+**JSON Form Templates (25):**
+- Original 8 + `amc_report_form.json`, `asset_allocation_form.json`, `asset_loss_form.json`, `asset_transfer_form.json`, `dispense_form.json`, `donation_form.json`, `emergency_supply_form.json`, `monthly_consumption_form.json`, `monthly_report_form.json`, `narcotic_log_form.json`, `newly_acquired_asset_form.json`, `pharmacy_supervision_checklist.json`, `purchase_request_form.json`, `return_form.json`, `stock_card_form.json`, `stock_withdrawal_form.json`, `temperature_log_form.json`
 
 **Documentation (1):**
 - `README.md` (284 lines — form field reference)
@@ -428,7 +428,7 @@
 
 | File | Lines | Content |
 |---|---|---|
-| `warehouse.json` | 145 | 4 warehouses with 17 locations, geo-coordinates, maps URLs |
+| `warehouse.json` | 109 | 6 CPI Bangladesh site offices (L2/L3/L4) with geo-coordinates and maps URLs |
 
 ---
 

@@ -82,21 +82,26 @@ make db-seed
 
 ### Step 4: Configure Your Warehouse
 
-Edit `config/location/warehouse.json`:
+Edit `config/location/warehouse.json` — the CPI Bangladesh site directory (country office, project offices, program site offices):
 
 ```json
 {
-  "warehouses": [
-    {
-      "name": "My Central Warehouse",
-      "code": "MY-CWH",
-      "type": "central",
-      "city": "My City",
-      "country": "My Country"
-    }
-  ]
+  "version": "1.0.0",
+  "warehouse_directory": {
+    "LEVEL_2_COUNTRY_OFFICE": [
+      { "id": "CPI-L2-001", "office_category": "Country Office" }
+    ],
+    "LEVEL_3_PROJECT_OFFICE": [
+      { "id": "CPI-L3-001", "office_category": "Project Office" }
+    ],
+    "LEVEL_4_PROGRAM_SITE_OFFICE": [
+      { "id": "CPI-L4-001", "office_category": "Program Site Office" }
+    ]
+  }
 }
 ```
+
+Operational warehouse stock locations (e.g. `WH-CXB-CWH`, `WH-CXB-SWH1`) live in the seed data — see `make db-seed`.
 
 ### Step 5: Start the System
 
@@ -330,35 +335,30 @@ File: `config/location/warehouse.json`
 
 ```json
 {
-  "warehouse": {
-    "name": "Cox Bazar Central Warehouse",
-    "code": "CXB-CWH",
-    "type": "central",
-    "address": "Main Logistics Hub, Cox Bazar",
-    "city": "Cox Bazar",
-    "country": "Bangladesh",
-    "is_cold_chain": false
-  },
-  "locations": [
-    { "code": "RECV", "name": "Receiving Area", "type": "area" },
-    { "code": "GEN-A", "name": "General Storage A", "type": "zone", "parent": "RECV" },
-    { "code": "GEN-B", "name": "General Storage B", "type": "zone" },
-    { "code": "COLD", "name": "Cold Chain Storage", "type": "zone", "is_cold_chain": true },
-    { "code": "QA", "name": "QA/Quarantine", "type": "area", "is_secure": true },
-    { "code": "DISP", "name": "Dispatch Area", "type": "area" }
-  ]
+  "schema_name": "CPI Bangladesh Mission Warehouse Directory Schema",
+  "version": "1.0.0",
+  "warehouse_directory": {
+    "LEVEL_2_COUNTRY_OFFICE": [
+      {
+        "id": "CPI-L2-001",
+        "office_category": "Country Office",
+        "name": "Community Partners International (CPI) Bangladesh Country Office",
+        "plain_address": "…",
+        "map_location_url": "…",
+        "contact_details": { "phone_mobile": "…", "email": "…" }
+      }
+    ],
+    "LEVEL_3_PROJECT_OFFICE": [
+      { "id": "CPI-L3-001", "office_category": "Project Office", "name": "…" }
+    ],
+    "LEVEL_4_PROGRAM_SITE_OFFICE": [
+      { "id": "CPI-L4-001", "office_category": "Program Site Office", "name": "…" }
+    ]
+  }
 }
 ```
 
-### Location Types
-
-| Type | Purpose | Naming Convention |
-|------|---------|-------------------|
-| `area` | Functional area (Receiving, Dispatch) | 4-letter uppercase |
-| `zone` | Storage zone (A, B, Cold Chain) | PREFIX-ZONE |
-| `rack` | Rack within zone | ZONE-R-## |
-| `bin` | Bin within rack | RACK-BIN-## |
-| `shelf` | Shelf within bin | BIN-S-# |
+Operational warehouse/stock-location topology (receiving areas, cold chain, QA quarantine, bins) is part of the seed data, not `warehouse.json` — see `make db-seed` and `docs/STATUS.md` § 2.5.
 
 ---
 
@@ -503,7 +503,7 @@ cd apps/web && pnpm test
 | `config/metadata/uom.csv` | CSV | Units of measure | VS Code / Spreadsheet |
 | `config/metadata/master_product_list.csv` | CSV | Product catalogue | VS Code / Spreadsheet |
 | `config/metadata/roles.md` | Markdown | Role definitions | VS Code |
-| `config/location/warehouse.json` | JSON | Warehouse + locations | VS Code |
+| `config/location/warehouse.json` | JSON | CPI Bangladesh site directory (offices) | VS Code |
 | `config/templates/goods_receipt_form.json` | JSON | GRN form fields | VS Code |
 | `config/templates/stock_issue_form.json` | JSON | SRF form fields | VS Code |
 | `.env` | INI | System settings | VS Code |

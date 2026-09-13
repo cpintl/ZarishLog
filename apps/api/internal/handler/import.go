@@ -54,8 +54,9 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 		reader := csv.NewReader(file)
 		reader.TrimLeadingSpace = true
 		reader.LazyQuotes = true
+		reader.FieldsPerRecord = -1
 
-		headers, err := reader.Read()
+		headers, err := readCSVRecord(reader)
 		if err != nil {
 			response.BadRequest(c, "failed to read CSV headers")
 			return
@@ -63,7 +64,18 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 
 		headerMap := make(map[string]int)
 		for i, h := range headers {
-			headerMap[strings.ToLower(strings.TrimSpace(h))] = i
+			key := strings.ToLower(strings.TrimSpace(h))
+			headerMap[key] = i
+			switch key {
+			case "category_name":
+				if _, exists := headerMap["category"]; !exists {
+					headerMap["category"] = i
+				}
+			case "uom_abbreviation":
+				if _, exists := headerMap["uom"]; !exists {
+					headerMap["uom"] = i
+				}
+			}
 		}
 
 		required := []string{"sku", "name"}
@@ -85,7 +97,7 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 
 		rowNum := 1
 		for {
-			record, err := reader.Read()
+			record, err := readCSVRecord(reader)
 			if err == io.EOF {
 				break
 			}
@@ -96,6 +108,11 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 			}
 
 			rowNum++
+			if len(record) <= headerMap["sku"] || len(record) <= headerMap["name"] {
+				result.Errors = append(result.Errors, ImportError{Row: rowNum, Field: "sku", Error: "row has fewer columns than the header"})
+				result.Skipped++
+				continue
+			}
 			sku := strings.TrimSpace(record[headerMap["sku"]])
 			name := strings.TrimSpace(record[headerMap["name"]])
 
@@ -213,4 +230,20 @@ func getCSVField(record []string, headerMap map[string]int, field string) string
 		return strings.TrimSpace(record[idx])
 	}
 	return ""
+}
+
+// readCSVRecord returns the next non-comment row from a CSV stream. Rows whose
+// first non-whitespace cell starts with "#" are treated as comments and are
+// skipped, so templates may include instruction lines before the header row.
+func readCSVRecord(reader *csv.Reader) ([]string, error) {
+	for {
+		record, err := reader.Read()
+		if err != nil {
+			return nil, err
+		}
+		if len(record) > 0 && strings.HasPrefix(strings.TrimSpace(record[0]), "#") {
+			continue
+		}
+		return record, nil
+	}
 }

@@ -102,8 +102,29 @@ validate_csv() {
     local sku_col=1
     if echo "$headers" | grep -qi "sku"; then
       sku_col="$(echo "$headers" | tr ',' '\n' | grep -n -i "sku" | cut -d: -f1)"
-      local dupes
-      dupes="$(tail -n +2 "$file" | cut -d, -f"$sku_col" | sort | uniq -d | grep -v '^\s*$' || true)"
+      local dupes=""
+      if command -v python3 >/dev/null 2>&1; then
+        dupes="$(python3 - "$file" <<'PY' 2>/dev/null || true
+import csv, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+with open(path, newline="", encoding="utf-8") as fh:
+    reader = csv.DictReader(fh)
+    if not reader.fieldnames or "sku" not in reader.fieldnames:
+        sys.exit(0)
+    seen = {}
+    for row in reader:
+        sku = (row.get("sku") or "").strip()
+        if sku:
+            seen[sku] = seen.get(sku, 0) + 1
+for sku, n in sorted(seen.items()):
+    if n > 1:
+        print(f"{sku} ({n}x)")
+PY
+)"
+      else
+        dupes="$(tail -n +2 "$file" | cut -d, -f"$sku_col" | sort | uniq -d | grep -v '^\s*$' || true)"
+      fi
       if [[ -n "$dupes" ]]; then
         report_warning "${name}: Duplicate SKUs found:"
         echo "$dupes" | sed 's/^/      - /'
@@ -139,6 +160,57 @@ validate_json() {
   report_info "${name}: $(numfmt --to=iec $size 2>/dev/null || echo "${size}B")"
 }
 
+# ─── Validate CSV Import Templates ────────────────────────────────────
+
+validate_template_csv() {
+  local file="$1"
+  local name="$2"
+  
+  if [[ ! -f "$file" ]]; then
+    report_error "${name}: File not found: $file"
+    return
+  fi
+  
+  if ! command -v python3 >/dev/null 2>&1; then
+    report_info "${name}: skipped (python3 not available for CSV template parsing)"
+    return
+  fi
+  
+  local out
+  out="$(python3 - "${file}" <<'PY' 2>&1
+import csv, sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+with open(path, newline="", encoding="utf-8-sig") as fh:
+    reader = csv.reader(fh)
+    header = None
+    data_rows = 0
+    for row in reader:
+        if not row or not row[0] or str(row[0]).lstrip().startswith("#"):
+            continue
+        if header is None:
+            header = row
+            continue
+        if any(cell.strip() for cell in row):
+            data_rows += 1
+
+if header is None:
+    print("ERROR: no header row found (only # comments present)")
+    sys.exit(1)
+if len(header) < 3:
+    print(f"ERROR: header has only {len(header)} columns (expected 3+)")
+    sys.exit(1)
+print(f"OK {len(header)} columns, {data_rows} example row(s)")
+PY
+)"
+  if [[ "$out" == OK* ]]; then
+    report_pass "${name}: ${out#OK }"
+  else
+    report_error "${name}: ${out}"
+  fi
+}
+
 # ─── Validate Environment ──────────────────────────────────────────────
 
 validate_env() {
@@ -167,13 +239,55 @@ echo ""
 
 # CSV files
 if [[ "$CHECK_CSV" == "true" ]]; then
-  echo -e "${BOLD}── CSV Files ──${NC}"
+  echo -e "${BOLD}── CSV Files (metadata) ──${NC}"
   echo ""
   
   validate_csv "${PROJECT_DIR}/config/metadata/master_product_list.csv" "Product Catalogue" "sku,name,category_name,uom_abbreviation,item_type"
+  validate_csv "${PROJECT_DIR}/config/metadata/master_product_catalogue.csv" "Master Product Catalogue" "sku,name,category_name,uom_abbreviation,item_type"
   validate_csv "${PROJECT_DIR}/config/metadata/organization.csv" "Organization Hierarchy" "name,code,level"
+  validate_csv "${PROJECT_DIR}/config/metadata/departments.csv" "Departments" "code,name"
   validate_csv "${PROJECT_DIR}/config/metadata/programs.csv" "Programs" "code,name"
   validate_csv "${PROJECT_DIR}/config/metadata/uom.csv" "Units of Measure" "name,abbreviation,category"
+  
+  cat_rows="$(tail -n +2 "${PROJECT_DIR}/config/metadata/master_product_catalogue.csv" | grep -c -v '^$' 2>/dev/null || true)"
+  if [[ "$cat_rows" -ge 1900 ]]; then
+    report_info "Master catalogue: ${cat_rows} non-empty lines (expect ~1,912 quoted records)"
+  else
+    report_warning "Master catalogue: only ${cat_rows} non-empty lines — expected ~1,912 records"
+  fi
+  
+  echo -e "${BOLD}── CSV Import Templates (xlsx.csv) ──${NC}"
+  echo ""
+  
+  for tf in "${PROJECT_DIR}"/config/templates/*.xlsx.csv; do
+    [[ -f "$tf" ]] || continue
+    validate_template_csv "$tf" "$(basename "$tf")"
+  done
+  
+  echo ""
+fi
+
+# Markdown metadata
+if [[ "$CHECK_ALL" == "true" ]]; then
+  echo -e "${BOLD}── Markdown Metadata ──${NC}"
+  echo ""
+  
+  if [[ -f "${PROJECT_DIR}/config/metadata/roles.md" ]]; then
+    role_rows="$(grep -cE '^\| R(0|1)[0-9]' "${PROJECT_DIR}/config/metadata/roles.md" 2>/dev/null || true)"
+    if grep -q 'R12' "${PROJECT_DIR}/config/metadata/roles.md" 2>/dev/null; then
+      report_pass "roles.md: Present with ${role_rows} documented roles (R01–R12)"
+    else
+      report_warning "roles.md: R12 reference not found"
+    fi
+  else
+    report_error "roles.md: Missing at config/metadata/roles.md"
+  fi
+  
+  if [[ -f "${PROJECT_DIR}/config/reference_data/GLOSSARY.md" ]]; then
+    report_pass "GLOSSARY.md: Present"
+  else
+    report_warning "GLOSSARY.md: Missing at config/reference_data/GLOSSARY.md"
+  fi
   
   echo ""
 fi
@@ -183,9 +297,10 @@ if [[ "$CHECK_JSON" == "true" ]]; then
   echo -e "${BOLD}── JSON Files ──${NC}"
   echo ""
   
-  validate_json "${PROJECT_DIR}/config/location/warehouse.json" "Warehouse Configuration"
-  validate_json "${PROJECT_DIR}/config/templates/goods_receipt_form.json" "GRN Form Template"
-  validate_json "${PROJECT_DIR}/config/templates/stock_issue_form.json" "Stock Issue Form Template"
+  for jf in "${PROJECT_DIR}"/config/location/*.json "${PROJECT_DIR}"/config/templates/*.json; do
+    [[ -f "$jf" ]] || continue
+    validate_json "$jf" "$(basename "$jf")"
+  done
   
   echo ""
 fi

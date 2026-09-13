@@ -2,7 +2,6 @@
   "schema_name": "CPI Bangladesh Mission Warehouse Directory Schema",
   "version": "1.0.0",
   "warehouse_directory": {
-    
     "LEVEL_2_COUNTRY_OFFICE": [
       {
         "id": "CPI-L2-001",
@@ -39,7 +38,7 @@
           "managed_by": "Local Partner Organizations (e.g., YPSA — Young Power in Social Action)",
           "partner_website": "https://www.ypsa.org"
         }
-    },
+      },
       {
         "id": "CPI-L3-002",
         "office_category": "Project Office",
@@ -73,7 +72,7 @@
         }
       },
       {
-        "id": "CPI-L4-003",
+        "id": "CPI-L4-002",
         "office_category": "Program Site Office",
         "name": "CPI Health Outreach Office - Camp 01 West",
         "organization": "Community Partners International — CPI-YPSA Joint Program",
@@ -90,7 +89,7 @@
         }
       },
       {
-        "id": "CPI-L4-004",
+        "id": "CPI-L4-003",
         "office_category": "Program Site Office",
         "name": "CPI Health Outreach Office - Camp 04",
         "organization": "Community Partners International — CPI-YPSA Joint Program",
@@ -105,7 +104,6 @@
           "mobile_assignment": "Sexual and Reproductive Health Program Officer",
           "email": "ruma@cpi-ypsa.org"
         }
-        
       }
     ]
   }

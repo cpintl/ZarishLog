@@ -229,7 +229,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for branch naming, commit conventions
 | `config/metadata/roles.md` | 12 roles (R01–R12) with level and purpose |
 | `config/metadata/departments.csv` | Department structure (HPP, HOP, HSS) |
 | `config/metadata/programs.csv` | Program codes (Health & Nutrition, WASH, Livelihood) |
-| `config/location/warehouse.json` | Warehouse definitions with zones and bin locations |
+| `config/location/warehouse.json` | CPI Bangladesh site directory (L2 country office → L4 program site offices) |
 | `config/reference_data/GLOSSARY.md` | Logistics terminology used throughout the system |
 
 See [`CONFIGURE.md`](./CONFIGURE.md) for detailed configuration instructions.

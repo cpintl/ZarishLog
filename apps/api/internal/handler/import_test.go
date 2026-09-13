@@ -91,6 +91,66 @@ func TestImportProducts_MissingFile(t *testing.T) {
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
+func TestImportProducts_TemplateWithCommentsAndAliases(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	require.NoError(t, err)
+	defer mockDB.Close()
+
+	db := sqlx.NewDb(mockDB, "sqlmock")
+	router := setupImportRouter(db)
+
+	csvContent := `# [Organization Name] Master Product Import Template
+# Instructions: fill in one row per product.
+sku,name,category_name,uom_abbreviation,item_type
+ABC-1,Item One,Medicines & Drugs,EA,consumable
+# a mid-file comment row
+DEF-2,Item Two,,,consumable
+`
+	var buf bytes.Buffer
+	writer := multipart.NewWriter(&buf)
+	part, _ := writer.CreateFormFile("file", "products.csv")
+	part.Write([]byte(csvContent))
+	writer.Close()
+
+	mock.ExpectBegin()
+	mock.ExpectQuery(`SELECT COUNT\(\*\) FROM products WHERE`).
+		WithArgs("ABC-1", "org-123").
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
+	mock.ExpectQuery(`SELECT id FROM product_categories`).
+		WithArgs("Medicines & Drugs", "org-123").
+		WillReturnRows(sqlmock.NewRows([]string{"id"}))
+	mock.ExpectQuery(`SELECT id FROM units_of_measure`).
+		WithArgs("EA").
+		WillReturnRows(sqlmock.NewRows([]string{"id"}))
+	mock.ExpectExec(`INSERT INTO products`).
+		WithArgs("org-123", nil, nil, "ABC-1", "Item One", "", "consumable", "", "", "user-456", "user-456").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`SELECT COUNT\(\*\) FROM products WHERE`).
+		WithArgs("DEF-2", "org-123").
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
+	mock.ExpectExec(`INSERT INTO products`).
+		WithArgs("org-123", nil, nil, "DEF-2", "Item Two", "", "consumable", "", "", "user-456", "user-456").
+		WillReturnResult(sqlmock.NewResult(2, 1))
+	mock.ExpectCommit()
+
+	req, _ := http.NewRequest("POST", "/api/v1/products/import", &buf)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	if w.Code != http.StatusCreated {
+		t.Logf("Response body: %s", w.Body.String())
+	}
+	assert.Equal(t, http.StatusCreated, w.Code)
+
+	var resp map[string]interface{}
+	err = json.Unmarshal(w.Body.Bytes(), &resp)
+	require.NoError(t, err)
+	assert.Equal(t, float64(2), resp["data"].(map[string]interface{})["imported"])
+
+	require.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestImportProducts_DuplicateSKU(t *testing.T) {
 	mockDB, mock, err := sqlmock.New()
 	require.NoError(t, err)

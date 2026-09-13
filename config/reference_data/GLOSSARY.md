@@ -124,8 +124,8 @@
 | Entity | Object, Resource, Instance | Typed (warehouse, vehicle, user) |
 | Product Catalogue | Item Master, Commodity Catalog | `products` table |
 | Stock Card | Inventory Ledger, Bin Card | `stock_card_form` |
-| Stock In | Goods Receipt, Inbound | `stock_in_form_mother/child` |
-| Stock Out | Issue, Dispatch, SRF | `stock_out_form_mother/child` |
+| Stock In | Goods Receipt, Inbound | `goods_receipt_form` |
+| Stock Out | Issue, Dispatch, SRF | `stock_issue_form` |
 | Batch | Lot, Serial | `batches` table |
 | Warehouse | Store, Depot, Central Storage | `warehouses` table |
 | Location | Storage Location, Bin, Slot | Zone → Aisle → Rack → Bin hierarchy |
