@@ -556,6 +556,111 @@ type Batch struct {
 	CreatedAt    time.Time      `json:"created_at"`
 }
 
+type CapaAction struct {
+	ID                      string         `json:"id"`
+	OrgID                   string         `json:"org_id"`
+	CapaNumber              string         `json:"capa_number"`
+	SourceType              string         `json:"source_type"`
+	SourceID                sql.NullString `json:"source_id"`
+	CapaType                string         `json:"capa_type"`
+	Title                   string         `json:"title"`
+	RootCause               sql.NullString `json:"root_cause"`
+	ActionPlan              string         `json:"action_plan"`
+	ResponsibleOwner        sql.NullString `json:"responsible_owner"`
+	DueDate                 sql.NullTime   `json:"due_date"`
+	Status                  string         `json:"status"`
+	EffectivenessCheck      sql.NullString `json:"effectiveness_check"`
+	EffectivenessVerified   bool           `json:"effectiveness_verified"`
+	EffectivenessVerifiedBy sql.NullString `json:"effectiveness_verified_by"`
+	VerifiedAt              sql.NullTime   `json:"verified_at"`
+	ClosedBy                sql.NullString `json:"closed_by"`
+	ClosedAt                sql.NullTime   `json:"closed_at"`
+	CreatedBy               sql.NullString `json:"created_by"`
+	UpdatedBy               sql.NullString `json:"updated_by"`
+	CreatedAt               time.Time      `json:"created_at"`
+	UpdatedAt               time.Time      `json:"updated_at"`
+}
+
+type ChangeControl struct {
+	ID                    string         `json:"id"`
+	OrgID                 string         `json:"org_id"`
+	ChangeNumber          string         `json:"change_number"`
+	SubjectType           string         `json:"subject_type"`
+	SubjectID             sql.NullString `json:"subject_id"`
+	Description           string         `json:"description"`
+	ImpactAssessment      sql.NullString `json:"impact_assessment"`
+	RiskLevel             string         `json:"risk_level"`
+	RequiresQualityReview bool           `json:"requires_quality_review"`
+	AuthorizedBy          sql.NullString `json:"authorized_by"`
+	AuthorizationDate     sql.NullTime   `json:"authorization_date"`
+	StartDate             sql.NullTime   `json:"start_date"`
+	EndDate               sql.NullTime   `json:"end_date"`
+	Status                string         `json:"status"`
+	ClosureEvidence       sql.NullString `json:"closure_evidence"`
+	CreatedBy             sql.NullString `json:"created_by"`
+	UpdatedBy             sql.NullString `json:"updated_by"`
+	CreatedAt             time.Time      `json:"created_at"`
+	UpdatedAt             time.Time      `json:"updated_at"`
+}
+
+type Complaint struct {
+	ID                         string         `json:"id"`
+	OrgID                      string         `json:"org_id"`
+	ComplaintNumber            string         `json:"complaint_number"`
+	ReceivedDate               time.Time      `json:"received_date"`
+	ReceivedVia                sql.NullString `json:"received_via"`
+	Severity                   sql.NullString `json:"severity"`
+	Category                   sql.NullString `json:"category"`
+	ProductID                  uuid.NullUUID  `json:"product_id"`
+	BatchID                    uuid.NullUUID  `json:"batch_id"`
+	Description                string         `json:"description"`
+	ReporterName               sql.NullString `json:"reporter_name"`
+	ReporterContact            sql.NullString `json:"reporter_contact"`
+	ImmediateEscalation        bool           `json:"immediate_escalation"`
+	Escalated                  bool           `json:"escalated"`
+	EscalatedTo                sql.NullString `json:"escalated_to"`
+	ManufacturerNotified       bool           `json:"manufacturer_notified"`
+	CompetentAuthorityNotified bool           `json:"competent_authority_notified"`
+	Status                     string         `json:"status"`
+	ResolutionNotes            sql.NullString `json:"resolution_notes"`
+	CapaID                     uuid.NullUUID  `json:"capa_id"`
+	CreatedBy                  sql.NullString `json:"created_by"`
+	UpdatedBy                  sql.NullString `json:"updated_by"`
+	CreatedAt                  time.Time      `json:"created_at"`
+	UpdatedAt                  time.Time      `json:"updated_at"`
+}
+
+type ComplaintSeverity struct {
+	Code                string         `json:"code"`
+	Name                string         `json:"name"`
+	Description         sql.NullString `json:"description"`
+	ImmediateEscalation bool           `json:"immediate_escalation"`
+	SortOrder           int32          `json:"sort_order"`
+	IsActive            bool           `json:"is_active"`
+}
+
+type ControlledStockRegister struct {
+	ID                  string         `json:"id"`
+	OrgID               string         `json:"org_id"`
+	ProductID           string         `json:"product_id"`
+	BatchID             uuid.NullUUID  `json:"batch_id"`
+	WarehouseID         string         `json:"warehouse_id"`
+	RegisterDate        time.Time      `json:"register_date"`
+	TransactionType     string         `json:"transaction_type"`
+	ReferenceDocument   sql.NullString `json:"reference_document"`
+	Quantity            string         `json:"quantity"`
+	BalanceAfter        string         `json:"balance_after"`
+	ReceivedFrom        sql.NullString `json:"received_from"`
+	IssuedTo            sql.NullString `json:"issued_to"`
+	AuthorizedRecipient sql.NullString `json:"authorized_recipient"`
+	Signature           sql.NullString `json:"signature"`
+	Discrepancy         string         `json:"discrepancy"`
+	ReconciledAt        sql.NullTime   `json:"reconciled_at"`
+	ReconciledBy        sql.NullString `json:"reconciled_by"`
+	CreatedBy           sql.NullString `json:"created_by"`
+	CreatedAt           time.Time      `json:"created_at"`
+}
+
 type CountLineItem struct {
 	ID               string         `json:"id"`
 	CountID          string         `json:"count_id"`
@@ -594,6 +699,29 @@ type DataChangeLog struct {
 	ChangeTimestamp time.Time             `json:"change_timestamp"`
 }
 
+type DeliveryConfirmation struct {
+	ID                    string         `json:"id"`
+	OrgID                 string         `json:"org_id"`
+	WaybillID             string         `json:"waybill_id"`
+	ConfirmingWarehouseID uuid.NullUUID  `json:"confirming_warehouse_id"`
+	RecipientName         sql.NullString `json:"recipient_name"`
+	ConfirmedDate         time.Time      `json:"confirmed_date"`
+	DeliveryStatus        string         `json:"delivery_status"`
+	ItemsConformed        sql.NullBool   `json:"items_conformed"`
+	QuantityConformed     sql.NullBool   `json:"quantity_conformed"`
+	BatchConformed        sql.NullBool   `json:"batch_conformed"`
+	ExpiryConformed       sql.NullBool   `json:"expiry_conformed"`
+	ConditionConformed    sql.NullBool   `json:"condition_conformed"`
+	TemperatureConformed  sql.NullBool   `json:"temperature_conformed"`
+	UnfilledQuantity      sql.NullString `json:"unfilled_quantity"`
+	Substitutions         sql.NullString `json:"substitutions"`
+	Discrepancies         sql.NullString `json:"discrepancies"`
+	FollowUpCommitments   sql.NullString `json:"follow_up_commitments"`
+	ConfirmedBy           sql.NullString `json:"confirmed_by"`
+	CreatedAt             time.Time      `json:"created_at"`
+	UpdatedAt             time.Time      `json:"updated_at"`
+}
+
 type Department struct {
 	ID        string         `json:"id"`
 	OrgID     string         `json:"org_id"`
@@ -605,6 +733,70 @@ type Department struct {
 	UpdatedBy sql.NullString `json:"updated_by"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
+}
+
+type Deviation struct {
+	ID                 string         `json:"id"`
+	OrgID              string         `json:"org_id"`
+	DeviationNumber    string         `json:"deviation_number"`
+	CategoryCode       sql.NullString `json:"category_code"`
+	OccurredAt         time.Time      `json:"occurred_at"`
+	ReportedAt         time.Time      `json:"reported_at"`
+	SourceDocumentType sql.NullString `json:"source_document_type"`
+	SourceDocumentID   sql.NullString `json:"source_document_id"`
+	ProductID          uuid.NullUUID  `json:"product_id"`
+	BatchID            uuid.NullUUID  `json:"batch_id"`
+	WarehouseID        uuid.NullUUID  `json:"warehouse_id"`
+	LocationID         uuid.NullUUID  `json:"location_id"`
+	Description        string         `json:"description"`
+	ContainmentAction  sql.NullString `json:"containment_action"`
+	ImpactAssessment   sql.NullString `json:"impact_assessment"`
+	RootCause          sql.NullString `json:"root_cause"`
+	RiskRating         string         `json:"risk_rating"`
+	Disposition        sql.NullString `json:"disposition"`
+	Status             string         `json:"status"`
+	ResponsibleOwner   sql.NullString `json:"responsible_owner"`
+	DueDate            sql.NullTime   `json:"due_date"`
+	Escalated          bool           `json:"escalated"`
+	EscalatedTo        sql.NullString `json:"escalated_to"`
+	CreatedBy          sql.NullString `json:"created_by"`
+	UpdatedBy          sql.NullString `json:"updated_by"`
+	CreatedAt          time.Time      `json:"created_at"`
+	UpdatedAt          time.Time      `json:"updated_at"`
+}
+
+type DeviationCategory struct {
+	Code             string         `json:"code"`
+	Name             string         `json:"name"`
+	Description      sql.NullString `json:"description"`
+	DefaultRiskLevel string         `json:"default_risk_level"`
+	SortOrder        int32          `json:"sort_order"`
+	IsActive         bool           `json:"is_active"`
+}
+
+type DispatchWaybill struct {
+	ID                   string         `json:"id"`
+	OrgID                string         `json:"org_id"`
+	WaybillNumber        string         `json:"waybill_number"`
+	IssueID              uuid.NullUUID  `json:"issue_id"`
+	TransferID           uuid.NullUUID  `json:"transfer_id"`
+	SenderWarehouseID    string         `json:"sender_warehouse_id"`
+	RecipientWarehouseID uuid.NullUUID  `json:"recipient_warehouse_id"`
+	Recipient            sql.NullString `json:"recipient"`
+	DispatchDate         time.Time      `json:"dispatch_date"`
+	Carrier              sql.NullString `json:"carrier"`
+	VehicleNumber        sql.NullString `json:"vehicle_number"`
+	CartonCount          sql.NullInt32  `json:"carton_count"`
+	PackingListReference sql.NullString `json:"packing_list_reference"`
+	StorageRequirement   sql.NullString `json:"storage_requirement"`
+	TemperatureSensitive bool           `json:"temperature_sensitive"`
+	Condition            sql.NullString `json:"condition"`
+	DocumentRefs         sql.NullString `json:"document_refs"`
+	Status               string         `json:"status"`
+	CreatedBy            sql.NullString `json:"created_by"`
+	UpdatedBy            sql.NullString `json:"updated_by"`
+	CreatedAt            time.Time      `json:"created_at"`
+	UpdatedAt            time.Time      `json:"updated_at"`
 }
 
 type Disposal struct {
@@ -679,6 +871,48 @@ type DistributionLineItem struct {
 	Status              EntityStatus   `json:"status"`
 }
 
+type Donation struct {
+	ID                      string         `json:"id"`
+	OrgID                   string         `json:"org_id"`
+	DonationNumber          string         `json:"donation_number"`
+	DonorName               string         `json:"donor_name"`
+	DonorContact            sql.NullString `json:"donor_contact"`
+	OfferDate               time.Time      `json:"offer_date"`
+	Decision                sql.NullString `json:"decision"`
+	DecisionDate            sql.NullTime   `json:"decision_date"`
+	DecidedBy               sql.NullString `json:"decided_by"`
+	NeedsAssessment         sql.NullString `json:"needs_assessment"`
+	ProposedRecipient       sql.NullString `json:"proposed_recipient"`
+	ApprovalReference       sql.NullString `json:"approval_reference"`
+	TransportResponsibility sql.NullString `json:"transport_responsibility"`
+	CustomsNotes            sql.NullString `json:"customs_notes"`
+	DisposalResponsibility  sql.NullString `json:"disposal_responsibility"`
+	CertificateNumber       sql.NullString `json:"certificate_number"`
+	CertificateIssuedDate   sql.NullTime   `json:"certificate_issued_date"`
+	RegistryReference       sql.NullString `json:"registry_reference"`
+	Status                  string         `json:"status"`
+	Notes                   sql.NullString `json:"notes"`
+	CreatedBy               sql.NullString `json:"created_by"`
+	UpdatedBy               sql.NullString `json:"updated_by"`
+	CreatedAt               time.Time      `json:"created_at"`
+	UpdatedAt               time.Time      `json:"updated_at"`
+}
+
+type DonationLineItem struct {
+	ID                       string         `json:"id"`
+	DonationID               string         `json:"donation_id"`
+	ProductID                string         `json:"product_id"`
+	BatchNumber              sql.NullString `json:"batch_number"`
+	ExpiryDate               sql.NullTime   `json:"expiry_date"`
+	Quantity                 string         `json:"quantity"`
+	Uom                      sql.NullString `json:"uom"`
+	RemainingShelfLifeMonths sql.NullInt32  `json:"remaining_shelf_life_months"`
+	Condition                sql.NullString `json:"condition"`
+	ShelfLifeCompliant       sql.NullBool   `json:"shelf_life_compliant"`
+	Authorized               bool           `json:"authorized"`
+	Notes                    sql.NullString `json:"notes"`
+}
+
 type DosageForm struct {
 	Code              string        `json:"code"`
 	Name              string        `json:"name"`
@@ -687,6 +921,40 @@ type DosageForm struct {
 	IsParenteral      sql.NullBool  `json:"is_parenteral"`
 	RequiresColdChain sql.NullBool  `json:"requires_cold_chain"`
 	SortOrder         sql.NullInt32 `json:"sort_order"`
+}
+
+type EmergencyPlan struct {
+	ID                     string         `json:"id"`
+	OrgID                  string         `json:"org_id"`
+	PlanNumber             string         `json:"plan_number"`
+	Name                   string         `json:"name"`
+	CountryCode            sql.NullString `json:"country_code"`
+	FacilityID             uuid.NullUUID  `json:"facility_id"`
+	ScenarioType           string         `json:"scenario_type"`
+	Scenario               sql.NullString `json:"scenario"`
+	DemandAssumptions      sql.NullString `json:"demand_assumptions"`
+	ServiceLevel           sql.NullString `json:"service_level"`
+	PrepositionedStockPlan sql.NullString `json:"prepositioned_stock_plan"`
+	RotationPlan           sql.NullString `json:"rotation_plan"`
+	AlternateSuppliers     sql.NullString `json:"alternate_suppliers"`
+	AlternateWarehouses    sql.NullString `json:"alternate_warehouses"`
+	AlternateRoutes        sql.NullString `json:"alternate_routes"`
+	AlternatePowerSources  sql.NullString `json:"alternate_power_sources"`
+	EmergencyAuthority     sql.NullString `json:"emergency_authority"`
+	PaperFallbackRecords   bool           `json:"paper_fallback_records"`
+	MinimumStaffing        sql.NullString `json:"minimum_staffing"`
+	ColdChainContingency   sql.NullString `json:"cold_chain_contingency"`
+	Communications         sql.NullString `json:"communications"`
+	EscalationContacts     sql.NullString `json:"escalation_contacts"`
+	SecurityControls       sql.NullString `json:"security_controls"`
+	ReturnToNormalPlan     sql.NullString `json:"return_to_normal_plan"`
+	Status                 string         `json:"status"`
+	ApprovedBy             sql.NullString `json:"approved_by"`
+	ApprovedAt             sql.NullTime   `json:"approved_at"`
+	CreatedBy              sql.NullString `json:"created_by"`
+	UpdatedBy              sql.NullString `json:"updated_by"`
+	CreatedAt              time.Time      `json:"created_at"`
+	UpdatedAt              time.Time      `json:"updated_at"`
 }
 
 type Entity struct {
@@ -1058,6 +1326,74 @@ type QaInspection struct {
 	UpdatedAt      time.Time      `json:"updated_at"`
 }
 
+type Recall struct {
+	ID              string         `json:"id"`
+	OrgID           string         `json:"org_id"`
+	RecallNumber    string         `json:"recall_number"`
+	RecallType      string         `json:"recall_type"`
+	RecallDate      time.Time      `json:"recall_date"`
+	ProductID       uuid.NullUUID  `json:"product_id"`
+	SubjectProduct  string         `json:"subject_product"`
+	BatchNumbers    sql.NullString `json:"batch_numbers"`
+	Reason          string         `json:"reason"`
+	InitiatedBy     sql.NullString `json:"initiated_by"`
+	AuthorizedBy    sql.NullString `json:"authorized_by"`
+	Communications  sql.NullString `json:"communications"`
+	DispositionPlan sql.NullString `json:"disposition_plan"`
+	Status          string         `json:"status"`
+	ClosureEvidence sql.NullString `json:"closure_evidence"`
+	CreatedBy       sql.NullString `json:"created_by"`
+	UpdatedBy       sql.NullString `json:"updated_by"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+}
+
+type RecallLineItem struct {
+	ID                  string         `json:"id"`
+	RecallID            string         `json:"recall_id"`
+	Recipient           string         `json:"recipient"`
+	Location            sql.NullString `json:"location"`
+	ProductID           uuid.NullUUID  `json:"product_id"`
+	BatchNumber         sql.NullString `json:"batch_number"`
+	QuantityIssued      string         `json:"quantity_issued"`
+	QuantityRecovered   string         `json:"quantity_recovered"`
+	QuantityOutstanding string         `json:"quantity_outstanding"`
+	StorageDisposition  sql.NullString `json:"storage_disposition"`
+	RecoveredAt         sql.NullTime   `json:"recovered_at"`
+	Notes               sql.NullString `json:"notes"`
+}
+
+type RecallType struct {
+	Code        string         `json:"code"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+	SortOrder   int32          `json:"sort_order"`
+	IsActive    bool           `json:"is_active"`
+}
+
+type RegulatoryApproval struct {
+	ID               string         `json:"id"`
+	OrgID            string         `json:"org_id"`
+	ScopeType        string         `json:"scope_type"`
+	ScopeID          string         `json:"scope_id"`
+	Authority        string         `json:"authority"`
+	LicenseType      string         `json:"license_type"`
+	ReferenceNumber  string         `json:"reference_number"`
+	ProductScope     sql.NullString `json:"product_scope"`
+	Conditions       sql.NullString `json:"conditions"`
+	IssueDate        sql.NullTime   `json:"issue_date"`
+	ExpiryDate       sql.NullTime   `json:"expiry_date"`
+	RenewalLeadDays  int32          `json:"renewal_lead_days"`
+	ResponsibleOwner sql.NullString `json:"responsible_owner"`
+	Status           string         `json:"status"`
+	EvidenceUrl      sql.NullString `json:"evidence_url"`
+	Notes            sql.NullString `json:"notes"`
+	CreatedBy        sql.NullString `json:"created_by"`
+	UpdatedBy        sql.NullString `json:"updated_by"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
 type ReorderRecommendation struct {
 	ID                 string         `json:"id"`
 	OrgID              string         `json:"org_id"`
@@ -1135,6 +1471,28 @@ type RolePermission struct {
 	PermissionID string `json:"permission_id"`
 }
 
+type ShortExpiryReview struct {
+	ID                       string         `json:"id"`
+	OrgID                    string         `json:"org_id"`
+	ReviewDate               time.Time      `json:"review_date"`
+	ProductID                string         `json:"product_id"`
+	BatchID                  uuid.NullUUID  `json:"batch_id"`
+	WarehouseID              string         `json:"warehouse_id"`
+	ExpiryDate               time.Time      `json:"expiry_date"`
+	RemainingShelfLifeMonths int32          `json:"remaining_shelf_life_months"`
+	ExpectedConsumption      sql.NullString `json:"expected_consumption"`
+	TransferOption           sql.NullString `json:"transfer_option"`
+	DonorCondition           sql.NullString `json:"donor_condition"`
+	RegulatoryRestriction    sql.NullString `json:"regulatory_restriction"`
+	Decision                 string         `json:"decision"`
+	DecisionBy               sql.NullString `json:"decision_by"`
+	DecisionDate             sql.NullTime   `json:"decision_date"`
+	Notes                    sql.NullString `json:"notes"`
+	CreatedBy                sql.NullString `json:"created_by"`
+	CreatedAt                time.Time      `json:"created_at"`
+	UpdatedAt                time.Time      `json:"updated_at"`
+}
+
 type StockAdjustment struct {
 	ID          string         `json:"id"`
 	OrgID       string         `json:"org_id"`
@@ -1210,6 +1568,27 @@ type StockMovement struct {
 	Reference    sql.NullString `json:"reference"`
 	CreatedBy    string         `json:"created_by"`
 	CreatedAt    time.Time      `json:"created_at"`
+}
+
+type StockReleaseRecord struct {
+	ID                  string         `json:"id"`
+	OrgID               string         `json:"org_id"`
+	ReleaseNumber       string         `json:"release_number"`
+	WarehouseID         string         `json:"warehouse_id"`
+	ProductID           string         `json:"product_id"`
+	BatchID             uuid.NullUUID  `json:"batch_id"`
+	LocationID          uuid.NullUUID  `json:"location_id"`
+	Quantity            string         `json:"quantity"`
+	QuarantineReference sql.NullString `json:"quarantine_reference"`
+	EvidenceReviewed    sql.NullString `json:"evidence_reviewed"`
+	Decision            string         `json:"decision"`
+	DecisionDate        time.Time      `json:"decision_date"`
+	DecidedBy           string         `json:"decided_by"`
+	Notes               sql.NullString `json:"notes"`
+	CreatedBy           sql.NullString `json:"created_by"`
+	UpdatedBy           sql.NullString `json:"updated_by"`
+	CreatedAt           time.Time      `json:"created_at"`
+	UpdatedAt           time.Time      `json:"updated_at"`
 }
 
 type StockReturn struct {
@@ -1324,6 +1703,73 @@ type SyncLog struct {
 	RecordsPulled int32          `json:"records_pulled"`
 	ErrorsCount   int32          `json:"errors_count"`
 	ErrorMessage  sql.NullString `json:"error_message"`
+}
+
+type TemperatureExcursion struct {
+	ID                  string         `json:"id"`
+	OrgID               string         `json:"org_id"`
+	WarehouseID         string         `json:"warehouse_id"`
+	LocationID          uuid.NullUUID  `json:"location_id"`
+	EquipmentID         uuid.NullUUID  `json:"equipment_id"`
+	DeviceName          sql.NullString `json:"device_name"`
+	ExcursionType       string         `json:"excursion_type"`
+	StartedAt           time.Time      `json:"started_at"`
+	EndedAt             sql.NullTime   `json:"ended_at"`
+	MinValue            sql.NullString `json:"min_value"`
+	MaxValue            sql.NullString `json:"max_value"`
+	ExpectedMin         sql.NullString `json:"expected_min"`
+	ExpectedMax         sql.NullString `json:"expected_max"`
+	AffectedProducts    sql.NullString `json:"affected_products"`
+	AffectedBatches     sql.NullString `json:"affected_batches"`
+	QuantityAffected    sql.NullString `json:"quantity_affected"`
+	Quarantined         bool           `json:"quarantined"`
+	QuarantineReference sql.NullString `json:"quarantine_reference"`
+	Disposition         string         `json:"disposition"`
+	NotifiedQuality     bool           `json:"notified_quality"`
+	NotifiedManager     bool           `json:"notified_manager"`
+	TechnicalAdvice     sql.NullString `json:"technical_advice"`
+	RootCause           sql.NullString `json:"root_cause"`
+	CapaID              uuid.NullUUID  `json:"capa_id"`
+	Status              string         `json:"status"`
+	CreatedBy           sql.NullString `json:"created_by"`
+	UpdatedBy           sql.NullString `json:"updated_by"`
+	CreatedAt           time.Time      `json:"created_at"`
+	UpdatedAt           time.Time      `json:"updated_at"`
+}
+
+type TemperatureMonitoringEntry struct {
+	ID           string         `json:"id"`
+	OrgID        string         `json:"org_id"`
+	WarehouseID  string         `json:"warehouse_id"`
+	LocationID   uuid.NullUUID  `json:"location_id"`
+	EquipmentID  uuid.NullUUID  `json:"equipment_id"`
+	DeviceName   sql.NullString `json:"device_name"`
+	MonitorType  string         `json:"monitor_type"`
+	ReadingValue string         `json:"reading_value"`
+	MinThreshold sql.NullString `json:"min_threshold"`
+	MaxThreshold sql.NullString `json:"max_threshold"`
+	RecordedAt   time.Time      `json:"recorded_at"`
+	RecordedBy   sql.NullString `json:"recorded_by"`
+	CreatedAt    time.Time      `json:"created_at"`
+}
+
+type TrainingRecord struct {
+	ID                   string         `json:"id"`
+	OrgID                string         `json:"org_id"`
+	UserID               uuid.NullUUID  `json:"user_id"`
+	TrainingTitle        string         `json:"training_title"`
+	TrainingType         string         `json:"training_type"`
+	Topic                sql.NullString `json:"topic"`
+	TrainingDate         time.Time      `json:"training_date"`
+	Method               sql.NullString `json:"method"`
+	Trainer              sql.NullString `json:"trainer"`
+	Assessed             bool           `json:"assessed"`
+	AssessmentResult     sql.NullString `json:"assessment_result"`
+	CompetencyValidUntil sql.NullTime   `json:"competency_valid_until"`
+	CertificateUrl       sql.NullString `json:"certificate_url"`
+	CreatedBy            sql.NullString `json:"created_by"`
+	CreatedAt            time.Time      `json:"created_at"`
+	UpdatedAt            time.Time      `json:"updated_at"`
 }
 
 type TransferLineItem struct {

@@ -4,28 +4,20 @@
 -- Enable UUIDv7 generation
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Helper: generate UUID v7 (time-ordered)
+-- Helper: generate UUID v7 (time-ordered, RFC 9562)
 CREATE OR REPLACE FUNCTION uuid_generate_v7()
 RETURNS uuid
 LANGUAGE plpgsql
 AS $$
+DECLARE
+  millis bigint;
+  bytes bytea;
 BEGIN
-  RETURN encode(
-    set_byte(
-      set_byte(
-        set_byte(
-          set_byte(
-            overlay(
-              decode(lpad(to_hex(floor(extract(epoch from clock_timestamp()) * 1000)::bigint), 12, '0'), 'hex')
-              placing '\x0b' from 7
-            )
-            , 4, 1, (get_byte(decode(lpad(to_hex(floor(extract(epoch from clock_timestamp()) * 1000)::bigint), 12, '0'), 'hex'), 4) & 0x0f) | 0x70)
-          , 0, 1, (get_byte(decode(lpad(to_hex(floor(extract(epoch from clock_timestamp()) * 1000)::bigint), 12, '0'), 'hex'), 0) & 0x7f) | 0x80)
-        , 7, 1, (random() * 255)::int)
-      , 1, 1, (random() * 255)::int)
-    , 0, 1, (random() * 255)::int)
-    , 'hex'
-  )::uuid;
+  millis := (extract(epoch from clock_timestamp()) * 1000)::bigint;
+  bytes := decode(lpad(to_hex(millis), 12, '0'), 'hex') || gen_random_bytes(10);
+  bytes := set_byte(bytes, 6, (get_byte(bytes, 6) & 0x0f) | 0x70);
+  bytes := set_byte(bytes, 7, (get_byte(bytes, 7) & 0x3f) | 0x80);
+  RETURN encode(bytes, 'hex')::uuid;
 END;
 $$;
 
@@ -166,7 +158,7 @@ CREATE TABLE role_permissions (
 CREATE TABLE units_of_measure (
     id           uuid PRIMARY KEY DEFAULT uuid_generate_v7(),
     name         text NOT NULL,
-    abbreviation text NOT NULL,
+    abbreviation text NOT NULL UNIQUE,
     category     uom_category NOT NULL,
     status       entity_status NOT NULL DEFAULT 'active',
     created_at   timestamptz NOT NULL DEFAULT now(),
@@ -186,7 +178,8 @@ CREATE TABLE product_categories (
     created_by  text,
     updated_by  text,
     created_at  timestamptz NOT NULL DEFAULT now(),
-    updated_at  timestamptz NOT NULL DEFAULT now()
+    updated_at  timestamptz NOT NULL DEFAULT now(),
+    UNIQUE(org_id, name)
 );
 
 -- Products / Item Master
@@ -505,6 +498,7 @@ $$;
 DO $$
 DECLARE
   tbl text;
+  has_org_id boolean;
 BEGIN
   FOR tbl IN SELECT tablename FROM pg_tables WHERE tablename IN (
     'org_levels', 'programs', 'departments', 'users', 'product_categories',
@@ -513,11 +507,23 @@ BEGIN
     'stock_adjustments', 'qa_inspections', 'assets'
   ) LOOP
     EXECUTE format('DROP POLICY IF EXISTS org_isolation ON %I', tbl);
-    EXECUTE format('
-      CREATE POLICY org_isolation ON %I
-        USING (org_id = app.current_org_id()::uuid)
-        WITH CHECK (org_id = app.current_org_id()::uuid)
-    ', tbl);
+    SELECT EXISTS (
+      SELECT 1 FROM pg_attribute
+      WHERE attrelid = tbl::regclass AND attname = 'org_id' AND attnum > 0
+    ) INTO has_org_id;
+    IF has_org_id THEN
+      EXECUTE format('
+        CREATE POLICY org_isolation ON %I
+          USING (org_id = app.current_org_id()::uuid)
+          WITH CHECK (org_id = app.current_org_id()::uuid)
+      ', tbl);
+    ELSE
+      EXECUTE format('
+        CREATE POLICY org_isolation ON %I
+          USING (warehouse_id IN (SELECT w.id FROM warehouses w WHERE w.org_id = app.current_org_id()::uuid))
+          WITH CHECK (warehouse_id IN (SELECT w.id FROM warehouses w WHERE w.org_id = app.current_org_id()::uuid))
+      ', tbl);
+    END IF;
   END LOOP;
 END;
 $$;

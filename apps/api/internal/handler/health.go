@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )

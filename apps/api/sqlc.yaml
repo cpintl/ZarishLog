@@ -9,6 +9,7 @@ sql:
       - "../../packages/data-models/sql/migrations/004_finer_grained_rls_isolation.sql"
       - "../../packages/data-models/sql/migrations/005_master_catalogue_extension.sql"
       - "../../packages/data-models/sql/migrations/006_add_safety_stock.sql"
+      - "../../packages/data-models/sql/migrations/007_cpi_medical_policy_controls.sql"
     gen:
       go:
         package: "db"

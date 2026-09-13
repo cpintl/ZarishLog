@@ -1,6 +1,6 @@
 # ZarishLog — Project Status Dashboard
 
-**Generated:** 2026-07-16
+**Generated:** 2026-09-13
 **Stack:** Go 1.26 + Gin 1.12 · PostgreSQL 18 + sqlc + sqlx · Next.js 16 + React 19 PWA · Keycloak 26 · Docker Compose · Terraform
 **Repository:** `github.com/cpintl/zarishlog` (monorepo)
 
@@ -11,7 +11,7 @@
 | Phase | Status | Key Deliverables |
 |---|---|---|
 | Phase 0 — Foundation | ✅ Complete | Monorepo scaffold, Docker Compose (PostgreSQL 18, Redis 8, MinIO, Keycloak 26, Meilisearch), Makefile, GitHub CI, AGENTS.md, .env |
-| Phase 1 — Database & Data Models | ✅ Complete | 76 tables, 137 sqlc queries, 6 migrations, 1410-line seed data, RLS on 39 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
+| Phase 1 — Database & Data Models | ✅ Complete | 100 tables, 205 sqlc queries, 7 migrations, ~1,410-line seed data, RLS on 82 tenant tables, config-as-CSV/JSON framework, Master Catalogues (40 products + expanded 1912-product pharmaceutical catalogue) |
 | Phase 2 — Go API Core | ✅ Complete | Go module, config layer, DB pool, CORS/Tenant/Auth/RBAC middleware, health/version endpoints, structured error handling (`internal/response/`), request validation (`internal/validator/`, custom UUIDv7/enum/date validators), pagination helpers (`internal/pagination/`, page/page_size with LIMIT/OFFSET on all list endpoints), audit logging middleware (`internal/middleware/audit.go`), error middleware (`internal/middleware/error.go`) |
 | Phase 3 — Product/Catalogue Module | ✅ Complete | Product CRUD (List/Get/Create/Update/Delete), Category CRUD (List/Create), UoM CRUD (List/Get/Create/Update/Delete), bulk CSV import with duplicate detection, PostgreSQL ILIKE search (name/SKU/description/brand/manufacturer), structured validation + pagination + error helpers, 12 unit tests (testify + sqlmock) |
 | Phase 4 — Warehouse & Location Module | ✅ Complete | Warehouse CRUD (List/Get/Create/Update/Delete), Location CRUD (List/Get/Create/Update/Delete with hierarchy tree), Location constraints (get/upsert with ON CONFLICT), location_type validator, 13 unit tests (testify + sqlmock) |
@@ -20,9 +20,10 @@
 | Phase 7 — Distribution & Asset Management | ✅ Complete | Distribution CRUD (with line items + beneficiaries), asset register CRUD, custody transfer, maintenance history, 17 unit tests |
 | Phase 8 — Replenishment & Forecasting | ✅ Complete | AMC calculation (3/6/12-month from stock movements), reorder recommendations (auto-type/priority), forecast results CRUD, 9 unit tests |
 | Phase 9 — User & Access Management | ✅ Complete | User CRUD, role/permission listing, role assignment with org-level scope, 11 unit tests |
-| Phase 10 — Offline-First & PWA | ❌ Not started | Dexie.js IndexedDB, Workbox service worker, Background Sync, conflict resolution |
+| Phase 10 — Offline-First & PWA | 🟡 Scaffolded | Dexie.js IndexedDB + adapter, Workbox service worker scaffold (`sw.ts`), offline sync queue (`processQueue`) with 5-attempt retry cap, `OfflineIndicator` UI; service worker registration and conflict resolution pending |
 | Phase 11 — Reporting & Analytics | ❌ Not started | Metabase dashboards, stock turnover, expiry dashboard, donor compliance reports |
-| Phase 12 — Deployment & Infrastructure | ❌ Not started | Docker multi-stage, Terraform (VPC/RDS/ECS), GitHub Actions deploy, monitoring, load testing |
+| Phase 12 — Deployment & Infrastructure | ❌ Not started | Production Dockerfiles done; Terraform (VPC/RDS/ECS), GitHub Actions deploy, monitoring, load testing remain |
+| CPI Bangladesh Policy Compliance (v1.0) | ✅ Schema + API + Tests | 18 policy-register tables + 3 dicts (migration 007), 8 sqlc query files, 8 handler files, 29 API routes, 19 handler tests |
 
 ---
 
@@ -38,7 +39,8 @@
 | `004_finer_grained_rls_isolation.sql` | — | 161 | Program/org-level/department scoped RLS, `app.set_isolation_context()` middleware helper |
 | `005_master_catalogue_extension.sql` | 3 | 198 | Master Catalogue fields: `strength`, `is_asset`, `replenishment_type`, `valuation_method`, `alternate_codes` (JSONB), `unspsc_commodity`, `eclass_code`, `is_kitting`, `temp_min_c`/`max_c`, `is_essential`, `is_controlled`; enums `aisle`, `committed`, `backordered`; new tables: `justification_codes`, `entities`, `entity_attributes`; `conversion_factor` on UoM and packaging |
 | `006_add_safety_stock.sql` | 0 (alteration) | 13 | Adds `safety_stock` numeric column and index to `products` table for reorder planning |
-| **Total** | **79** | **~1,903** | — |
+| `007_cpi_medical_policy_controls.sql` | 21 (3 dicts + 18 registers) | 641 | CPI Bangladesh Medical Warehouse Policy registers: regulatory approvals, deviations/CAPA/training, temperature monitoring & excursions, controlled-stock register, donations, complaints, recalls, dispatch/proof-of-delivery, short-expiry reviews, emergency plans, change controls; RLS on all 16 main tables via `app.rls_policy_expression()` plus parent-join policy on 2 line-item tables |
+| **Total** | **100** | **~2,554** | — |
 
 ### 2.2 Seed Data Inventory
 
@@ -93,7 +95,15 @@
 | `reports.sql` | 6 | Report definitions, schedules, parameter CRUD |
 | `sync.sql` | 5 | Sync log, sync conflicts, conflict resolution |
 | `audit.sql` | 4 | Audit log query, data change log, export |
-| **Total** | **137** | 16 files, typed Go generation via sqlc |
+| `policy_regulatory.sql` | 5 | Regulatory approvals CRUD + expiring-in-days listing |
+| `policy_quality.sql` | 14 | Deviations, CAPA actions (+ effectiveness close), training records |
+| `policy_coldchain.sql` | 8 | Temperature monitoring entries, excursions (+ disposition) |
+| `policy_stock_controls.sql` | 10 | Stock release records, controlled-stock register, short-expiry reviews |
+| `policy_donations.sql` | 7 | Donations + line items + decision workflow |
+| `policy_events.sql` | 10 | Complaints, recalls + line items (outstanding = issued − recovered) |
+| `policy_dispatch.sql` | 8 | Dispatch waybills + delivery confirmations (marks waybill delivered) |
+| `policy_planning.sql` | 6 | Emergency plans, change controls |
+| **Total** | **205** | 24 files, typed Go generation via sqlc |
 
 ### 2.4 Config Templates Inventory
 
@@ -111,11 +121,12 @@
 | `master_product_list.csv` | CSV | 40-product sample catalogue (SKU scheme: `{PREFIX}-{ABBREV}-{SPEC}` e.g. `MED-AMOX-500`); used by template CSV examples and seed data |
 | `master_product_catalogue.csv` | CSV | Expanded 1912-product pharmaceutical/humanitarian catalogue (SKU scheme: `{item_type}-{name}-{seq}` e.g. `DRUG-acemetacin-0001`); 65+ categories (generated via `scripts/process_catalogue_csvs.py`) |
 | `catalogue_summary.txt` | Text | Summary breakdown of the expanded catalogue (1912 items by type and category) |
-| `organization.csv` | CSV | 8-entry L1-L4 org hierarchy |
+| `organization.csv` | CSV | 7-entry L1-L4 org hierarchy (CPI → CPI-BD → CPI-BD-CXB → CPI-CXB-UKH → camps/health posts) |
+| `departments.csv` | CSV | 3 department units (HPP Health Post Program, HOP Health Outreach Program, HSS Health System Strengthening) |
 | `programs.csv` | CSV | 6 thematic program areas |
-| `uom.csv` | CSV | 23 units of measure across 6 categories |
+| `uom.csv` | CSV | 16 units of measure across 6 categories |
 | `warehouse.json` | JSON | 4-warehouse config with 17 locations, lat/lng, maps URLs, facility metadata |
-| `roles.md` | Markdown | Human-readable R01-R09 role definitions + permission matrix |
+| `roles.md` | Markdown | Human-readable R01-R12 role definitions + permission matrix |
 
 ### 2.6 Extended Schema Features
 
@@ -147,7 +158,7 @@
 
 ---
 
-## 3. All Database Tables (76 tables, 16 domains)
+## 3. All Database Tables (100 tables, 17 domains)
 
 ### Domain 1: Organization & Users (14 tables)
 
@@ -305,15 +316,41 @@
 | 75 | `report_definitions` | Tenant | Report catalog (SQL query, parameters, output formats, scheduling) |
 | 76 | `report_schedules` | Tenant | Cron-based report schedules with recipients and format |
 
+### Domain 17: Policy Compliance — CPI Bangladesh Medical Warehouse Policy (21 tables, migration 007)
+
+| # | Table | Type | Description |
+|---|---|---|---|
+| 77 | `regulatory_approvals` | Tenant | DGDA/DNC/NBR/Customs licences, permits, registrations with issue/expiry + renewal lead (policy §8) |
+| 78 | `deviations` | Tenant | Deviation register: category, severity, containment, root cause, risk, escalation (policy §14.3) |
+| 79 | `capa_actions` | Tenant | CAPA actions with effectiveness verification → close (policy §14.3) |
+| 80 | `training_records` | Tenant | Staff qualification/training log with validity period (policy §14.4) |
+| 81 | `temperature_monitoring_entries` | Tenant | Periodic temperature/humidity readings (policy §11.3) |
+| 82 | `temperature_excursions` | Tenant | Freeze/heat/transport/humidity excursions, quarantine, disposition (policy §11.3) |
+| 83 | `stock_release_records` | Tenant | Released-stock records with evidence + decision (policy §16) |
+| 84 | `controlled_stock_register` | Tenant | Controlled-substance register: ref document, quantity, balance-after, recipient signature (policy §12.2) |
+| 85 | `donations` | Tenant | Donation header: donor, offer, approval, decision + certificate (policy §13) |
+| 86 | `donation_line_items` | Junction | Donation product/batch/expiry/uom/shelf-life/compliance → `donations` (RLS via parent) |
+| 87 | `complaints` | Tenant | Complaint register with severities + escalation rules (policy §17.2) |
+| 88 | `recalls` | Tenant | Actual + MOCK recall exercises with communications & disposition plan (policy §17.3) |
+| 89 | `recall_line_items` | Junction | Recipient/location, issued/recovered → outstanding = issued − recovered (RLS via parent) |
+| 90 | `dispatch_waybills` | Tenant | Dispatch header with storage requirements + temperature-sensitive flag (policy §10) |
+| 91 | `delivery_confirmations` | Tenant | Proof of delivery + conformance checks (marks waybill delivered) |
+| 92 | `short_expiry_reviews` | Tenant | Short-dated stock reviews (3/6/12-month bands, action, approval) (policy §16) |
+| 93 | `emergency_plans` | Tenant | Scenario emergency/preparedness plans (cyclone/flood/fire/power) (policy §20) |
+| 94 | `change_controls` | Tenant | Change control: impact assessment, risk, quality review, approval (policy §27) |
+| 95 | `deviation_categories` | Reference | Seeded category → default risk-level dictionary (11 values) |
+| 96 | `complaint_severities` | Reference | Seeded severity → immediate-escalation dictionary (CRITICAL/MAJOR/MINOR) |
+| 97 | `recall_types` | Reference | ACTUAL vs MOCK recall type dictionary |
+
 ### Summary
 
 | Metric | Count |
 |---|---|
-| Tables | 76 (26 initial + 46 extended + 1 dosage forms + 3 master catalogue) |
-| Tenant-scoped (RLS) | 39 with `org_id` enforced (incl. entity_attributes which uses `entity_id` via FK) |
-| Reference/lookup | 10 shared across tenants (incl. justification_codes, dosage_forms, disposal_methods) |
-| Junction/child | 28 inherited via FK |
-| Rows of seed data | ~1,407 lines (seed.sql) + 2,255 lines (006_master_product_seed.sql), 148 INSERT statements total |
+| Tables | 100 (78 base + 22 policy-related) |
+| Tenant-scoped (RLS) | 55 with `org_id` enforced |
+| Reference/lookup | 13 shared across tenants |
+| Junction/child | 30 inherited via FK (incl. `donation_line_items` → `donations`, `recall_line_items` → `recalls`, `entity_attributes` → `entities`) |
+| Rows of seed data | ~1,407 lines (seed.sql) + 2,255 lines (006_master_product_seed.sql) + policy dictionaries in 007 |
 | Custom ENUM types | 8 (`uom_category`, `item_type`, `entity_status`, `warehouse_type`, `location_type`, `movement_type`, `doc_type`, `stock_status`) |
 | Database functions | 7 (`uuid_generate_v7`, `app.current_org_id`, `app.current_user_id`, `app.current_program_id`, `app.current_org_level_id`, `app.current_department_id`, `app.set_isolation_context`) |
 
@@ -321,7 +358,7 @@
 
 ## 4. File Inventory
 
-### `packages/data-models/sql/migrations/` (6 files)
+### `packages/data-models/sql/migrations/` (7 files)
 
 | File | Tables | Lines |
 |---|---|---|
@@ -331,9 +368,10 @@
 | `004_finer_grained_rls_isolation.sql` | — | 165 |
 | `005_master_catalogue_extension.sql` | 3 (new tables) | 198 |
 | `006_add_safety_stock.sql` | 0 (alteration) | 13 |
-| **Total** | **76** | **~1,910** |
+| `007_cpi_medical_policy_controls.sql` | 21 (3 dicts + 18 registers) | 641 |
+| **Total** | **100** | **~2,551** |
 
-### `packages/data-models/sql/queries/` (16 files, 137 queries)
+### `packages/data-models/sql/queries/` (24 files, 205 queries)
 
 | File | Queries | Lines |
 |---|---|---|
@@ -353,7 +391,15 @@
 | `reports.sql` | 6 | 33 |
 | `sync.sql` | 5 | 26 |
 | `audit.sql` | 4 | 27 |
-| **Total** | **137** | **822** |
+| `policy_regulatory.sql` | 5 | 31 |
+| `policy_quality.sql` | 14 | 97 |
+| `policy_coldchain.sql` | 8 | 57 |
+| `policy_stock_controls.sql` | 10 | 66 |
+| `policy_donations.sql` | 7 | 47 |
+| `policy_events.sql` | 10 | 64 |
+| `policy_dispatch.sql` | 8 | 52 |
+| `policy_planning.sql` | 6 | 42 |
+| **Total** | **205** | **~1,278** |
 
 ### `config/templates/` (54 files)
 
@@ -373,9 +419,10 @@
 | `master_product_list.csv` | 40 products | Sample catalogue with SKU, name, category, UoM, item type, tracking flags |
 | `master_product_catalogue.csv` | 1,912 products | Expanded pharmaceutical/humanitarian catalogue (65+ categories, generated via `scripts/process_catalogue_csvs.py`) |
 | `catalogue_summary.txt` | 69 lines | Summary breakdown of expanded catalogue by type and category |
-| `organization.csv` | 8 org levels | L1-L4 hierarchy with parent codes |
+| `organization.csv` | 7 org levels | L1-L4 hierarchy with parent codes |
+| `departments.csv` | 3 departments | HPP/HOP/HSS department units |
 | `programs.csv` | 6 programs | Thematic area codes and descriptions |
-| `uom.csv` | 23 units | Name, abbreviation, category |
+| `uom.csv` | 16 units | Name, abbreviation, category |
 
 ### `config/location/` (1 JSON file)
 

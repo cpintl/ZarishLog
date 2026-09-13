@@ -29,7 +29,9 @@
        │                    API Layer — Go + Gin 1.12                │
         │  Middleware: Auth (OIDC/JWT) · RBAC (enforced) · Audit · Tenant       │
        │  Modules: Catalogue · Warehouse · Stock · GRN/SRF · QA ·   │
-       │           Assets · Forecasting · Reporting · Notifications  │
+       │           Assets · Forecasting · Reporting · Compliance    │
+       │           (CPI policy: regulatory, CAPA, cold chain,       │
+       │            donors, recalls, dispatch)                      │
        └─────────┬──────────────────────────────────────────────────┘
                  │
        ┌─────────▼──────────────────────────────────────────────────┐
@@ -157,6 +159,58 @@ POST   /api/v1/users/:id/roles          # Assign role to user
 DELETE /api/v1/users/:id/roles          # Remove role assignment
 GET    /api/v1/roles                    # List roles
 GET    /api/v1/permissions              # List permissions
+
+# Compliance — CPI Bangladesh Medical Warehouse Policy (DGDA/DNC)
+# (see docs/CPI_POLICY_IMPLEMENTATION.md for policy § mapping)
+GET    /api/v1/policy/regulatory-approvals           # List licences/permits
+POST   /api/v1/policy/regulatory-approvals           # Create approval
+GET    /api/v1/policy/regulatory-approvals/expiring  # Expiring within ?days= (default 60)
+GET    /api/v1/policy/regulatory-approvals/:id       # Get approval
+POST   /api/v1/policy/deviations                     # Create deviation
+GET    /api/v1/policy/deviations                     # List deviations
+GET    /api/v1/policy/deviations/:id                 # Get deviation
+POST   /api/v1/policy/capa                           # Create CAPA action
+GET    /api/v1/policy/capa                           # List CAPA actions
+GET    /api/v1/policy/capa/:id                       # Get CAPA action
+POST   /api/v1/policy/capa/:id/effectiveness         # Verify effectiveness (closes)
+POST   /api/v1/policy/training                       # Create training record
+GET    /api/v1/policy/training                       # List training records
+POST   /api/v1/temperature-monitoring                # Create temp/humidity reading
+GET    /api/v1/temperature-monitoring                # List readings
+POST   /api/v1/temperature-excursions                # Create excursion
+GET    /api/v1/temperature-excursions                # List excursions
+GET    /api/v1/temperature-excursions/:id            # Get excursion
+POST   /api/v1/temperature-excursions/:id/disposition  # Set disposition (closes)
+POST   /api/v1/stock-releases                        # Create stock release record
+GET    /api/v1/stock-releases                        # List stock releases
+GET    /api/v1/stock-releases/:id                    # Get stock release
+POST   /api/v1/controlled-stock                      # Create controlled-stock register entry
+GET    /api/v1/controlled-stock                      # List controlled-stock register
+GET    /api/v1/controlled-stock/:id                  # Get entry
+POST   /api/v1/donations                             # Create donation + line items (txn)
+GET    /api/v1/donations                             # List donations
+GET    /api/v1/donations/:id                         # Get donation + line items
+POST   /api/v1/donations/:id/decision                # Record acceptance decision
+POST   /api/v1/complaints                            # Create complaint
+GET    /api/v1/complaints                            # List complaints
+GET    /api/v1/complaints/:id                        # Get complaint
+POST   /api/v1/recalls                               # Create recall (actual/mock) + line items (txn)
+GET    /api/v1/recalls                               # List recalls
+GET    /api/v1/recalls/:id                           # Get recall + line items
+POST   /api/v1/dispatch-waybills                     # Create dispatch waybill
+GET    /api/v1/dispatch-waybills                     # List waybills
+GET    /api/v1/dispatch-waybills/:id                 # Get waybill
+POST   /api/v1/delivery-confirmations                # Confirm delivery (marks waybill delivered)
+GET    /api/v1/delivery-confirmations                # List confirmations
+GET    /api/v1/delivery-confirmations/:id            # Get confirmation
+POST   /api/v1/short-expiry-reviews                  # Create short-expiry review
+GET    /api/v1/short-expiry-reviews                  # List short-expiry reviews
+POST   /api/v1/emergency-plans                       # Create emergency plan
+GET    /api/v1/emergency-plans                       # List emergency plans
+GET    /api/v1/emergency-plans/:id                   # Get emergency plan
+POST   /api/v1/change-controls                       # Create change control
+GET    /api/v1/change-controls                       # List change controls
+GET    /api/v1/change-controls/:id                   # Get change control
 GET    /api/v1/reports/stock-status      # [STUB]
 GET    /api/v1/reports/valuation         # [STUB]
 GET    /api/v1/reports/expiry            # [STUB]
@@ -168,7 +222,9 @@ GET    /api/v1/sync/pull                # [STUB]
 
 **Master Data:** `organizations`, `org_levels` (L1–L4), `programs`, `departments`, `product_categories`, `products`, `units_of_measure`, `warehouses`, `locations`
 
-**Transactional Data:** `stock_levels`, `stock_movements`, `goods_receipts`, `stock_requests`, `stock_transfers`, `stock_adjustments`, `qa_inspections`, `asset_transfers`, `distributions`
+**Transactional Data:** `stock_levels`, `stock_movements`, `goods_receipts`, `stock_issues`, `stock_transfers`, `stock_adjustments`, `qa_inspections`, `asset_transfers`, `distributions`
+
+**Compliance Data (CPI Bangladesh Medical Warehouse Policy):** `regulatory_approvals`, `deviations`, `capa_actions`, `training_records`, `temperature_monitoring_entries`, `temperature_excursions`, `stock_release_records`, `controlled_stock_register`, `donations`, `donation_line_items`, `complaints`, `recalls`, `recall_line_items`, `dispatch_waybills`, `delivery_confirmations`, `short_expiry_reviews`, `emergency_plans`, `change_controls` (migration 007; see `docs/CPI_POLICY_IMPLEMENTATION.md`)
 
 **Reference Data:** status enums, UoM codes, document types
 

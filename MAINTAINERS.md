@@ -6,7 +6,7 @@
 
 ```bash
 # Update version
-export VERSION="v0.3.0"
+export VERSION="v1.0.0"
 
 # Run full test suite
 ./scripts/test.sh --ci

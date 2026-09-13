@@ -66,17 +66,47 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createBatchStmt, err = db.PrepareContext(ctx, createBatch); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateBatch: %w", err)
 	}
+	if q.createCAPAActionStmt, err = db.PrepareContext(ctx, createCAPAAction); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateCAPAAction: %w", err)
+	}
 	if q.createCategoryStmt, err = db.PrepareContext(ctx, createCategory); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateCategory: %w", err)
+	}
+	if q.createChangeControlStmt, err = db.PrepareContext(ctx, createChangeControl); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateChangeControl: %w", err)
+	}
+	if q.createComplaintStmt, err = db.PrepareContext(ctx, createComplaint); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateComplaint: %w", err)
+	}
+	if q.createControlledStockRegisterEntryStmt, err = db.PrepareContext(ctx, createControlledStockRegisterEntry); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateControlledStockRegisterEntry: %w", err)
 	}
 	if q.createDataChangeLogStmt, err = db.PrepareContext(ctx, createDataChangeLog); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateDataChangeLog: %w", err)
 	}
+	if q.createDeliveryConfirmationStmt, err = db.PrepareContext(ctx, createDeliveryConfirmation); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateDeliveryConfirmation: %w", err)
+	}
 	if q.createDepartmentStmt, err = db.PrepareContext(ctx, createDepartment); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateDepartment: %w", err)
 	}
+	if q.createDeviationStmt, err = db.PrepareContext(ctx, createDeviation); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateDeviation: %w", err)
+	}
+	if q.createDispatchWaybillStmt, err = db.PrepareContext(ctx, createDispatchWaybill); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateDispatchWaybill: %w", err)
+	}
 	if q.createDistributionStmt, err = db.PrepareContext(ctx, createDistribution); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateDistribution: %w", err)
+	}
+	if q.createDonationStmt, err = db.PrepareContext(ctx, createDonation); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateDonation: %w", err)
+	}
+	if q.createDonationLineItemStmt, err = db.PrepareContext(ctx, createDonationLineItem); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateDonationLineItem: %w", err)
+	}
+	if q.createEmergencyPlanStmt, err = db.PrepareContext(ctx, createEmergencyPlan); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateEmergencyPlan: %w", err)
 	}
 	if q.createForecastResultStmt, err = db.PrepareContext(ctx, createForecastResult); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateForecastResult: %w", err)
@@ -117,6 +147,15 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createQAInspectionStmt, err = db.PrepareContext(ctx, createQAInspection); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateQAInspection: %w", err)
 	}
+	if q.createRecallStmt, err = db.PrepareContext(ctx, createRecall); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateRecall: %w", err)
+	}
+	if q.createRecallLineItemStmt, err = db.PrepareContext(ctx, createRecallLineItem); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateRecallLineItem: %w", err)
+	}
+	if q.createRegulatoryApprovalStmt, err = db.PrepareContext(ctx, createRegulatoryApproval); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateRegulatoryApproval: %w", err)
+	}
 	if q.createReorderRecommendationStmt, err = db.PrepareContext(ctx, createReorderRecommendation); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateReorderRecommendation: %w", err)
 	}
@@ -129,11 +168,17 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createRoleStmt, err = db.PrepareContext(ctx, createRole); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateRole: %w", err)
 	}
+	if q.createShortExpiryReviewStmt, err = db.PrepareContext(ctx, createShortExpiryReview); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateShortExpiryReview: %w", err)
+	}
 	if q.createStockIssueStmt, err = db.PrepareContext(ctx, createStockIssue); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateStockIssue: %w", err)
 	}
 	if q.createStockMovementStmt, err = db.PrepareContext(ctx, createStockMovement); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateStockMovement: %w", err)
+	}
+	if q.createStockReleaseRecordStmt, err = db.PrepareContext(ctx, createStockReleaseRecord); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateStockReleaseRecord: %w", err)
 	}
 	if q.createSupplierStmt, err = db.PrepareContext(ctx, createSupplier); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateSupplier: %w", err)
@@ -143,6 +188,15 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.createSyncLogStmt, err = db.PrepareContext(ctx, createSyncLog); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateSyncLog: %w", err)
+	}
+	if q.createTemperatureExcursionStmt, err = db.PrepareContext(ctx, createTemperatureExcursion); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTemperatureExcursion: %w", err)
+	}
+	if q.createTemperatureMonitoringEntryStmt, err = db.PrepareContext(ctx, createTemperatureMonitoringEntry); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTemperatureMonitoringEntry: %w", err)
+	}
+	if q.createTrainingRecordStmt, err = db.PrepareContext(ctx, createTrainingRecord); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTrainingRecord: %w", err)
 	}
 	if q.createTransferStmt, err = db.PrepareContext(ctx, createTransfer); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateTransfer: %w", err)
@@ -174,11 +228,41 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getBatchesByProductStmt, err = db.PrepareContext(ctx, getBatchesByProduct); err != nil {
 		return nil, fmt.Errorf("error preparing query GetBatchesByProduct: %w", err)
 	}
+	if q.getCAPAActionStmt, err = db.PrepareContext(ctx, getCAPAAction); err != nil {
+		return nil, fmt.Errorf("error preparing query GetCAPAAction: %w", err)
+	}
 	if q.getCategoryStmt, err = db.PrepareContext(ctx, getCategory); err != nil {
 		return nil, fmt.Errorf("error preparing query GetCategory: %w", err)
 	}
+	if q.getChangeControlStmt, err = db.PrepareContext(ctx, getChangeControl); err != nil {
+		return nil, fmt.Errorf("error preparing query GetChangeControl: %w", err)
+	}
+	if q.getComplaintStmt, err = db.PrepareContext(ctx, getComplaint); err != nil {
+		return nil, fmt.Errorf("error preparing query GetComplaint: %w", err)
+	}
+	if q.getControlledStockRegisterEntryStmt, err = db.PrepareContext(ctx, getControlledStockRegisterEntry); err != nil {
+		return nil, fmt.Errorf("error preparing query GetControlledStockRegisterEntry: %w", err)
+	}
+	if q.getDeliveryConfirmationStmt, err = db.PrepareContext(ctx, getDeliveryConfirmation); err != nil {
+		return nil, fmt.Errorf("error preparing query GetDeliveryConfirmation: %w", err)
+	}
+	if q.getDeviationStmt, err = db.PrepareContext(ctx, getDeviation); err != nil {
+		return nil, fmt.Errorf("error preparing query GetDeviation: %w", err)
+	}
+	if q.getDispatchWaybillStmt, err = db.PrepareContext(ctx, getDispatchWaybill); err != nil {
+		return nil, fmt.Errorf("error preparing query GetDispatchWaybill: %w", err)
+	}
 	if q.getDistributionStmt, err = db.PrepareContext(ctx, getDistribution); err != nil {
 		return nil, fmt.Errorf("error preparing query GetDistribution: %w", err)
+	}
+	if q.getDonationStmt, err = db.PrepareContext(ctx, getDonation); err != nil {
+		return nil, fmt.Errorf("error preparing query GetDonation: %w", err)
+	}
+	if q.getDonationLineItemsStmt, err = db.PrepareContext(ctx, getDonationLineItems); err != nil {
+		return nil, fmt.Errorf("error preparing query GetDonationLineItems: %w", err)
+	}
+	if q.getEmergencyPlanStmt, err = db.PrepareContext(ctx, getEmergencyPlan); err != nil {
+		return nil, fmt.Errorf("error preparing query GetEmergencyPlan: %w", err)
 	}
 	if q.getExpiringBatchesStmt, err = db.PrepareContext(ctx, getExpiringBatches); err != nil {
 		return nil, fmt.Errorf("error preparing query GetExpiringBatches: %w", err)
@@ -213,6 +297,15 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getQAInspectionStmt, err = db.PrepareContext(ctx, getQAInspection); err != nil {
 		return nil, fmt.Errorf("error preparing query GetQAInspection: %w", err)
 	}
+	if q.getRecallStmt, err = db.PrepareContext(ctx, getRecall); err != nil {
+		return nil, fmt.Errorf("error preparing query GetRecall: %w", err)
+	}
+	if q.getRecallLineItemsStmt, err = db.PrepareContext(ctx, getRecallLineItems); err != nil {
+		return nil, fmt.Errorf("error preparing query GetRecallLineItems: %w", err)
+	}
+	if q.getRegulatoryApprovalStmt, err = db.PrepareContext(ctx, getRegulatoryApproval); err != nil {
+		return nil, fmt.Errorf("error preparing query GetRegulatoryApproval: %w", err)
+	}
 	if q.getReportDefinitionStmt, err = db.PrepareContext(ctx, getReportDefinition); err != nil {
 		return nil, fmt.Errorf("error preparing query GetReportDefinition: %w", err)
 	}
@@ -228,8 +321,14 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getStockMovementsStmt, err = db.PrepareContext(ctx, getStockMovements); err != nil {
 		return nil, fmt.Errorf("error preparing query GetStockMovements: %w", err)
 	}
+	if q.getStockReleaseRecordStmt, err = db.PrepareContext(ctx, getStockReleaseRecord); err != nil {
+		return nil, fmt.Errorf("error preparing query GetStockReleaseRecord: %w", err)
+	}
 	if q.getSupplierStmt, err = db.PrepareContext(ctx, getSupplier); err != nil {
 		return nil, fmt.Errorf("error preparing query GetSupplier: %w", err)
+	}
+	if q.getTemperatureExcursionStmt, err = db.PrepareContext(ctx, getTemperatureExcursion); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTemperatureExcursion: %w", err)
 	}
 	if q.getTransferStmt, err = db.PrepareContext(ctx, getTransfer); err != nil {
 		return nil, fmt.Errorf("error preparing query GetTransfer: %w", err)
@@ -279,20 +378,68 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listAuditLogsStmt, err = db.PrepareContext(ctx, listAuditLogs); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAuditLogs: %w", err)
 	}
+	if q.listCAPAActionsStmt, err = db.PrepareContext(ctx, listCAPAActions); err != nil {
+		return nil, fmt.Errorf("error preparing query ListCAPAActions: %w", err)
+	}
 	if q.listCategoriesStmt, err = db.PrepareContext(ctx, listCategories); err != nil {
 		return nil, fmt.Errorf("error preparing query ListCategories: %w", err)
 	}
 	if q.listCategoryTreeStmt, err = db.PrepareContext(ctx, listCategoryTree); err != nil {
 		return nil, fmt.Errorf("error preparing query ListCategoryTree: %w", err)
 	}
+	if q.listChangeControlsStmt, err = db.PrepareContext(ctx, listChangeControls); err != nil {
+		return nil, fmt.Errorf("error preparing query ListChangeControls: %w", err)
+	}
+	if q.listComplaintsStmt, err = db.PrepareContext(ctx, listComplaints); err != nil {
+		return nil, fmt.Errorf("error preparing query ListComplaints: %w", err)
+	}
+	if q.listControlledStockRegisterStmt, err = db.PrepareContext(ctx, listControlledStockRegister); err != nil {
+		return nil, fmt.Errorf("error preparing query ListControlledStockRegister: %w", err)
+	}
+	if q.listControlledStockRegisterByProductStmt, err = db.PrepareContext(ctx, listControlledStockRegisterByProduct); err != nil {
+		return nil, fmt.Errorf("error preparing query ListControlledStockRegisterByProduct: %w", err)
+	}
+	if q.listDeliveryConfirmationsStmt, err = db.PrepareContext(ctx, listDeliveryConfirmations); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDeliveryConfirmations: %w", err)
+	}
+	if q.listDeliveryConfirmationsByWaybillStmt, err = db.PrepareContext(ctx, listDeliveryConfirmationsByWaybill); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDeliveryConfirmationsByWaybill: %w", err)
+	}
 	if q.listDepartmentsStmt, err = db.PrepareContext(ctx, listDepartments); err != nil {
 		return nil, fmt.Errorf("error preparing query ListDepartments: %w", err)
+	}
+	if q.listDeviationsStmt, err = db.PrepareContext(ctx, listDeviations); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDeviations: %w", err)
+	}
+	if q.listDeviationsByStatusStmt, err = db.PrepareContext(ctx, listDeviationsByStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDeviationsByStatus: %w", err)
+	}
+	if q.listDispatchWaybillsStmt, err = db.PrepareContext(ctx, listDispatchWaybills); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDispatchWaybills: %w", err)
+	}
+	if q.listDispatchWaybillsByStatusStmt, err = db.PrepareContext(ctx, listDispatchWaybillsByStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDispatchWaybillsByStatus: %w", err)
 	}
 	if q.listDistributionLineItemsStmt, err = db.PrepareContext(ctx, listDistributionLineItems); err != nil {
 		return nil, fmt.Errorf("error preparing query ListDistributionLineItems: %w", err)
 	}
 	if q.listDistributionsStmt, err = db.PrepareContext(ctx, listDistributions); err != nil {
 		return nil, fmt.Errorf("error preparing query ListDistributions: %w", err)
+	}
+	if q.listDonationsStmt, err = db.PrepareContext(ctx, listDonations); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDonations: %w", err)
+	}
+	if q.listDonationsByStatusStmt, err = db.PrepareContext(ctx, listDonationsByStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query ListDonationsByStatus: %w", err)
+	}
+	if q.listEmergencyPlansStmt, err = db.PrepareContext(ctx, listEmergencyPlans); err != nil {
+		return nil, fmt.Errorf("error preparing query ListEmergencyPlans: %w", err)
+	}
+	if q.listEscalatedComplaintsStmt, err = db.PrepareContext(ctx, listEscalatedComplaints); err != nil {
+		return nil, fmt.Errorf("error preparing query ListEscalatedComplaints: %w", err)
+	}
+	if q.listExpiringRegulatoryApprovalsStmt, err = db.PrepareContext(ctx, listExpiringRegulatoryApprovals); err != nil {
+		return nil, fmt.Errorf("error preparing query ListExpiringRegulatoryApprovals: %w", err)
 	}
 	if q.listForecastResultsStmt, err = db.PrepareContext(ctx, listForecastResults); err != nil {
 		return nil, fmt.Errorf("error preparing query ListForecastResults: %w", err)
@@ -308,6 +455,15 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.listLocationsStmt, err = db.PrepareContext(ctx, listLocations); err != nil {
 		return nil, fmt.Errorf("error preparing query ListLocations: %w", err)
+	}
+	if q.listOpenCAPAActionsStmt, err = db.PrepareContext(ctx, listOpenCAPAActions); err != nil {
+		return nil, fmt.Errorf("error preparing query ListOpenCAPAActions: %w", err)
+	}
+	if q.listOpenShortExpiryReviewsStmt, err = db.PrepareContext(ctx, listOpenShortExpiryReviews); err != nil {
+		return nil, fmt.Errorf("error preparing query ListOpenShortExpiryReviews: %w", err)
+	}
+	if q.listOpenTemperatureExcursionsStmt, err = db.PrepareContext(ctx, listOpenTemperatureExcursions); err != nil {
+		return nil, fmt.Errorf("error preparing query ListOpenTemperatureExcursions: %w", err)
 	}
 	if q.listOrgLevelsStmt, err = db.PrepareContext(ctx, listOrgLevels); err != nil {
 		return nil, fmt.Errorf("error preparing query ListOrgLevels: %w", err)
@@ -342,6 +498,15 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listQAInspectionsStmt, err = db.PrepareContext(ctx, listQAInspections); err != nil {
 		return nil, fmt.Errorf("error preparing query ListQAInspections: %w", err)
 	}
+	if q.listRecallsStmt, err = db.PrepareContext(ctx, listRecalls); err != nil {
+		return nil, fmt.Errorf("error preparing query ListRecalls: %w", err)
+	}
+	if q.listRecallsByTypeStmt, err = db.PrepareContext(ctx, listRecallsByType); err != nil {
+		return nil, fmt.Errorf("error preparing query ListRecallsByType: %w", err)
+	}
+	if q.listRegulatoryApprovalsStmt, err = db.PrepareContext(ctx, listRegulatoryApprovals); err != nil {
+		return nil, fmt.Errorf("error preparing query ListRegulatoryApprovals: %w", err)
+	}
 	if q.listReorderRecommendationsStmt, err = db.PrepareContext(ctx, listReorderRecommendations); err != nil {
 		return nil, fmt.Errorf("error preparing query ListReorderRecommendations: %w", err)
 	}
@@ -354,11 +519,32 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listRolesStmt, err = db.PrepareContext(ctx, listRoles); err != nil {
 		return nil, fmt.Errorf("error preparing query ListRoles: %w", err)
 	}
+	if q.listShortExpiryReviewsStmt, err = db.PrepareContext(ctx, listShortExpiryReviews); err != nil {
+		return nil, fmt.Errorf("error preparing query ListShortExpiryReviews: %w", err)
+	}
 	if q.listStockIssuesStmt, err = db.PrepareContext(ctx, listStockIssues); err != nil {
 		return nil, fmt.Errorf("error preparing query ListStockIssues: %w", err)
 	}
+	if q.listStockReleaseRecordsStmt, err = db.PrepareContext(ctx, listStockReleaseRecords); err != nil {
+		return nil, fmt.Errorf("error preparing query ListStockReleaseRecords: %w", err)
+	}
 	if q.listSuppliersStmt, err = db.PrepareContext(ctx, listSuppliers); err != nil {
 		return nil, fmt.Errorf("error preparing query ListSuppliers: %w", err)
+	}
+	if q.listTemperatureExcursionsStmt, err = db.PrepareContext(ctx, listTemperatureExcursions); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTemperatureExcursions: %w", err)
+	}
+	if q.listTemperatureMonitoringEntriesStmt, err = db.PrepareContext(ctx, listTemperatureMonitoringEntries); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTemperatureMonitoringEntries: %w", err)
+	}
+	if q.listTemperatureMonitoringEntriesByWarehouseStmt, err = db.PrepareContext(ctx, listTemperatureMonitoringEntriesByWarehouse); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTemperatureMonitoringEntriesByWarehouse: %w", err)
+	}
+	if q.listTrainingRecordsStmt, err = db.PrepareContext(ctx, listTrainingRecords); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTrainingRecords: %w", err)
+	}
+	if q.listTrainingRecordsByUserStmt, err = db.PrepareContext(ctx, listTrainingRecordsByUser); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTrainingRecordsByUser: %w", err)
 	}
 	if q.listTransferLineItemsStmt, err = db.PrepareContext(ctx, listTransferLineItems); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTransferLineItems: %w", err)
@@ -396,11 +582,20 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.updateAssetStmt, err = db.PrepareContext(ctx, updateAsset); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateAsset: %w", err)
 	}
+	if q.updateCAPAStatusStmt, err = db.PrepareContext(ctx, updateCAPAStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateCAPAStatus: %w", err)
+	}
 	if q.updateCategoryStmt, err = db.PrepareContext(ctx, updateCategory); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateCategory: %w", err)
 	}
+	if q.updateDeviationStatusStmt, err = db.PrepareContext(ctx, updateDeviationStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateDeviationStatus: %w", err)
+	}
 	if q.updateDistributionStatusStmt, err = db.PrepareContext(ctx, updateDistributionStatus); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateDistributionStatus: %w", err)
+	}
+	if q.updateDonationDecisionStmt, err = db.PrepareContext(ctx, updateDonationDecision); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateDonationDecision: %w", err)
 	}
 	if q.updateLocationStmt, err = db.PrepareContext(ctx, updateLocation); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateLocation: %w", err)
@@ -420,6 +615,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.updateQAInspectionResultStmt, err = db.PrepareContext(ctx, updateQAInspectionResult); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateQAInspectionResult: %w", err)
 	}
+	if q.updateRegulatoryApprovalStatusStmt, err = db.PrepareContext(ctx, updateRegulatoryApprovalStatus); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateRegulatoryApprovalStatus: %w", err)
+	}
 	if q.updateScheduleLastRunStmt, err = db.PrepareContext(ctx, updateScheduleLastRun); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateScheduleLastRun: %w", err)
 	}
@@ -432,8 +630,14 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.updateSyncLogStmt, err = db.PrepareContext(ctx, updateSyncLog); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateSyncLog: %w", err)
 	}
+	if q.updateTemperatureExcursionDispositionStmt, err = db.PrepareContext(ctx, updateTemperatureExcursionDisposition); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateTemperatureExcursionDisposition: %w", err)
+	}
 	if q.updateUserStmt, err = db.PrepareContext(ctx, updateUser); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateUser: %w", err)
+	}
+	if q.verifyCAPAEffectivenessStmt, err = db.PrepareContext(ctx, verifyCAPAEffectiveness); err != nil {
+		return nil, fmt.Errorf("error preparing query VerifyCAPAEffectiveness: %w", err)
 	}
 	return &q, nil
 }
@@ -510,9 +714,29 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createBatchStmt: %w", cerr)
 		}
 	}
+	if q.createCAPAActionStmt != nil {
+		if cerr := q.createCAPAActionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createCAPAActionStmt: %w", cerr)
+		}
+	}
 	if q.createCategoryStmt != nil {
 		if cerr := q.createCategoryStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createCategoryStmt: %w", cerr)
+		}
+	}
+	if q.createChangeControlStmt != nil {
+		if cerr := q.createChangeControlStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createChangeControlStmt: %w", cerr)
+		}
+	}
+	if q.createComplaintStmt != nil {
+		if cerr := q.createComplaintStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createComplaintStmt: %w", cerr)
+		}
+	}
+	if q.createControlledStockRegisterEntryStmt != nil {
+		if cerr := q.createControlledStockRegisterEntryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createControlledStockRegisterEntryStmt: %w", cerr)
 		}
 	}
 	if q.createDataChangeLogStmt != nil {
@@ -520,14 +744,44 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createDataChangeLogStmt: %w", cerr)
 		}
 	}
+	if q.createDeliveryConfirmationStmt != nil {
+		if cerr := q.createDeliveryConfirmationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createDeliveryConfirmationStmt: %w", cerr)
+		}
+	}
 	if q.createDepartmentStmt != nil {
 		if cerr := q.createDepartmentStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createDepartmentStmt: %w", cerr)
 		}
 	}
+	if q.createDeviationStmt != nil {
+		if cerr := q.createDeviationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createDeviationStmt: %w", cerr)
+		}
+	}
+	if q.createDispatchWaybillStmt != nil {
+		if cerr := q.createDispatchWaybillStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createDispatchWaybillStmt: %w", cerr)
+		}
+	}
 	if q.createDistributionStmt != nil {
 		if cerr := q.createDistributionStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createDistributionStmt: %w", cerr)
+		}
+	}
+	if q.createDonationStmt != nil {
+		if cerr := q.createDonationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createDonationStmt: %w", cerr)
+		}
+	}
+	if q.createDonationLineItemStmt != nil {
+		if cerr := q.createDonationLineItemStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createDonationLineItemStmt: %w", cerr)
+		}
+	}
+	if q.createEmergencyPlanStmt != nil {
+		if cerr := q.createEmergencyPlanStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createEmergencyPlanStmt: %w", cerr)
 		}
 	}
 	if q.createForecastResultStmt != nil {
@@ -595,6 +849,21 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createQAInspectionStmt: %w", cerr)
 		}
 	}
+	if q.createRecallStmt != nil {
+		if cerr := q.createRecallStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createRecallStmt: %w", cerr)
+		}
+	}
+	if q.createRecallLineItemStmt != nil {
+		if cerr := q.createRecallLineItemStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createRecallLineItemStmt: %w", cerr)
+		}
+	}
+	if q.createRegulatoryApprovalStmt != nil {
+		if cerr := q.createRegulatoryApprovalStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createRegulatoryApprovalStmt: %w", cerr)
+		}
+	}
 	if q.createReorderRecommendationStmt != nil {
 		if cerr := q.createReorderRecommendationStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createReorderRecommendationStmt: %w", cerr)
@@ -615,6 +884,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createRoleStmt: %w", cerr)
 		}
 	}
+	if q.createShortExpiryReviewStmt != nil {
+		if cerr := q.createShortExpiryReviewStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createShortExpiryReviewStmt: %w", cerr)
+		}
+	}
 	if q.createStockIssueStmt != nil {
 		if cerr := q.createStockIssueStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createStockIssueStmt: %w", cerr)
@@ -623,6 +897,11 @@ func (q *Queries) Close() error {
 	if q.createStockMovementStmt != nil {
 		if cerr := q.createStockMovementStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createStockMovementStmt: %w", cerr)
+		}
+	}
+	if q.createStockReleaseRecordStmt != nil {
+		if cerr := q.createStockReleaseRecordStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createStockReleaseRecordStmt: %w", cerr)
 		}
 	}
 	if q.createSupplierStmt != nil {
@@ -638,6 +917,21 @@ func (q *Queries) Close() error {
 	if q.createSyncLogStmt != nil {
 		if cerr := q.createSyncLogStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createSyncLogStmt: %w", cerr)
+		}
+	}
+	if q.createTemperatureExcursionStmt != nil {
+		if cerr := q.createTemperatureExcursionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTemperatureExcursionStmt: %w", cerr)
+		}
+	}
+	if q.createTemperatureMonitoringEntryStmt != nil {
+		if cerr := q.createTemperatureMonitoringEntryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTemperatureMonitoringEntryStmt: %w", cerr)
+		}
+	}
+	if q.createTrainingRecordStmt != nil {
+		if cerr := q.createTrainingRecordStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTrainingRecordStmt: %w", cerr)
 		}
 	}
 	if q.createTransferStmt != nil {
@@ -690,14 +984,64 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getBatchesByProductStmt: %w", cerr)
 		}
 	}
+	if q.getCAPAActionStmt != nil {
+		if cerr := q.getCAPAActionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getCAPAActionStmt: %w", cerr)
+		}
+	}
 	if q.getCategoryStmt != nil {
 		if cerr := q.getCategoryStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getCategoryStmt: %w", cerr)
 		}
 	}
+	if q.getChangeControlStmt != nil {
+		if cerr := q.getChangeControlStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getChangeControlStmt: %w", cerr)
+		}
+	}
+	if q.getComplaintStmt != nil {
+		if cerr := q.getComplaintStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getComplaintStmt: %w", cerr)
+		}
+	}
+	if q.getControlledStockRegisterEntryStmt != nil {
+		if cerr := q.getControlledStockRegisterEntryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getControlledStockRegisterEntryStmt: %w", cerr)
+		}
+	}
+	if q.getDeliveryConfirmationStmt != nil {
+		if cerr := q.getDeliveryConfirmationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getDeliveryConfirmationStmt: %w", cerr)
+		}
+	}
+	if q.getDeviationStmt != nil {
+		if cerr := q.getDeviationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getDeviationStmt: %w", cerr)
+		}
+	}
+	if q.getDispatchWaybillStmt != nil {
+		if cerr := q.getDispatchWaybillStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getDispatchWaybillStmt: %w", cerr)
+		}
+	}
 	if q.getDistributionStmt != nil {
 		if cerr := q.getDistributionStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getDistributionStmt: %w", cerr)
+		}
+	}
+	if q.getDonationStmt != nil {
+		if cerr := q.getDonationStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getDonationStmt: %w", cerr)
+		}
+	}
+	if q.getDonationLineItemsStmt != nil {
+		if cerr := q.getDonationLineItemsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getDonationLineItemsStmt: %w", cerr)
+		}
+	}
+	if q.getEmergencyPlanStmt != nil {
+		if cerr := q.getEmergencyPlanStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getEmergencyPlanStmt: %w", cerr)
 		}
 	}
 	if q.getExpiringBatchesStmt != nil {
@@ -755,6 +1099,21 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getQAInspectionStmt: %w", cerr)
 		}
 	}
+	if q.getRecallStmt != nil {
+		if cerr := q.getRecallStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getRecallStmt: %w", cerr)
+		}
+	}
+	if q.getRecallLineItemsStmt != nil {
+		if cerr := q.getRecallLineItemsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getRecallLineItemsStmt: %w", cerr)
+		}
+	}
+	if q.getRegulatoryApprovalStmt != nil {
+		if cerr := q.getRegulatoryApprovalStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getRegulatoryApprovalStmt: %w", cerr)
+		}
+	}
 	if q.getReportDefinitionStmt != nil {
 		if cerr := q.getReportDefinitionStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getReportDefinitionStmt: %w", cerr)
@@ -780,9 +1139,19 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getStockMovementsStmt: %w", cerr)
 		}
 	}
+	if q.getStockReleaseRecordStmt != nil {
+		if cerr := q.getStockReleaseRecordStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getStockReleaseRecordStmt: %w", cerr)
+		}
+	}
 	if q.getSupplierStmt != nil {
 		if cerr := q.getSupplierStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getSupplierStmt: %w", cerr)
+		}
+	}
+	if q.getTemperatureExcursionStmt != nil {
+		if cerr := q.getTemperatureExcursionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTemperatureExcursionStmt: %w", cerr)
 		}
 	}
 	if q.getTransferStmt != nil {
@@ -865,6 +1234,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listAuditLogsStmt: %w", cerr)
 		}
 	}
+	if q.listCAPAActionsStmt != nil {
+		if cerr := q.listCAPAActionsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listCAPAActionsStmt: %w", cerr)
+		}
+	}
 	if q.listCategoriesStmt != nil {
 		if cerr := q.listCategoriesStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listCategoriesStmt: %w", cerr)
@@ -875,9 +1249,59 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listCategoryTreeStmt: %w", cerr)
 		}
 	}
+	if q.listChangeControlsStmt != nil {
+		if cerr := q.listChangeControlsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listChangeControlsStmt: %w", cerr)
+		}
+	}
+	if q.listComplaintsStmt != nil {
+		if cerr := q.listComplaintsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listComplaintsStmt: %w", cerr)
+		}
+	}
+	if q.listControlledStockRegisterStmt != nil {
+		if cerr := q.listControlledStockRegisterStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listControlledStockRegisterStmt: %w", cerr)
+		}
+	}
+	if q.listControlledStockRegisterByProductStmt != nil {
+		if cerr := q.listControlledStockRegisterByProductStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listControlledStockRegisterByProductStmt: %w", cerr)
+		}
+	}
+	if q.listDeliveryConfirmationsStmt != nil {
+		if cerr := q.listDeliveryConfirmationsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDeliveryConfirmationsStmt: %w", cerr)
+		}
+	}
+	if q.listDeliveryConfirmationsByWaybillStmt != nil {
+		if cerr := q.listDeliveryConfirmationsByWaybillStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDeliveryConfirmationsByWaybillStmt: %w", cerr)
+		}
+	}
 	if q.listDepartmentsStmt != nil {
 		if cerr := q.listDepartmentsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listDepartmentsStmt: %w", cerr)
+		}
+	}
+	if q.listDeviationsStmt != nil {
+		if cerr := q.listDeviationsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDeviationsStmt: %w", cerr)
+		}
+	}
+	if q.listDeviationsByStatusStmt != nil {
+		if cerr := q.listDeviationsByStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDeviationsByStatusStmt: %w", cerr)
+		}
+	}
+	if q.listDispatchWaybillsStmt != nil {
+		if cerr := q.listDispatchWaybillsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDispatchWaybillsStmt: %w", cerr)
+		}
+	}
+	if q.listDispatchWaybillsByStatusStmt != nil {
+		if cerr := q.listDispatchWaybillsByStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDispatchWaybillsByStatusStmt: %w", cerr)
 		}
 	}
 	if q.listDistributionLineItemsStmt != nil {
@@ -888,6 +1312,31 @@ func (q *Queries) Close() error {
 	if q.listDistributionsStmt != nil {
 		if cerr := q.listDistributionsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listDistributionsStmt: %w", cerr)
+		}
+	}
+	if q.listDonationsStmt != nil {
+		if cerr := q.listDonationsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDonationsStmt: %w", cerr)
+		}
+	}
+	if q.listDonationsByStatusStmt != nil {
+		if cerr := q.listDonationsByStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listDonationsByStatusStmt: %w", cerr)
+		}
+	}
+	if q.listEmergencyPlansStmt != nil {
+		if cerr := q.listEmergencyPlansStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listEmergencyPlansStmt: %w", cerr)
+		}
+	}
+	if q.listEscalatedComplaintsStmt != nil {
+		if cerr := q.listEscalatedComplaintsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listEscalatedComplaintsStmt: %w", cerr)
+		}
+	}
+	if q.listExpiringRegulatoryApprovalsStmt != nil {
+		if cerr := q.listExpiringRegulatoryApprovalsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listExpiringRegulatoryApprovalsStmt: %w", cerr)
 		}
 	}
 	if q.listForecastResultsStmt != nil {
@@ -913,6 +1362,21 @@ func (q *Queries) Close() error {
 	if q.listLocationsStmt != nil {
 		if cerr := q.listLocationsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listLocationsStmt: %w", cerr)
+		}
+	}
+	if q.listOpenCAPAActionsStmt != nil {
+		if cerr := q.listOpenCAPAActionsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listOpenCAPAActionsStmt: %w", cerr)
+		}
+	}
+	if q.listOpenShortExpiryReviewsStmt != nil {
+		if cerr := q.listOpenShortExpiryReviewsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listOpenShortExpiryReviewsStmt: %w", cerr)
+		}
+	}
+	if q.listOpenTemperatureExcursionsStmt != nil {
+		if cerr := q.listOpenTemperatureExcursionsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listOpenTemperatureExcursionsStmt: %w", cerr)
 		}
 	}
 	if q.listOrgLevelsStmt != nil {
@@ -970,6 +1434,21 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listQAInspectionsStmt: %w", cerr)
 		}
 	}
+	if q.listRecallsStmt != nil {
+		if cerr := q.listRecallsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listRecallsStmt: %w", cerr)
+		}
+	}
+	if q.listRecallsByTypeStmt != nil {
+		if cerr := q.listRecallsByTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listRecallsByTypeStmt: %w", cerr)
+		}
+	}
+	if q.listRegulatoryApprovalsStmt != nil {
+		if cerr := q.listRegulatoryApprovalsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listRegulatoryApprovalsStmt: %w", cerr)
+		}
+	}
 	if q.listReorderRecommendationsStmt != nil {
 		if cerr := q.listReorderRecommendationsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listReorderRecommendationsStmt: %w", cerr)
@@ -990,14 +1469,49 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listRolesStmt: %w", cerr)
 		}
 	}
+	if q.listShortExpiryReviewsStmt != nil {
+		if cerr := q.listShortExpiryReviewsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listShortExpiryReviewsStmt: %w", cerr)
+		}
+	}
 	if q.listStockIssuesStmt != nil {
 		if cerr := q.listStockIssuesStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listStockIssuesStmt: %w", cerr)
 		}
 	}
+	if q.listStockReleaseRecordsStmt != nil {
+		if cerr := q.listStockReleaseRecordsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listStockReleaseRecordsStmt: %w", cerr)
+		}
+	}
 	if q.listSuppliersStmt != nil {
 		if cerr := q.listSuppliersStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listSuppliersStmt: %w", cerr)
+		}
+	}
+	if q.listTemperatureExcursionsStmt != nil {
+		if cerr := q.listTemperatureExcursionsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTemperatureExcursionsStmt: %w", cerr)
+		}
+	}
+	if q.listTemperatureMonitoringEntriesStmt != nil {
+		if cerr := q.listTemperatureMonitoringEntriesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTemperatureMonitoringEntriesStmt: %w", cerr)
+		}
+	}
+	if q.listTemperatureMonitoringEntriesByWarehouseStmt != nil {
+		if cerr := q.listTemperatureMonitoringEntriesByWarehouseStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTemperatureMonitoringEntriesByWarehouseStmt: %w", cerr)
+		}
+	}
+	if q.listTrainingRecordsStmt != nil {
+		if cerr := q.listTrainingRecordsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTrainingRecordsStmt: %w", cerr)
+		}
+	}
+	if q.listTrainingRecordsByUserStmt != nil {
+		if cerr := q.listTrainingRecordsByUserStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTrainingRecordsByUserStmt: %w", cerr)
 		}
 	}
 	if q.listTransferLineItemsStmt != nil {
@@ -1060,14 +1574,29 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing updateAssetStmt: %w", cerr)
 		}
 	}
+	if q.updateCAPAStatusStmt != nil {
+		if cerr := q.updateCAPAStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateCAPAStatusStmt: %w", cerr)
+		}
+	}
 	if q.updateCategoryStmt != nil {
 		if cerr := q.updateCategoryStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateCategoryStmt: %w", cerr)
 		}
 	}
+	if q.updateDeviationStatusStmt != nil {
+		if cerr := q.updateDeviationStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateDeviationStatusStmt: %w", cerr)
+		}
+	}
 	if q.updateDistributionStatusStmt != nil {
 		if cerr := q.updateDistributionStatusStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateDistributionStatusStmt: %w", cerr)
+		}
+	}
+	if q.updateDonationDecisionStmt != nil {
+		if cerr := q.updateDonationDecisionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateDonationDecisionStmt: %w", cerr)
 		}
 	}
 	if q.updateLocationStmt != nil {
@@ -1100,6 +1629,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing updateQAInspectionResultStmt: %w", cerr)
 		}
 	}
+	if q.updateRegulatoryApprovalStatusStmt != nil {
+		if cerr := q.updateRegulatoryApprovalStatusStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateRegulatoryApprovalStatusStmt: %w", cerr)
+		}
+	}
 	if q.updateScheduleLastRunStmt != nil {
 		if cerr := q.updateScheduleLastRunStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateScheduleLastRunStmt: %w", cerr)
@@ -1120,9 +1654,19 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing updateSyncLogStmt: %w", cerr)
 		}
 	}
+	if q.updateTemperatureExcursionDispositionStmt != nil {
+		if cerr := q.updateTemperatureExcursionDispositionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateTemperatureExcursionDispositionStmt: %w", cerr)
+		}
+	}
 	if q.updateUserStmt != nil {
 		if cerr := q.updateUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateUserStmt: %w", cerr)
+		}
+	}
+	if q.verifyCAPAEffectivenessStmt != nil {
+		if cerr := q.verifyCAPAEffectivenessStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing verifyCAPAEffectivenessStmt: %w", cerr)
 		}
 	}
 	return err
@@ -1162,287 +1706,423 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                              DBTX
-	tx                              *sql.Tx
-	acknowledgeAlertStmt            *sql.Stmt
-	addCustodyChangeStmt            *sql.Stmt
-	addDistributionLineItemStmt     *sql.Stmt
-	addMaintenanceRecordStmt        *sql.Stmt
-	addPOLineItemStmt               *sql.Stmt
-	countProductsStmt               *sql.Stmt
-	createAMCCalculationStmt        *sql.Stmt
-	createAdjustmentStmt            *sql.Stmt
-	createAdjustmentLineItemStmt    *sql.Stmt
-	createAlertStmt                 *sql.Stmt
-	createAlertConfigurationStmt    *sql.Stmt
-	createAssetStmt                 *sql.Stmt
-	createAuditLogStmt              *sql.Stmt
-	createBatchStmt                 *sql.Stmt
-	createCategoryStmt              *sql.Stmt
-	createDataChangeLogStmt         *sql.Stmt
-	createDepartmentStmt            *sql.Stmt
-	createDistributionStmt          *sql.Stmt
-	createForecastResultStmt        *sql.Stmt
-	createGRNStmt                   *sql.Stmt
-	createGRNLineItemStmt           *sql.Stmt
-	createIssueLineItemStmt         *sql.Stmt
-	createLocationStmt              *sql.Stmt
-	createOrgLevelStmt              *sql.Stmt
-	createOrganizationStmt          *sql.Stmt
-	createProductStmt               *sql.Stmt
-	createProgramStmt               *sql.Stmt
-	createPurchaseOrderStmt         *sql.Stmt
-	createQAChecklistItemStmt       *sql.Stmt
-	createQAChecklistTemplateStmt   *sql.Stmt
-	createQAInspectionStmt          *sql.Stmt
-	createReorderRecommendationStmt *sql.Stmt
-	createReportDefinitionStmt      *sql.Stmt
-	createReportScheduleStmt        *sql.Stmt
-	createRoleStmt                  *sql.Stmt
-	createStockIssueStmt            *sql.Stmt
-	createStockMovementStmt         *sql.Stmt
-	createSupplierStmt              *sql.Stmt
-	createSyncConflictStmt          *sql.Stmt
-	createSyncLogStmt               *sql.Stmt
-	createTransferStmt              *sql.Stmt
-	createTransferLineItemStmt      *sql.Stmt
-	createUserStmt                  *sql.Stmt
-	createWarehouseStmt             *sql.Stmt
-	deleteCategoryStmt              *sql.Stmt
-	deleteProductStmt               *sql.Stmt
-	getActiveAlertsStmt             *sql.Stmt
-	getAdjustmentStmt               *sql.Stmt
-	getAssetStmt                    *sql.Stmt
-	getBatchesByProductStmt         *sql.Stmt
-	getCategoryStmt                 *sql.Stmt
-	getDistributionStmt             *sql.Stmt
-	getExpiringBatchesStmt          *sql.Stmt
-	getGRNStmt                      *sql.Stmt
-	getLatestAMCStmt                *sql.Stmt
-	getOrgTreeStmt                  *sql.Stmt
-	getOrganizationStmt             *sql.Stmt
-	getPendingConflictsStmt         *sql.Stmt
-	getProductStmt                  *sql.Stmt
-	getProductBySKUStmt             *sql.Stmt
-	getPurchaseOrderStmt            *sql.Stmt
-	getQAChecklistTemplateStmt      *sql.Stmt
-	getQAInspectionStmt             *sql.Stmt
-	getReportDefinitionStmt         *sql.Stmt
-	getStockIssueStmt               *sql.Stmt
-	getStockLevelStmt               *sql.Stmt
-	getStockLevelsStmt              *sql.Stmt
-	getStockMovementsStmt           *sql.Stmt
-	getSupplierStmt                 *sql.Stmt
-	getTransferStmt                 *sql.Stmt
-	getUserStmt                     *sql.Stmt
-	getUserByEmailStmt              *sql.Stmt
-	getUserPermissionsStmt          *sql.Stmt
-	getWarehouseStmt                *sql.Stmt
-	getWarehouseWithLocationsStmt   *sql.Stmt
-	listAMCCalculationsStmt         *sql.Stmt
-	listAdjustmentReasonCodesStmt   *sql.Stmt
-	listAdjustmentsStmt             *sql.Stmt
-	listAlertConfigurationsStmt     *sql.Stmt
-	listAlertsStmt                  *sql.Stmt
-	listAssetCustodyChangesStmt     *sql.Stmt
-	listAssetDepreciationStmt       *sql.Stmt
-	listAssetMaintenanceStmt        *sql.Stmt
-	listAssetsStmt                  *sql.Stmt
-	listAuditLogsStmt               *sql.Stmt
-	listCategoriesStmt              *sql.Stmt
-	listCategoryTreeStmt            *sql.Stmt
-	listDepartmentsStmt             *sql.Stmt
-	listDistributionLineItemsStmt   *sql.Stmt
-	listDistributionsStmt           *sql.Stmt
-	listForecastResultsStmt         *sql.Stmt
-	listGRNLineItemsStmt            *sql.Stmt
-	listGRNsStmt                    *sql.Stmt
-	listIssueLineItemsStmt          *sql.Stmt
-	listLocationsStmt               *sql.Stmt
-	listOrgLevelsStmt               *sql.Stmt
-	listOrganizationsStmt           *sql.Stmt
-	listPOLineItemsStmt             *sql.Stmt
-	listPermissionsStmt             *sql.Stmt
-	listProductsStmt                *sql.Stmt
-	listProductsByCategoryStmt      *sql.Stmt
-	listProgramsStmt                *sql.Stmt
-	listPurchaseOrdersStmt          *sql.Stmt
-	listQAChecklistItemsStmt        *sql.Stmt
-	listQAChecklistTemplatesStmt    *sql.Stmt
-	listQAInspectionsStmt           *sql.Stmt
-	listReorderRecommendationsStmt  *sql.Stmt
-	listReportDefinitionsStmt       *sql.Stmt
-	listReportSchedulesStmt         *sql.Stmt
-	listRolesStmt                   *sql.Stmt
-	listStockIssuesStmt             *sql.Stmt
-	listSuppliersStmt               *sql.Stmt
-	listTransferLineItemsStmt       *sql.Stmt
-	listTransfersStmt               *sql.Stmt
-	listUsersStmt                   *sql.Stmt
-	listWarehousesStmt              *sql.Stmt
-	listWarehousesByTypeStmt        *sql.Stmt
-	markRecommendationReviewedStmt  *sql.Stmt
-	resolveAlertStmt                *sql.Stmt
-	resolveSyncConflictStmt         *sql.Stmt
-	searchAuditLogsStmt             *sql.Stmt
-	searchProductsStmt              *sql.Stmt
-	searchStockMovementsStmt        *sql.Stmt
-	updateAssetStmt                 *sql.Stmt
-	updateCategoryStmt              *sql.Stmt
-	updateDistributionStatusStmt    *sql.Stmt
-	updateLocationStmt              *sql.Stmt
-	updateOrganizationStmt          *sql.Stmt
-	updateProductStmt               *sql.Stmt
-	updateProductStockParamsStmt    *sql.Stmt
-	updatePurchaseOrderStatusStmt   *sql.Stmt
-	updateQAInspectionResultStmt    *sql.Stmt
-	updateScheduleLastRunStmt       *sql.Stmt
-	updateStockLevelStmt            *sql.Stmt
-	updateSupplierStmt              *sql.Stmt
-	updateSyncLogStmt               *sql.Stmt
-	updateUserStmt                  *sql.Stmt
+	db                                              DBTX
+	tx                                              *sql.Tx
+	acknowledgeAlertStmt                            *sql.Stmt
+	addCustodyChangeStmt                            *sql.Stmt
+	addDistributionLineItemStmt                     *sql.Stmt
+	addMaintenanceRecordStmt                        *sql.Stmt
+	addPOLineItemStmt                               *sql.Stmt
+	countProductsStmt                               *sql.Stmt
+	createAMCCalculationStmt                        *sql.Stmt
+	createAdjustmentStmt                            *sql.Stmt
+	createAdjustmentLineItemStmt                    *sql.Stmt
+	createAlertStmt                                 *sql.Stmt
+	createAlertConfigurationStmt                    *sql.Stmt
+	createAssetStmt                                 *sql.Stmt
+	createAuditLogStmt                              *sql.Stmt
+	createBatchStmt                                 *sql.Stmt
+	createCAPAActionStmt                            *sql.Stmt
+	createCategoryStmt                              *sql.Stmt
+	createChangeControlStmt                         *sql.Stmt
+	createComplaintStmt                             *sql.Stmt
+	createControlledStockRegisterEntryStmt          *sql.Stmt
+	createDataChangeLogStmt                         *sql.Stmt
+	createDeliveryConfirmationStmt                  *sql.Stmt
+	createDepartmentStmt                            *sql.Stmt
+	createDeviationStmt                             *sql.Stmt
+	createDispatchWaybillStmt                       *sql.Stmt
+	createDistributionStmt                          *sql.Stmt
+	createDonationStmt                              *sql.Stmt
+	createDonationLineItemStmt                      *sql.Stmt
+	createEmergencyPlanStmt                         *sql.Stmt
+	createForecastResultStmt                        *sql.Stmt
+	createGRNStmt                                   *sql.Stmt
+	createGRNLineItemStmt                           *sql.Stmt
+	createIssueLineItemStmt                         *sql.Stmt
+	createLocationStmt                              *sql.Stmt
+	createOrgLevelStmt                              *sql.Stmt
+	createOrganizationStmt                          *sql.Stmt
+	createProductStmt                               *sql.Stmt
+	createProgramStmt                               *sql.Stmt
+	createPurchaseOrderStmt                         *sql.Stmt
+	createQAChecklistItemStmt                       *sql.Stmt
+	createQAChecklistTemplateStmt                   *sql.Stmt
+	createQAInspectionStmt                          *sql.Stmt
+	createRecallStmt                                *sql.Stmt
+	createRecallLineItemStmt                        *sql.Stmt
+	createRegulatoryApprovalStmt                    *sql.Stmt
+	createReorderRecommendationStmt                 *sql.Stmt
+	createReportDefinitionStmt                      *sql.Stmt
+	createReportScheduleStmt                        *sql.Stmt
+	createRoleStmt                                  *sql.Stmt
+	createShortExpiryReviewStmt                     *sql.Stmt
+	createStockIssueStmt                            *sql.Stmt
+	createStockMovementStmt                         *sql.Stmt
+	createStockReleaseRecordStmt                    *sql.Stmt
+	createSupplierStmt                              *sql.Stmt
+	createSyncConflictStmt                          *sql.Stmt
+	createSyncLogStmt                               *sql.Stmt
+	createTemperatureExcursionStmt                  *sql.Stmt
+	createTemperatureMonitoringEntryStmt            *sql.Stmt
+	createTrainingRecordStmt                        *sql.Stmt
+	createTransferStmt                              *sql.Stmt
+	createTransferLineItemStmt                      *sql.Stmt
+	createUserStmt                                  *sql.Stmt
+	createWarehouseStmt                             *sql.Stmt
+	deleteCategoryStmt                              *sql.Stmt
+	deleteProductStmt                               *sql.Stmt
+	getActiveAlertsStmt                             *sql.Stmt
+	getAdjustmentStmt                               *sql.Stmt
+	getAssetStmt                                    *sql.Stmt
+	getBatchesByProductStmt                         *sql.Stmt
+	getCAPAActionStmt                               *sql.Stmt
+	getCategoryStmt                                 *sql.Stmt
+	getChangeControlStmt                            *sql.Stmt
+	getComplaintStmt                                *sql.Stmt
+	getControlledStockRegisterEntryStmt             *sql.Stmt
+	getDeliveryConfirmationStmt                     *sql.Stmt
+	getDeviationStmt                                *sql.Stmt
+	getDispatchWaybillStmt                          *sql.Stmt
+	getDistributionStmt                             *sql.Stmt
+	getDonationStmt                                 *sql.Stmt
+	getDonationLineItemsStmt                        *sql.Stmt
+	getEmergencyPlanStmt                            *sql.Stmt
+	getExpiringBatchesStmt                          *sql.Stmt
+	getGRNStmt                                      *sql.Stmt
+	getLatestAMCStmt                                *sql.Stmt
+	getOrgTreeStmt                                  *sql.Stmt
+	getOrganizationStmt                             *sql.Stmt
+	getPendingConflictsStmt                         *sql.Stmt
+	getProductStmt                                  *sql.Stmt
+	getProductBySKUStmt                             *sql.Stmt
+	getPurchaseOrderStmt                            *sql.Stmt
+	getQAChecklistTemplateStmt                      *sql.Stmt
+	getQAInspectionStmt                             *sql.Stmt
+	getRecallStmt                                   *sql.Stmt
+	getRecallLineItemsStmt                          *sql.Stmt
+	getRegulatoryApprovalStmt                       *sql.Stmt
+	getReportDefinitionStmt                         *sql.Stmt
+	getStockIssueStmt                               *sql.Stmt
+	getStockLevelStmt                               *sql.Stmt
+	getStockLevelsStmt                              *sql.Stmt
+	getStockMovementsStmt                           *sql.Stmt
+	getStockReleaseRecordStmt                       *sql.Stmt
+	getSupplierStmt                                 *sql.Stmt
+	getTemperatureExcursionStmt                     *sql.Stmt
+	getTransferStmt                                 *sql.Stmt
+	getUserStmt                                     *sql.Stmt
+	getUserByEmailStmt                              *sql.Stmt
+	getUserPermissionsStmt                          *sql.Stmt
+	getWarehouseStmt                                *sql.Stmt
+	getWarehouseWithLocationsStmt                   *sql.Stmt
+	listAMCCalculationsStmt                         *sql.Stmt
+	listAdjustmentReasonCodesStmt                   *sql.Stmt
+	listAdjustmentsStmt                             *sql.Stmt
+	listAlertConfigurationsStmt                     *sql.Stmt
+	listAlertsStmt                                  *sql.Stmt
+	listAssetCustodyChangesStmt                     *sql.Stmt
+	listAssetDepreciationStmt                       *sql.Stmt
+	listAssetMaintenanceStmt                        *sql.Stmt
+	listAssetsStmt                                  *sql.Stmt
+	listAuditLogsStmt                               *sql.Stmt
+	listCAPAActionsStmt                             *sql.Stmt
+	listCategoriesStmt                              *sql.Stmt
+	listCategoryTreeStmt                            *sql.Stmt
+	listChangeControlsStmt                          *sql.Stmt
+	listComplaintsStmt                              *sql.Stmt
+	listControlledStockRegisterStmt                 *sql.Stmt
+	listControlledStockRegisterByProductStmt        *sql.Stmt
+	listDeliveryConfirmationsStmt                   *sql.Stmt
+	listDeliveryConfirmationsByWaybillStmt          *sql.Stmt
+	listDepartmentsStmt                             *sql.Stmt
+	listDeviationsStmt                              *sql.Stmt
+	listDeviationsByStatusStmt                      *sql.Stmt
+	listDispatchWaybillsStmt                        *sql.Stmt
+	listDispatchWaybillsByStatusStmt                *sql.Stmt
+	listDistributionLineItemsStmt                   *sql.Stmt
+	listDistributionsStmt                           *sql.Stmt
+	listDonationsStmt                               *sql.Stmt
+	listDonationsByStatusStmt                       *sql.Stmt
+	listEmergencyPlansStmt                          *sql.Stmt
+	listEscalatedComplaintsStmt                     *sql.Stmt
+	listExpiringRegulatoryApprovalsStmt             *sql.Stmt
+	listForecastResultsStmt                         *sql.Stmt
+	listGRNLineItemsStmt                            *sql.Stmt
+	listGRNsStmt                                    *sql.Stmt
+	listIssueLineItemsStmt                          *sql.Stmt
+	listLocationsStmt                               *sql.Stmt
+	listOpenCAPAActionsStmt                         *sql.Stmt
+	listOpenShortExpiryReviewsStmt                  *sql.Stmt
+	listOpenTemperatureExcursionsStmt               *sql.Stmt
+	listOrgLevelsStmt                               *sql.Stmt
+	listOrganizationsStmt                           *sql.Stmt
+	listPOLineItemsStmt                             *sql.Stmt
+	listPermissionsStmt                             *sql.Stmt
+	listProductsStmt                                *sql.Stmt
+	listProductsByCategoryStmt                      *sql.Stmt
+	listProgramsStmt                                *sql.Stmt
+	listPurchaseOrdersStmt                          *sql.Stmt
+	listQAChecklistItemsStmt                        *sql.Stmt
+	listQAChecklistTemplatesStmt                    *sql.Stmt
+	listQAInspectionsStmt                           *sql.Stmt
+	listRecallsStmt                                 *sql.Stmt
+	listRecallsByTypeStmt                           *sql.Stmt
+	listRegulatoryApprovalsStmt                     *sql.Stmt
+	listReorderRecommendationsStmt                  *sql.Stmt
+	listReportDefinitionsStmt                       *sql.Stmt
+	listReportSchedulesStmt                         *sql.Stmt
+	listRolesStmt                                   *sql.Stmt
+	listShortExpiryReviewsStmt                      *sql.Stmt
+	listStockIssuesStmt                             *sql.Stmt
+	listStockReleaseRecordsStmt                     *sql.Stmt
+	listSuppliersStmt                               *sql.Stmt
+	listTemperatureExcursionsStmt                   *sql.Stmt
+	listTemperatureMonitoringEntriesStmt            *sql.Stmt
+	listTemperatureMonitoringEntriesByWarehouseStmt *sql.Stmt
+	listTrainingRecordsStmt                         *sql.Stmt
+	listTrainingRecordsByUserStmt                   *sql.Stmt
+	listTransferLineItemsStmt                       *sql.Stmt
+	listTransfersStmt                               *sql.Stmt
+	listUsersStmt                                   *sql.Stmt
+	listWarehousesStmt                              *sql.Stmt
+	listWarehousesByTypeStmt                        *sql.Stmt
+	markRecommendationReviewedStmt                  *sql.Stmt
+	resolveAlertStmt                                *sql.Stmt
+	resolveSyncConflictStmt                         *sql.Stmt
+	searchAuditLogsStmt                             *sql.Stmt
+	searchProductsStmt                              *sql.Stmt
+	searchStockMovementsStmt                        *sql.Stmt
+	updateAssetStmt                                 *sql.Stmt
+	updateCAPAStatusStmt                            *sql.Stmt
+	updateCategoryStmt                              *sql.Stmt
+	updateDeviationStatusStmt                       *sql.Stmt
+	updateDistributionStatusStmt                    *sql.Stmt
+	updateDonationDecisionStmt                      *sql.Stmt
+	updateLocationStmt                              *sql.Stmt
+	updateOrganizationStmt                          *sql.Stmt
+	updateProductStmt                               *sql.Stmt
+	updateProductStockParamsStmt                    *sql.Stmt
+	updatePurchaseOrderStatusStmt                   *sql.Stmt
+	updateQAInspectionResultStmt                    *sql.Stmt
+	updateRegulatoryApprovalStatusStmt              *sql.Stmt
+	updateScheduleLastRunStmt                       *sql.Stmt
+	updateStockLevelStmt                            *sql.Stmt
+	updateSupplierStmt                              *sql.Stmt
+	updateSyncLogStmt                               *sql.Stmt
+	updateTemperatureExcursionDispositionStmt       *sql.Stmt
+	updateUserStmt                                  *sql.Stmt
+	verifyCAPAEffectivenessStmt                     *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                              tx,
-		tx:                              tx,
-		acknowledgeAlertStmt:            q.acknowledgeAlertStmt,
-		addCustodyChangeStmt:            q.addCustodyChangeStmt,
-		addDistributionLineItemStmt:     q.addDistributionLineItemStmt,
-		addMaintenanceRecordStmt:        q.addMaintenanceRecordStmt,
-		addPOLineItemStmt:               q.addPOLineItemStmt,
-		countProductsStmt:               q.countProductsStmt,
-		createAMCCalculationStmt:        q.createAMCCalculationStmt,
-		createAdjustmentStmt:            q.createAdjustmentStmt,
-		createAdjustmentLineItemStmt:    q.createAdjustmentLineItemStmt,
-		createAlertStmt:                 q.createAlertStmt,
-		createAlertConfigurationStmt:    q.createAlertConfigurationStmt,
-		createAssetStmt:                 q.createAssetStmt,
-		createAuditLogStmt:              q.createAuditLogStmt,
-		createBatchStmt:                 q.createBatchStmt,
-		createCategoryStmt:              q.createCategoryStmt,
-		createDataChangeLogStmt:         q.createDataChangeLogStmt,
-		createDepartmentStmt:            q.createDepartmentStmt,
-		createDistributionStmt:          q.createDistributionStmt,
-		createForecastResultStmt:        q.createForecastResultStmt,
-		createGRNStmt:                   q.createGRNStmt,
-		createGRNLineItemStmt:           q.createGRNLineItemStmt,
-		createIssueLineItemStmt:         q.createIssueLineItemStmt,
-		createLocationStmt:              q.createLocationStmt,
-		createOrgLevelStmt:              q.createOrgLevelStmt,
-		createOrganizationStmt:          q.createOrganizationStmt,
-		createProductStmt:               q.createProductStmt,
-		createProgramStmt:               q.createProgramStmt,
-		createPurchaseOrderStmt:         q.createPurchaseOrderStmt,
-		createQAChecklistItemStmt:       q.createQAChecklistItemStmt,
-		createQAChecklistTemplateStmt:   q.createQAChecklistTemplateStmt,
-		createQAInspectionStmt:          q.createQAInspectionStmt,
-		createReorderRecommendationStmt: q.createReorderRecommendationStmt,
-		createReportDefinitionStmt:      q.createReportDefinitionStmt,
-		createReportScheduleStmt:        q.createReportScheduleStmt,
-		createRoleStmt:                  q.createRoleStmt,
-		createStockIssueStmt:            q.createStockIssueStmt,
-		createStockMovementStmt:         q.createStockMovementStmt,
-		createSupplierStmt:              q.createSupplierStmt,
-		createSyncConflictStmt:          q.createSyncConflictStmt,
-		createSyncLogStmt:               q.createSyncLogStmt,
-		createTransferStmt:              q.createTransferStmt,
-		createTransferLineItemStmt:      q.createTransferLineItemStmt,
-		createUserStmt:                  q.createUserStmt,
-		createWarehouseStmt:             q.createWarehouseStmt,
-		deleteCategoryStmt:              q.deleteCategoryStmt,
-		deleteProductStmt:               q.deleteProductStmt,
-		getActiveAlertsStmt:             q.getActiveAlertsStmt,
-		getAdjustmentStmt:               q.getAdjustmentStmt,
-		getAssetStmt:                    q.getAssetStmt,
-		getBatchesByProductStmt:         q.getBatchesByProductStmt,
-		getCategoryStmt:                 q.getCategoryStmt,
-		getDistributionStmt:             q.getDistributionStmt,
-		getExpiringBatchesStmt:          q.getExpiringBatchesStmt,
-		getGRNStmt:                      q.getGRNStmt,
-		getLatestAMCStmt:                q.getLatestAMCStmt,
-		getOrgTreeStmt:                  q.getOrgTreeStmt,
-		getOrganizationStmt:             q.getOrganizationStmt,
-		getPendingConflictsStmt:         q.getPendingConflictsStmt,
-		getProductStmt:                  q.getProductStmt,
-		getProductBySKUStmt:             q.getProductBySKUStmt,
-		getPurchaseOrderStmt:            q.getPurchaseOrderStmt,
-		getQAChecklistTemplateStmt:      q.getQAChecklistTemplateStmt,
-		getQAInspectionStmt:             q.getQAInspectionStmt,
-		getReportDefinitionStmt:         q.getReportDefinitionStmt,
-		getStockIssueStmt:               q.getStockIssueStmt,
-		getStockLevelStmt:               q.getStockLevelStmt,
-		getStockLevelsStmt:              q.getStockLevelsStmt,
-		getStockMovementsStmt:           q.getStockMovementsStmt,
-		getSupplierStmt:                 q.getSupplierStmt,
-		getTransferStmt:                 q.getTransferStmt,
-		getUserStmt:                     q.getUserStmt,
-		getUserByEmailStmt:              q.getUserByEmailStmt,
-		getUserPermissionsStmt:          q.getUserPermissionsStmt,
-		getWarehouseStmt:                q.getWarehouseStmt,
-		getWarehouseWithLocationsStmt:   q.getWarehouseWithLocationsStmt,
-		listAMCCalculationsStmt:         q.listAMCCalculationsStmt,
-		listAdjustmentReasonCodesStmt:   q.listAdjustmentReasonCodesStmt,
-		listAdjustmentsStmt:             q.listAdjustmentsStmt,
-		listAlertConfigurationsStmt:     q.listAlertConfigurationsStmt,
-		listAlertsStmt:                  q.listAlertsStmt,
-		listAssetCustodyChangesStmt:     q.listAssetCustodyChangesStmt,
-		listAssetDepreciationStmt:       q.listAssetDepreciationStmt,
-		listAssetMaintenanceStmt:        q.listAssetMaintenanceStmt,
-		listAssetsStmt:                  q.listAssetsStmt,
-		listAuditLogsStmt:               q.listAuditLogsStmt,
-		listCategoriesStmt:              q.listCategoriesStmt,
-		listCategoryTreeStmt:            q.listCategoryTreeStmt,
-		listDepartmentsStmt:             q.listDepartmentsStmt,
-		listDistributionLineItemsStmt:   q.listDistributionLineItemsStmt,
-		listDistributionsStmt:           q.listDistributionsStmt,
-		listForecastResultsStmt:         q.listForecastResultsStmt,
-		listGRNLineItemsStmt:            q.listGRNLineItemsStmt,
-		listGRNsStmt:                    q.listGRNsStmt,
-		listIssueLineItemsStmt:          q.listIssueLineItemsStmt,
-		listLocationsStmt:               q.listLocationsStmt,
-		listOrgLevelsStmt:               q.listOrgLevelsStmt,
-		listOrganizationsStmt:           q.listOrganizationsStmt,
-		listPOLineItemsStmt:             q.listPOLineItemsStmt,
-		listPermissionsStmt:             q.listPermissionsStmt,
-		listProductsStmt:                q.listProductsStmt,
-		listProductsByCategoryStmt:      q.listProductsByCategoryStmt,
-		listProgramsStmt:                q.listProgramsStmt,
-		listPurchaseOrdersStmt:          q.listPurchaseOrdersStmt,
-		listQAChecklistItemsStmt:        q.listQAChecklistItemsStmt,
-		listQAChecklistTemplatesStmt:    q.listQAChecklistTemplatesStmt,
-		listQAInspectionsStmt:           q.listQAInspectionsStmt,
-		listReorderRecommendationsStmt:  q.listReorderRecommendationsStmt,
-		listReportDefinitionsStmt:       q.listReportDefinitionsStmt,
-		listReportSchedulesStmt:         q.listReportSchedulesStmt,
-		listRolesStmt:                   q.listRolesStmt,
-		listStockIssuesStmt:             q.listStockIssuesStmt,
-		listSuppliersStmt:               q.listSuppliersStmt,
-		listTransferLineItemsStmt:       q.listTransferLineItemsStmt,
-		listTransfersStmt:               q.listTransfersStmt,
-		listUsersStmt:                   q.listUsersStmt,
-		listWarehousesStmt:              q.listWarehousesStmt,
-		listWarehousesByTypeStmt:        q.listWarehousesByTypeStmt,
-		markRecommendationReviewedStmt:  q.markRecommendationReviewedStmt,
-		resolveAlertStmt:                q.resolveAlertStmt,
-		resolveSyncConflictStmt:         q.resolveSyncConflictStmt,
-		searchAuditLogsStmt:             q.searchAuditLogsStmt,
-		searchProductsStmt:              q.searchProductsStmt,
-		searchStockMovementsStmt:        q.searchStockMovementsStmt,
-		updateAssetStmt:                 q.updateAssetStmt,
-		updateCategoryStmt:              q.updateCategoryStmt,
-		updateDistributionStatusStmt:    q.updateDistributionStatusStmt,
-		updateLocationStmt:              q.updateLocationStmt,
-		updateOrganizationStmt:          q.updateOrganizationStmt,
-		updateProductStmt:               q.updateProductStmt,
-		updateProductStockParamsStmt:    q.updateProductStockParamsStmt,
-		updatePurchaseOrderStatusStmt:   q.updatePurchaseOrderStatusStmt,
-		updateQAInspectionResultStmt:    q.updateQAInspectionResultStmt,
-		updateScheduleLastRunStmt:       q.updateScheduleLastRunStmt,
-		updateStockLevelStmt:            q.updateStockLevelStmt,
-		updateSupplierStmt:              q.updateSupplierStmt,
-		updateSyncLogStmt:               q.updateSyncLogStmt,
-		updateUserStmt:                  q.updateUserStmt,
+		db:                                              tx,
+		tx:                                              tx,
+		acknowledgeAlertStmt:                            q.acknowledgeAlertStmt,
+		addCustodyChangeStmt:                            q.addCustodyChangeStmt,
+		addDistributionLineItemStmt:                     q.addDistributionLineItemStmt,
+		addMaintenanceRecordStmt:                        q.addMaintenanceRecordStmt,
+		addPOLineItemStmt:                               q.addPOLineItemStmt,
+		countProductsStmt:                               q.countProductsStmt,
+		createAMCCalculationStmt:                        q.createAMCCalculationStmt,
+		createAdjustmentStmt:                            q.createAdjustmentStmt,
+		createAdjustmentLineItemStmt:                    q.createAdjustmentLineItemStmt,
+		createAlertStmt:                                 q.createAlertStmt,
+		createAlertConfigurationStmt:                    q.createAlertConfigurationStmt,
+		createAssetStmt:                                 q.createAssetStmt,
+		createAuditLogStmt:                              q.createAuditLogStmt,
+		createBatchStmt:                                 q.createBatchStmt,
+		createCAPAActionStmt:                            q.createCAPAActionStmt,
+		createCategoryStmt:                              q.createCategoryStmt,
+		createChangeControlStmt:                         q.createChangeControlStmt,
+		createComplaintStmt:                             q.createComplaintStmt,
+		createControlledStockRegisterEntryStmt:          q.createControlledStockRegisterEntryStmt,
+		createDataChangeLogStmt:                         q.createDataChangeLogStmt,
+		createDeliveryConfirmationStmt:                  q.createDeliveryConfirmationStmt,
+		createDepartmentStmt:                            q.createDepartmentStmt,
+		createDeviationStmt:                             q.createDeviationStmt,
+		createDispatchWaybillStmt:                       q.createDispatchWaybillStmt,
+		createDistributionStmt:                          q.createDistributionStmt,
+		createDonationStmt:                              q.createDonationStmt,
+		createDonationLineItemStmt:                      q.createDonationLineItemStmt,
+		createEmergencyPlanStmt:                         q.createEmergencyPlanStmt,
+		createForecastResultStmt:                        q.createForecastResultStmt,
+		createGRNStmt:                                   q.createGRNStmt,
+		createGRNLineItemStmt:                           q.createGRNLineItemStmt,
+		createIssueLineItemStmt:                         q.createIssueLineItemStmt,
+		createLocationStmt:                              q.createLocationStmt,
+		createOrgLevelStmt:                              q.createOrgLevelStmt,
+		createOrganizationStmt:                          q.createOrganizationStmt,
+		createProductStmt:                               q.createProductStmt,
+		createProgramStmt:                               q.createProgramStmt,
+		createPurchaseOrderStmt:                         q.createPurchaseOrderStmt,
+		createQAChecklistItemStmt:                       q.createQAChecklistItemStmt,
+		createQAChecklistTemplateStmt:                   q.createQAChecklistTemplateStmt,
+		createQAInspectionStmt:                          q.createQAInspectionStmt,
+		createRecallStmt:                                q.createRecallStmt,
+		createRecallLineItemStmt:                        q.createRecallLineItemStmt,
+		createRegulatoryApprovalStmt:                    q.createRegulatoryApprovalStmt,
+		createReorderRecommendationStmt:                 q.createReorderRecommendationStmt,
+		createReportDefinitionStmt:                      q.createReportDefinitionStmt,
+		createReportScheduleStmt:                        q.createReportScheduleStmt,
+		createRoleStmt:                                  q.createRoleStmt,
+		createShortExpiryReviewStmt:                     q.createShortExpiryReviewStmt,
+		createStockIssueStmt:                            q.createStockIssueStmt,
+		createStockMovementStmt:                         q.createStockMovementStmt,
+		createStockReleaseRecordStmt:                    q.createStockReleaseRecordStmt,
+		createSupplierStmt:                              q.createSupplierStmt,
+		createSyncConflictStmt:                          q.createSyncConflictStmt,
+		createSyncLogStmt:                               q.createSyncLogStmt,
+		createTemperatureExcursionStmt:                  q.createTemperatureExcursionStmt,
+		createTemperatureMonitoringEntryStmt:            q.createTemperatureMonitoringEntryStmt,
+		createTrainingRecordStmt:                        q.createTrainingRecordStmt,
+		createTransferStmt:                              q.createTransferStmt,
+		createTransferLineItemStmt:                      q.createTransferLineItemStmt,
+		createUserStmt:                                  q.createUserStmt,
+		createWarehouseStmt:                             q.createWarehouseStmt,
+		deleteCategoryStmt:                              q.deleteCategoryStmt,
+		deleteProductStmt:                               q.deleteProductStmt,
+		getActiveAlertsStmt:                             q.getActiveAlertsStmt,
+		getAdjustmentStmt:                               q.getAdjustmentStmt,
+		getAssetStmt:                                    q.getAssetStmt,
+		getBatchesByProductStmt:                         q.getBatchesByProductStmt,
+		getCAPAActionStmt:                               q.getCAPAActionStmt,
+		getCategoryStmt:                                 q.getCategoryStmt,
+		getChangeControlStmt:                            q.getChangeControlStmt,
+		getComplaintStmt:                                q.getComplaintStmt,
+		getControlledStockRegisterEntryStmt:             q.getControlledStockRegisterEntryStmt,
+		getDeliveryConfirmationStmt:                     q.getDeliveryConfirmationStmt,
+		getDeviationStmt:                                q.getDeviationStmt,
+		getDispatchWaybillStmt:                          q.getDispatchWaybillStmt,
+		getDistributionStmt:                             q.getDistributionStmt,
+		getDonationStmt:                                 q.getDonationStmt,
+		getDonationLineItemsStmt:                        q.getDonationLineItemsStmt,
+		getEmergencyPlanStmt:                            q.getEmergencyPlanStmt,
+		getExpiringBatchesStmt:                          q.getExpiringBatchesStmt,
+		getGRNStmt:                                      q.getGRNStmt,
+		getLatestAMCStmt:                                q.getLatestAMCStmt,
+		getOrgTreeStmt:                                  q.getOrgTreeStmt,
+		getOrganizationStmt:                             q.getOrganizationStmt,
+		getPendingConflictsStmt:                         q.getPendingConflictsStmt,
+		getProductStmt:                                  q.getProductStmt,
+		getProductBySKUStmt:                             q.getProductBySKUStmt,
+		getPurchaseOrderStmt:                            q.getPurchaseOrderStmt,
+		getQAChecklistTemplateStmt:                      q.getQAChecklistTemplateStmt,
+		getQAInspectionStmt:                             q.getQAInspectionStmt,
+		getRecallStmt:                                   q.getRecallStmt,
+		getRecallLineItemsStmt:                          q.getRecallLineItemsStmt,
+		getRegulatoryApprovalStmt:                       q.getRegulatoryApprovalStmt,
+		getReportDefinitionStmt:                         q.getReportDefinitionStmt,
+		getStockIssueStmt:                               q.getStockIssueStmt,
+		getStockLevelStmt:                               q.getStockLevelStmt,
+		getStockLevelsStmt:                              q.getStockLevelsStmt,
+		getStockMovementsStmt:                           q.getStockMovementsStmt,
+		getStockReleaseRecordStmt:                       q.getStockReleaseRecordStmt,
+		getSupplierStmt:                                 q.getSupplierStmt,
+		getTemperatureExcursionStmt:                     q.getTemperatureExcursionStmt,
+		getTransferStmt:                                 q.getTransferStmt,
+		getUserStmt:                                     q.getUserStmt,
+		getUserByEmailStmt:                              q.getUserByEmailStmt,
+		getUserPermissionsStmt:                          q.getUserPermissionsStmt,
+		getWarehouseStmt:                                q.getWarehouseStmt,
+		getWarehouseWithLocationsStmt:                   q.getWarehouseWithLocationsStmt,
+		listAMCCalculationsStmt:                         q.listAMCCalculationsStmt,
+		listAdjustmentReasonCodesStmt:                   q.listAdjustmentReasonCodesStmt,
+		listAdjustmentsStmt:                             q.listAdjustmentsStmt,
+		listAlertConfigurationsStmt:                     q.listAlertConfigurationsStmt,
+		listAlertsStmt:                                  q.listAlertsStmt,
+		listAssetCustodyChangesStmt:                     q.listAssetCustodyChangesStmt,
+		listAssetDepreciationStmt:                       q.listAssetDepreciationStmt,
+		listAssetMaintenanceStmt:                        q.listAssetMaintenanceStmt,
+		listAssetsStmt:                                  q.listAssetsStmt,
+		listAuditLogsStmt:                               q.listAuditLogsStmt,
+		listCAPAActionsStmt:                             q.listCAPAActionsStmt,
+		listCategoriesStmt:                              q.listCategoriesStmt,
+		listCategoryTreeStmt:                            q.listCategoryTreeStmt,
+		listChangeControlsStmt:                          q.listChangeControlsStmt,
+		listComplaintsStmt:                              q.listComplaintsStmt,
+		listControlledStockRegisterStmt:                 q.listControlledStockRegisterStmt,
+		listControlledStockRegisterByProductStmt:        q.listControlledStockRegisterByProductStmt,
+		listDeliveryConfirmationsStmt:                   q.listDeliveryConfirmationsStmt,
+		listDeliveryConfirmationsByWaybillStmt:          q.listDeliveryConfirmationsByWaybillStmt,
+		listDepartmentsStmt:                             q.listDepartmentsStmt,
+		listDeviationsStmt:                              q.listDeviationsStmt,
+		listDeviationsByStatusStmt:                      q.listDeviationsByStatusStmt,
+		listDispatchWaybillsStmt:                        q.listDispatchWaybillsStmt,
+		listDispatchWaybillsByStatusStmt:                q.listDispatchWaybillsByStatusStmt,
+		listDistributionLineItemsStmt:                   q.listDistributionLineItemsStmt,
+		listDistributionsStmt:                           q.listDistributionsStmt,
+		listDonationsStmt:                               q.listDonationsStmt,
+		listDonationsByStatusStmt:                       q.listDonationsByStatusStmt,
+		listEmergencyPlansStmt:                          q.listEmergencyPlansStmt,
+		listEscalatedComplaintsStmt:                     q.listEscalatedComplaintsStmt,
+		listExpiringRegulatoryApprovalsStmt:             q.listExpiringRegulatoryApprovalsStmt,
+		listForecastResultsStmt:                         q.listForecastResultsStmt,
+		listGRNLineItemsStmt:                            q.listGRNLineItemsStmt,
+		listGRNsStmt:                                    q.listGRNsStmt,
+		listIssueLineItemsStmt:                          q.listIssueLineItemsStmt,
+		listLocationsStmt:                               q.listLocationsStmt,
+		listOpenCAPAActionsStmt:                         q.listOpenCAPAActionsStmt,
+		listOpenShortExpiryReviewsStmt:                  q.listOpenShortExpiryReviewsStmt,
+		listOpenTemperatureExcursionsStmt:               q.listOpenTemperatureExcursionsStmt,
+		listOrgLevelsStmt:                               q.listOrgLevelsStmt,
+		listOrganizationsStmt:                           q.listOrganizationsStmt,
+		listPOLineItemsStmt:                             q.listPOLineItemsStmt,
+		listPermissionsStmt:                             q.listPermissionsStmt,
+		listProductsStmt:                                q.listProductsStmt,
+		listProductsByCategoryStmt:                      q.listProductsByCategoryStmt,
+		listProgramsStmt:                                q.listProgramsStmt,
+		listPurchaseOrdersStmt:                          q.listPurchaseOrdersStmt,
+		listQAChecklistItemsStmt:                        q.listQAChecklistItemsStmt,
+		listQAChecklistTemplatesStmt:                    q.listQAChecklistTemplatesStmt,
+		listQAInspectionsStmt:                           q.listQAInspectionsStmt,
+		listRecallsStmt:                                 q.listRecallsStmt,
+		listRecallsByTypeStmt:                           q.listRecallsByTypeStmt,
+		listRegulatoryApprovalsStmt:                     q.listRegulatoryApprovalsStmt,
+		listReorderRecommendationsStmt:                  q.listReorderRecommendationsStmt,
+		listReportDefinitionsStmt:                       q.listReportDefinitionsStmt,
+		listReportSchedulesStmt:                         q.listReportSchedulesStmt,
+		listRolesStmt:                                   q.listRolesStmt,
+		listShortExpiryReviewsStmt:                      q.listShortExpiryReviewsStmt,
+		listStockIssuesStmt:                             q.listStockIssuesStmt,
+		listStockReleaseRecordsStmt:                     q.listStockReleaseRecordsStmt,
+		listSuppliersStmt:                               q.listSuppliersStmt,
+		listTemperatureExcursionsStmt:                   q.listTemperatureExcursionsStmt,
+		listTemperatureMonitoringEntriesStmt:            q.listTemperatureMonitoringEntriesStmt,
+		listTemperatureMonitoringEntriesByWarehouseStmt: q.listTemperatureMonitoringEntriesByWarehouseStmt,
+		listTrainingRecordsStmt:                         q.listTrainingRecordsStmt,
+		listTrainingRecordsByUserStmt:                   q.listTrainingRecordsByUserStmt,
+		listTransferLineItemsStmt:                       q.listTransferLineItemsStmt,
+		listTransfersStmt:                               q.listTransfersStmt,
+		listUsersStmt:                                   q.listUsersStmt,
+		listWarehousesStmt:                              q.listWarehousesStmt,
+		listWarehousesByTypeStmt:                        q.listWarehousesByTypeStmt,
+		markRecommendationReviewedStmt:                  q.markRecommendationReviewedStmt,
+		resolveAlertStmt:                                q.resolveAlertStmt,
+		resolveSyncConflictStmt:                         q.resolveSyncConflictStmt,
+		searchAuditLogsStmt:                             q.searchAuditLogsStmt,
+		searchProductsStmt:                              q.searchProductsStmt,
+		searchStockMovementsStmt:                        q.searchStockMovementsStmt,
+		updateAssetStmt:                                 q.updateAssetStmt,
+		updateCAPAStatusStmt:                            q.updateCAPAStatusStmt,
+		updateCategoryStmt:                              q.updateCategoryStmt,
+		updateDeviationStatusStmt:                       q.updateDeviationStatusStmt,
+		updateDistributionStatusStmt:                    q.updateDistributionStatusStmt,
+		updateDonationDecisionStmt:                      q.updateDonationDecisionStmt,
+		updateLocationStmt:                              q.updateLocationStmt,
+		updateOrganizationStmt:                          q.updateOrganizationStmt,
+		updateProductStmt:                               q.updateProductStmt,
+		updateProductStockParamsStmt:                    q.updateProductStockParamsStmt,
+		updatePurchaseOrderStatusStmt:                   q.updatePurchaseOrderStatusStmt,
+		updateQAInspectionResultStmt:                    q.updateQAInspectionResultStmt,
+		updateRegulatoryApprovalStatusStmt:              q.updateRegulatoryApprovalStatusStmt,
+		updateScheduleLastRunStmt:                       q.updateScheduleLastRunStmt,
+		updateStockLevelStmt:                            q.updateStockLevelStmt,
+		updateSupplierStmt:                              q.updateSupplierStmt,
+		updateSyncLogStmt:                               q.updateSyncLogStmt,
+		updateTemperatureExcursionDispositionStmt:       q.updateTemperatureExcursionDispositionStmt,
+		updateUserStmt:                                  q.updateUserStmt,
+		verifyCAPAEffectivenessStmt:                     q.verifyCAPAEffectivenessStmt,
 	}
 }

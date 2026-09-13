@@ -222,7 +222,7 @@ release:
 
 clean:
 	@rm -rf apps/api/bin apps/api/dist apps/web/.next apps/web/out
-	@rm -rf apps/web/node_modules packages/*/node_modules
+	@rm -rf node_modules apps/*/node_modules packages/*/node_modules
 	@rm -f apps/api/coverage.out apps/api/coverage.html
 	@rm -f packages/business-logic/coverage.out
 	@echo "✓ Clean complete"

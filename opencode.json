@@ -1,0 +1,137 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+  "references": {
+    "architecture": {
+      "path": "docs/ARCHITECTURE.md",
+      "description": "System architecture and design decisions"
+    },
+    "status": {
+      "path": "docs/STATUS.md",
+      "description": "Current project status and roadmap"
+    },
+    "setup": {
+      "path": "SETUP.md",
+      "description": "Local development environment setup"
+    },
+    "configure": {
+      "path": "CONFIGURE.md",
+      "description": "Configuration options and environment variables"
+    },
+    "glossary": {
+      "path": "config/reference_data/GLOSSARY.md",
+      "description": "Domain terminology and data definitions"
+    }
+  },
+  "mcp": {
+    "database": {
+      "type": "local",
+      "command": ["npx", "-y", "@anthropic-ai/mcp-postgres", "--connection-string", "postgresql://zarishlog:zarishlog_dev_password@localhost:5432/zarishlog"],
+      "enabled": true
+    },
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@anthropic-ai/mcp-github", "--token", "{env:GITHUB_TOKEN}"],
+      "enabled": true
+    },
+    "docker": {
+      "type": "local",
+      "command": ["docker", "run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "mcp/docker"],
+      "enabled": true
+    },
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@anthropic-ai/mcp-filesystem", "--workspace", "."],
+      "enabled": true
+    }
+  },
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "make *": "allow",
+      "docker *": "allow",
+      "docker compose *": "allow",
+      "go *": "allow",
+      "pnpm *": "allow",
+      "npm *": "allow",
+      "git *": "allow",
+      "psql *": "allow",
+      "PGPASSWORD=* psql *": "allow",
+      "curl *": "allow",
+      "cat *": "allow",
+      "ls *": "allow",
+      "find *": "allow",
+      "grep *": "allow",
+      "mkdir *": "allow",
+      "rm -rf node_modules *": "allow",
+      "rm -rf apps/*/node_modules *": "allow",
+      "rm -rf apps/*/bin *": "allow",
+      "rm -rf apps/*/.next *": "allow",
+      "*": "ask"
+    },
+    "external_directory": {
+      "~/projects/*": "allow",
+      "*": "ask"
+    }
+  },
+  "agent": {
+    "build": {
+      "description": "Primary agent for code changes, builds, and DevOps tasks",
+      "mode": "primary",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "make *": "allow",
+          "docker *": "allow",
+          "go *": "allow",
+          "pnpm *": "allow",
+          "git *": "allow",
+          "*": "ask"
+        }
+      }
+    },
+    "devops": {
+      "description": "Specialized agent for Docker, infrastructure, and deployment tasks",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "docker *": "allow",
+          "docker compose *": "allow",
+          "make docker-*": "allow",
+          "make db-*": "allow",
+          "make build*": "allow",
+          "make publish": "allow",
+          "make release": "allow",
+          "*": "ask"
+        }
+      }
+    },
+    "database": {
+      "description": "Specialized agent for database migrations, queries, and schema changes",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "psql *": "allow",
+          "PGPASSWORD=* psql *": "allow",
+          "make db-*": "allow",
+          "*": "ask"
+        }
+      }
+    },
+    "plan": {
+      "description": "Planning agent for architecture decisions and task breakdown",
+      "mode": "primary",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
+      }
+    }
+  }
+}

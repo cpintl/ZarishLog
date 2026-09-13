@@ -1,4 +1,4 @@
-module github.com/cpintl/zarishlog-api
+module github.com/cpintl/ZarishLog/apps/api
 
 go 1.26
 

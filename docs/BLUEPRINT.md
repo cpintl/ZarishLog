@@ -17,21 +17,21 @@
 
 ## Phase 1 — Database & Data Models (Week 2)
 
-- [x] SQL schema — 76 tables across 16 domains with:
+- [x] SQL schema — 100 tables across 17 domains with:
   - UUIDv7 primary keys
   - `org_id` for multi-tenancy
   - Audit columns (`created_by`, `updated_by`, `created_at`, `updated_at`)
   - RLS policies on every tenant table
-- [x] sqlc configuration (137 queries, 16 query files) — type-safe Go query generation
-- [x] Master data seeding (23 UoM, 13 categories, 12 roles, 63 permissions, 40 products)
-- [x] Sample org hierarchy seed (L1–L4 from CSV, 8 org levels)
+- [x] sqlc configuration (205 queries, 24 query files) — type-safe Go query generation
+- [x] Master data seeding (16 UoM, 13 categories, 12 roles, 63 permissions, 40 products)
+- [x] Sample org hierarchy seed (L1–L4 from CSV, 7 org hierarchy entries)
 - [x] Sample product catalogue seed (40 items from master_product_list.csv)
 - [x] Indexes for performance-critical queries (stock_levels, movements, batches, alerts)
 - [x] Expanded pharmaceutical catalogue (1912 products across 65+ categories from Bangladesh national drug database, medical supplies, equipment, and assets)
 
 ## Phase 2 — Go API Core (Week 3)
 
-- [x] Go module init (`github.com/cpintl/zarishlog-api`) — `apps/api/`
+- [x] Go module init (`github.com/cpintl/ZarishLog/apps/api`) — `apps/api/`
 - [x] Configuration layer (viper/envconfig) — `internal/config/`
 - [x] Database connection pool (sqlx)
 - [x] Middleware: auth (OIDC/JWT validation), RBAC (`RequireRole` on all groups), tenant context — `internal/middleware/`

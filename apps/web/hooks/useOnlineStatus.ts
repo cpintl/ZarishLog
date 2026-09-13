@@ -12,7 +12,9 @@ export function useOnlineStatus() {
     if (syncing || !isOnline()) return;
     setSyncing(true);
     try {
-      const result = await processQueue("/api/v1");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const apiBase = apiUrl ? `${apiUrl}/api/v1` : "/api/v1";
+      const result = await processQueue(apiBase);
       setPendingCount(await getPendingMutationCount());
       return result;
     } finally {

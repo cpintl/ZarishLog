@@ -34,6 +34,11 @@ export async function processQueue(
     const m = mutations[i];
     onProgress?.(i + 1, mutations.length);
 
+    if (m.retryCount >= 5) {
+      failed++;
+      continue;
+    }
+
     try {
       const method = m.action === "delete" ? "DELETE" : m.action === "create" ? "POST" : "PUT";
       const endpoint = m.action === "create" ? `/${m.table}` : `/${m.table}/${m.recordId}`;

@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/cpintl/zarishlog-api/internal/response"
+	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/gin-gonic/gin"
 )
 

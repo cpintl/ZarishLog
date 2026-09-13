@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/cpintl/zarishlog-api/internal/config"
+	"github.com/cpintl/ZarishLog/apps/api/internal/config"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )

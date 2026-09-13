@@ -1,3 +1,3 @@
-module github.com/cpintl/zarishlog-business-logic
+module github.com/cpintl/ZarishLog/packages/business-logic
 
 go 1.26

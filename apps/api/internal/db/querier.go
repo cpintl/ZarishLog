@@ -23,10 +23,25 @@ type Querier interface {
 	CreateAsset(ctx context.Context, arg CreateAssetParams) (Asset, error)
 	CreateAuditLog(ctx context.Context, arg CreateAuditLogParams) error
 	CreateBatch(ctx context.Context, arg CreateBatchParams) (Batch, error)
+	CreateCAPAAction(ctx context.Context, arg CreateCAPAActionParams) (CapaAction, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (ProductCategory, error)
+	CreateChangeControl(ctx context.Context, arg CreateChangeControlParams) (ChangeControl, error)
+	// Policy §17 — Complaints, recalls (incl. mock recall) and falsified-product triage
+	CreateComplaint(ctx context.Context, arg CreateComplaintParams) (Complaint, error)
+	CreateControlledStockRegisterEntry(ctx context.Context, arg CreateControlledStockRegisterEntryParams) (ControlledStockRegister, error)
 	CreateDataChangeLog(ctx context.Context, arg CreateDataChangeLogParams) error
+	CreateDeliveryConfirmation(ctx context.Context, arg CreateDeliveryConfirmationParams) (DeliveryConfirmation, error)
 	CreateDepartment(ctx context.Context, arg CreateDepartmentParams) (Department, error)
+	// Policy §7 — QMS: Deviations, CAPA, Training & Competency
+	CreateDeviation(ctx context.Context, arg CreateDeviationParams) (Deviation, error)
+	// Policy §16 — Dispatch waybills and delivery confirmation
+	CreateDispatchWaybill(ctx context.Context, arg CreateDispatchWaybillParams) (DispatchWaybill, error)
 	CreateDistribution(ctx context.Context, arg CreateDistributionParams) (Distribution, error)
+	// Policy §11.3 — Donation registry and acceptance/rejection workflow
+	CreateDonation(ctx context.Context, arg CreateDonationParams) (Donation, error)
+	CreateDonationLineItem(ctx context.Context, arg CreateDonationLineItemParams) (DonationLineItem, error)
+	// Policy §20 / §27 — Emergency plans and change control
+	CreateEmergencyPlan(ctx context.Context, arg CreateEmergencyPlanParams) (EmergencyPlan, error)
 	CreateForecastResult(ctx context.Context, arg CreateForecastResultParams) (ForecastResult, error)
 	CreateGRN(ctx context.Context, arg CreateGRNParams) (GoodsReceipt, error)
 	CreateGRNLineItem(ctx context.Context, arg CreateGRNLineItemParams) error
@@ -40,15 +55,26 @@ type Querier interface {
 	CreateQAChecklistItem(ctx context.Context, arg CreateQAChecklistItemParams) (QaChecklistItem, error)
 	CreateQAChecklistTemplate(ctx context.Context, arg CreateQAChecklistTemplateParams) (QaChecklistTemplate, error)
 	CreateQAInspection(ctx context.Context, arg CreateQAInspectionParams) (QaInspection, error)
+	CreateRecall(ctx context.Context, arg CreateRecallParams) (Recall, error)
+	CreateRecallLineItem(ctx context.Context, arg CreateRecallLineItemParams) (RecallLineItem, error)
+	// Policy §8 — Regulatory & Legal Compliance (Bangladesh DGDA/DNC matrix)
+	CreateRegulatoryApproval(ctx context.Context, arg CreateRegulatoryApprovalParams) (RegulatoryApproval, error)
 	CreateReorderRecommendation(ctx context.Context, arg CreateReorderRecommendationParams) (ReorderRecommendation, error)
 	CreateReportDefinition(ctx context.Context, arg CreateReportDefinitionParams) (ReportDefinition, error)
 	CreateReportSchedule(ctx context.Context, arg CreateReportScheduleParams) (ReportSchedule, error)
 	CreateRole(ctx context.Context, arg CreateRoleParams) (Role, error)
+	CreateShortExpiryReview(ctx context.Context, arg CreateShortExpiryReviewParams) (ShortExpiryReview, error)
 	CreateStockIssue(ctx context.Context, arg CreateStockIssueParams) (StockIssue, error)
 	CreateStockMovement(ctx context.Context, arg CreateStockMovementParams) error
+	// Policy §12 / §14 — Quality release and controlled-product registers
+	CreateStockReleaseRecord(ctx context.Context, arg CreateStockReleaseRecordParams) (StockReleaseRecord, error)
 	CreateSupplier(ctx context.Context, arg CreateSupplierParams) (Supplier, error)
 	CreateSyncConflict(ctx context.Context, arg CreateSyncConflictParams) (SyncConflict, error)
 	CreateSyncLog(ctx context.Context, arg CreateSyncLogParams) (SyncLog, error)
+	CreateTemperatureExcursion(ctx context.Context, arg CreateTemperatureExcursionParams) (TemperatureExcursion, error)
+	// Policy §13 — Cold Chain & Environmental Control
+	CreateTemperatureMonitoringEntry(ctx context.Context, arg CreateTemperatureMonitoringEntryParams) (TemperatureMonitoringEntry, error)
+	CreateTrainingRecord(ctx context.Context, arg CreateTrainingRecordParams) (TrainingRecord, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (StockTransfer, error)
 	CreateTransferLineItem(ctx context.Context, arg CreateTransferLineItemParams) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
@@ -59,8 +85,18 @@ type Querier interface {
 	GetAdjustment(ctx context.Context, arg GetAdjustmentParams) (GetAdjustmentRow, error)
 	GetAsset(ctx context.Context, arg GetAssetParams) (GetAssetRow, error)
 	GetBatchesByProduct(ctx context.Context, arg GetBatchesByProductParams) ([]Batch, error)
+	GetCAPAAction(ctx context.Context, arg GetCAPAActionParams) (CapaAction, error)
 	GetCategory(ctx context.Context, arg GetCategoryParams) (ProductCategory, error)
+	GetChangeControl(ctx context.Context, arg GetChangeControlParams) (ChangeControl, error)
+	GetComplaint(ctx context.Context, arg GetComplaintParams) (Complaint, error)
+	GetControlledStockRegisterEntry(ctx context.Context, arg GetControlledStockRegisterEntryParams) (ControlledStockRegister, error)
+	GetDeliveryConfirmation(ctx context.Context, arg GetDeliveryConfirmationParams) (DeliveryConfirmation, error)
+	GetDeviation(ctx context.Context, arg GetDeviationParams) (Deviation, error)
+	GetDispatchWaybill(ctx context.Context, arg GetDispatchWaybillParams) (DispatchWaybill, error)
 	GetDistribution(ctx context.Context, arg GetDistributionParams) (GetDistributionRow, error)
+	GetDonation(ctx context.Context, arg GetDonationParams) (Donation, error)
+	GetDonationLineItems(ctx context.Context, donationID string) ([]DonationLineItem, error)
+	GetEmergencyPlan(ctx context.Context, arg GetEmergencyPlanParams) (EmergencyPlan, error)
 	GetExpiringBatches(ctx context.Context, arg GetExpiringBatchesParams) ([]Batch, error)
 	GetGRN(ctx context.Context, arg GetGRNParams) (GetGRNRow, error)
 	GetLatestAMC(ctx context.Context, arg GetLatestAMCParams) (AmcCalculation, error)
@@ -72,12 +108,17 @@ type Querier interface {
 	GetPurchaseOrder(ctx context.Context, arg GetPurchaseOrderParams) (GetPurchaseOrderRow, error)
 	GetQAChecklistTemplate(ctx context.Context, arg GetQAChecklistTemplateParams) (QaChecklistTemplate, error)
 	GetQAInspection(ctx context.Context, arg GetQAInspectionParams) (GetQAInspectionRow, error)
+	GetRecall(ctx context.Context, arg GetRecallParams) (Recall, error)
+	GetRecallLineItems(ctx context.Context, recallID string) ([]RecallLineItem, error)
+	GetRegulatoryApproval(ctx context.Context, arg GetRegulatoryApprovalParams) (RegulatoryApproval, error)
 	GetReportDefinition(ctx context.Context, arg GetReportDefinitionParams) (ReportDefinition, error)
 	GetStockIssue(ctx context.Context, arg GetStockIssueParams) (GetStockIssueRow, error)
 	GetStockLevel(ctx context.Context, arg GetStockLevelParams) (StockLevel, error)
 	GetStockLevels(ctx context.Context, orgID string) ([]StockLevel, error)
 	GetStockMovements(ctx context.Context, arg GetStockMovementsParams) ([]StockMovement, error)
+	GetStockReleaseRecord(ctx context.Context, arg GetStockReleaseRecordParams) (StockReleaseRecord, error)
 	GetSupplier(ctx context.Context, arg GetSupplierParams) (Supplier, error)
+	GetTemperatureExcursion(ctx context.Context, arg GetTemperatureExcursionParams) (TemperatureExcursion, error)
 	GetTransfer(ctx context.Context, arg GetTransferParams) (GetTransferRow, error)
 	GetUser(ctx context.Context, arg GetUserParams) (User, error)
 	GetUserByEmail(ctx context.Context, arg GetUserByEmailParams) (User, error)
@@ -94,16 +135,35 @@ type Querier interface {
 	ListAssetMaintenance(ctx context.Context, assetID string) ([]AssetMaintenance, error)
 	ListAssets(ctx context.Context, arg ListAssetsParams) ([]ListAssetsRow, error)
 	ListAuditLogs(ctx context.Context, arg ListAuditLogsParams) ([]ListAuditLogsRow, error)
+	ListCAPAActions(ctx context.Context, arg ListCAPAActionsParams) ([]CapaAction, error)
 	ListCategories(ctx context.Context, orgID string) ([]ProductCategory, error)
 	ListCategoryTree(ctx context.Context, orgID string) ([]ListCategoryTreeRow, error)
+	ListChangeControls(ctx context.Context, arg ListChangeControlsParams) ([]ChangeControl, error)
+	ListComplaints(ctx context.Context, arg ListComplaintsParams) ([]Complaint, error)
+	ListControlledStockRegister(ctx context.Context, arg ListControlledStockRegisterParams) ([]ControlledStockRegister, error)
+	ListControlledStockRegisterByProduct(ctx context.Context, arg ListControlledStockRegisterByProductParams) ([]ControlledStockRegister, error)
+	ListDeliveryConfirmations(ctx context.Context, arg ListDeliveryConfirmationsParams) ([]DeliveryConfirmation, error)
+	ListDeliveryConfirmationsByWaybill(ctx context.Context, arg ListDeliveryConfirmationsByWaybillParams) ([]DeliveryConfirmation, error)
 	ListDepartments(ctx context.Context, orgID string) ([]Department, error)
+	ListDeviations(ctx context.Context, arg ListDeviationsParams) ([]Deviation, error)
+	ListDeviationsByStatus(ctx context.Context, arg ListDeviationsByStatusParams) ([]Deviation, error)
+	ListDispatchWaybills(ctx context.Context, arg ListDispatchWaybillsParams) ([]DispatchWaybill, error)
+	ListDispatchWaybillsByStatus(ctx context.Context, arg ListDispatchWaybillsByStatusParams) ([]DispatchWaybill, error)
 	ListDistributionLineItems(ctx context.Context, distributionID string) ([]ListDistributionLineItemsRow, error)
 	ListDistributions(ctx context.Context, arg ListDistributionsParams) ([]ListDistributionsRow, error)
+	ListDonations(ctx context.Context, arg ListDonationsParams) ([]Donation, error)
+	ListDonationsByStatus(ctx context.Context, arg ListDonationsByStatusParams) ([]Donation, error)
+	ListEmergencyPlans(ctx context.Context, arg ListEmergencyPlansParams) ([]EmergencyPlan, error)
+	ListEscalatedComplaints(ctx context.Context, arg ListEscalatedComplaintsParams) ([]Complaint, error)
+	ListExpiringRegulatoryApprovals(ctx context.Context, arg ListExpiringRegulatoryApprovalsParams) ([]RegulatoryApproval, error)
 	ListForecastResults(ctx context.Context, arg ListForecastResultsParams) ([]ForecastResult, error)
 	ListGRNLineItems(ctx context.Context, grnID string) ([]ListGRNLineItemsRow, error)
 	ListGRNs(ctx context.Context, arg ListGRNsParams) ([]ListGRNsRow, error)
 	ListIssueLineItems(ctx context.Context, issueID string) ([]ListIssueLineItemsRow, error)
 	ListLocations(ctx context.Context, warehouseID string) ([]Location, error)
+	ListOpenCAPAActions(ctx context.Context, arg ListOpenCAPAActionsParams) ([]CapaAction, error)
+	ListOpenShortExpiryReviews(ctx context.Context, arg ListOpenShortExpiryReviewsParams) ([]ShortExpiryReview, error)
+	ListOpenTemperatureExcursions(ctx context.Context, arg ListOpenTemperatureExcursionsParams) ([]TemperatureExcursion, error)
 	ListOrgLevels(ctx context.Context, orgID string) ([]OrgLevel, error)
 	ListOrganizations(ctx context.Context, arg ListOrganizationsParams) ([]Organization, error)
 	ListPOLineItems(ctx context.Context, poID string) ([]ListPOLineItemsRow, error)
@@ -115,12 +175,22 @@ type Querier interface {
 	ListQAChecklistItems(ctx context.Context, templateID string) ([]QaChecklistItem, error)
 	ListQAChecklistTemplates(ctx context.Context, orgID string) ([]QaChecklistTemplate, error)
 	ListQAInspections(ctx context.Context, arg ListQAInspectionsParams) ([]ListQAInspectionsRow, error)
+	ListRecalls(ctx context.Context, arg ListRecallsParams) ([]Recall, error)
+	ListRecallsByType(ctx context.Context, arg ListRecallsByTypeParams) ([]Recall, error)
+	ListRegulatoryApprovals(ctx context.Context, arg ListRegulatoryApprovalsParams) ([]RegulatoryApproval, error)
 	ListReorderRecommendations(ctx context.Context, arg ListReorderRecommendationsParams) ([]ListReorderRecommendationsRow, error)
 	ListReportDefinitions(ctx context.Context, arg ListReportDefinitionsParams) ([]ReportDefinition, error)
 	ListReportSchedules(ctx context.Context, orgID string) ([]ListReportSchedulesRow, error)
 	ListRoles(ctx context.Context) ([]Role, error)
+	ListShortExpiryReviews(ctx context.Context, arg ListShortExpiryReviewsParams) ([]ShortExpiryReview, error)
 	ListStockIssues(ctx context.Context, arg ListStockIssuesParams) ([]ListStockIssuesRow, error)
+	ListStockReleaseRecords(ctx context.Context, arg ListStockReleaseRecordsParams) ([]StockReleaseRecord, error)
 	ListSuppliers(ctx context.Context, arg ListSuppliersParams) ([]Supplier, error)
+	ListTemperatureExcursions(ctx context.Context, arg ListTemperatureExcursionsParams) ([]TemperatureExcursion, error)
+	ListTemperatureMonitoringEntries(ctx context.Context, arg ListTemperatureMonitoringEntriesParams) ([]TemperatureMonitoringEntry, error)
+	ListTemperatureMonitoringEntriesByWarehouse(ctx context.Context, arg ListTemperatureMonitoringEntriesByWarehouseParams) ([]TemperatureMonitoringEntry, error)
+	ListTrainingRecords(ctx context.Context, arg ListTrainingRecordsParams) ([]TrainingRecord, error)
+	ListTrainingRecordsByUser(ctx context.Context, arg ListTrainingRecordsByUserParams) ([]TrainingRecord, error)
 	ListTransferLineItems(ctx context.Context, transferID string) ([]ListTransferLineItemsRow, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]ListTransfersRow, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]ListUsersRow, error)
@@ -133,19 +203,25 @@ type Querier interface {
 	SearchProducts(ctx context.Context, arg SearchProductsParams) ([]Product, error)
 	SearchStockMovements(ctx context.Context, arg SearchStockMovementsParams) ([]StockMovement, error)
 	UpdateAsset(ctx context.Context, arg UpdateAssetParams) error
+	UpdateCAPAStatus(ctx context.Context, arg UpdateCAPAStatusParams) error
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) error
+	UpdateDeviationStatus(ctx context.Context, arg UpdateDeviationStatusParams) error
 	UpdateDistributionStatus(ctx context.Context, arg UpdateDistributionStatusParams) error
+	UpdateDonationDecision(ctx context.Context, arg UpdateDonationDecisionParams) error
 	UpdateLocation(ctx context.Context, arg UpdateLocationParams) error
 	UpdateOrganization(ctx context.Context, arg UpdateOrganizationParams) error
 	UpdateProduct(ctx context.Context, arg UpdateProductParams) error
 	UpdateProductStockParams(ctx context.Context, arg UpdateProductStockParamsParams) error
 	UpdatePurchaseOrderStatus(ctx context.Context, arg UpdatePurchaseOrderStatusParams) error
 	UpdateQAInspectionResult(ctx context.Context, arg UpdateQAInspectionResultParams) error
+	UpdateRegulatoryApprovalStatus(ctx context.Context, arg UpdateRegulatoryApprovalStatusParams) error
 	UpdateScheduleLastRun(ctx context.Context, arg UpdateScheduleLastRunParams) error
 	UpdateStockLevel(ctx context.Context, arg UpdateStockLevelParams) error
 	UpdateSupplier(ctx context.Context, arg UpdateSupplierParams) error
 	UpdateSyncLog(ctx context.Context, arg UpdateSyncLogParams) error
+	UpdateTemperatureExcursionDisposition(ctx context.Context, arg UpdateTemperatureExcursionDispositionParams) error
 	UpdateUser(ctx context.Context, arg UpdateUserParams) error
+	VerifyCAPAEffectiveness(ctx context.Context, arg VerifyCAPAEffectivenessParams) error
 }
 
 var _ Querier = (*Queries)(nil)

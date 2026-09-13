@@ -56,8 +56,6 @@ show_help() {
   exit 0
 }
 
-echo "Bootstrap complete. Use 'bash scripts/sandbox-start.sh' to start the local sandbox."
-
 # Add a convenience flag for non-interactive auto mode
 if [[ "${1:-}" == "--auto" || "${1:-}" == "--yes" ]]; then
   echo "Auto mode: installing optional tools non-interactively (if missing)."

@@ -1,9 +1,8 @@
 name,code,level,parent_code
-Center for Peace and Integrity,CPI,1,
-Country Office - Bangladesh,CPI-BD,2,CPI
-Country Office - Myanmar,CPI-MM,2,CPI
-Project Office - Cox Bazar,CPI-CXB,3,CPI-BD
-Project Office - Dhaka,CPI-DHK,3,CPI-BD
-Project Office - Yangon,CPI-YGN,3,CPI-MM
-Camp 5 Health Post,CPI-CXB-C5,4,CPI-CXB
-Camp 4W Distribution Point,CPI-CXB-C4W,4,CPI-CXB
+Community Partners International (CPI) HQ,CPI,1,
+Bangladesh Country Office - Bangladesh,CPI-BD,2,CPI
+Cox's Bazar Project Office - Bangladesh,CPI-BD-CXB,3,CPI-BD
+Cox's Bazar Central Warehouse - Ukhiya,CPI-CXB-UKH,3,CPI-BD-CXB
+Camp 1W Health Outreach Office - Camp 1W,CXB-HOP-1W,4,CPI-CXB-UKH
+Camp 04 Health Outreach Office - Camp 04,CXB-HOP-04,4,CPI-CXB-UKH
+Camp 1W Health Post,CXB-HP-1W,4,CPI-CXB-UKH

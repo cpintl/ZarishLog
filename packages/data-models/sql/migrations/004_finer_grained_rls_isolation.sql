@@ -84,6 +84,7 @@ DO $$
 DECLARE
   tbl text;
   has_org_id boolean;
+  has_warehouse_id boolean;
   tables text[] := ARRAY[
     'org_levels', 'programs', 'departments', 'functions', 'users',
     'product_categories', 'products', 'product_packaging', 'product_substitutes',
@@ -115,6 +116,13 @@ BEGIN
           AND NOT attisdropped
       ) INTO has_org_id;
 
+      SELECT EXISTS (
+        SELECT 1 FROM pg_attribute
+        WHERE attrelid = (tbl::regclass)
+          AND attname = 'warehouse_id'
+          AND NOT attisdropped
+      ) INTO has_warehouse_id;
+
       -- Drop any stale policy regardless (idempotent)
       EXECUTE format('DROP POLICY IF EXISTS org_isolation ON %I', tbl);
 
@@ -128,6 +136,16 @@ BEGIN
             USING (%s)
             WITH CHECK (%s)
         ', tbl, app.rls_policy_expression(), app.rls_policy_expression());
+      ELSIF has_warehouse_id THEN
+        -- Location-style tables resolve org through their warehouse
+        EXECUTE format('
+          ALTER TABLE %I ENABLE ROW LEVEL SECURITY
+        ', tbl);
+        EXECUTE format('
+          CREATE POLICY org_isolation ON %I
+            USING (warehouse_id IN (SELECT w.id FROM warehouses w WHERE w.org_id = app.current_org_id()::uuid))
+            WITH CHECK (warehouse_id IN (SELECT w.id FROM warehouses w WHERE w.org_id = app.current_org_id()::uuid))
+        ', tbl);
       END IF;
     END IF;
   END LOOP;

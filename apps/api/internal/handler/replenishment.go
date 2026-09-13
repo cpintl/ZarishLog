@@ -5,10 +5,10 @@ import (
 	"math"
 	"time"
 
-	"github.com/cpintl/zarishlog-api/internal/model"
-	"github.com/cpintl/zarishlog-api/internal/pagination"
-	"github.com/cpintl/zarishlog-api/internal/response"
-	"github.com/cpintl/zarishlog-api/internal/validator"
+	"github.com/cpintl/ZarishLog/apps/api/internal/model"
+	"github.com/cpintl/ZarishLog/apps/api/internal/pagination"
+	"github.com/cpintl/ZarishLog/apps/api/internal/response"
+	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )

@@ -13,9 +13,9 @@
         "map_location_url": "https://www.google.com/maps?q=Navana+Bilkis+Laurent,+Gulshan-2,+Dhaka",
         "contact_details": {
           "phone_mobile": "+880 1729-926877",
-          "mobile_assignment": "Country Director",
+          "mobile_assignment": "Country Representative",
           "phone_office": null,
-          "email": "cpi.bangladesh@cpintl.org"
+          "email": "abulbashar@cpintl.org"
         },
         "website": "https://www.cpintl.org"
       }
@@ -43,60 +43,33 @@
       {
         "id": "CPI-L3-002",
         "office_category": "Project Office",
-        "name": "Community Partners International (CPI) Bangkok Office",
-        "organization": "Community Partners International Thailand",
-        "plain_address": "84, 1 Soi Sukhumvit 62, Phra Khanong Tai, Khet Phra Khanong, Bangkok 10260, Thailand",
-        "map_location_url": "https://www.google.com/maps?q=84,+1+Soi+Sukhumvit+62,+Bangkok",
+        "name": "CPI Cox's Bazar Central Warehouse",
+        "organization": "Community Partners International — Bangladesh Mission",
+        "plain_address": "Ukhiya Central Warehouse, Cox's Bazar, Bangladesh",
+        "map_location_url": "https://www.google.com/maps?q=21.4333,92.0167",
         "contact_details": {
-          "phone_mobile": null,
-          "phone_office": null,
-          "email": "info@cpintl.org"
-        },
-        "website": "https://www.cpintl.org"
-      },
-      {
-        "id": "CPI-L3-003",
-        "office_category": "Project Office",
-        "name": "Community Partners International (CPI) Mae Sot Field Office",
-        "organization": "Community Partners International Thailand",
-        "plain_address": "Mae Sot, Tak, Thailand",
-        "map_location_url": "https://www.google.com/maps?q=Mae+Sot,+Tak,+Thailand",
-        "contact_details": {
-          "phone_mobile": null,
-          "phone_office": null,
-          "email": "info@cpintl.org"
-        },
-        "description": "Field office facilitating cross-border health initiatives along the Thailand-Myanmar border.",
-        "website": "https://www.cpintl.org"
+          "phone_mobile": "+880 1643-699596",
+          "mobile_assignment": "Warehouse Officer",
+          "email": "anamul@cpi-ypsa.org"
+        }
       }
     ],
     "LEVEL_4_PROGRAM_SITE_OFFICE": [
       {
         "id": "CPI-L4-001",
         "office_category": "Program Site Office",
-        "name": "CPI Cox's Bazar Central Warehouse",
-        "organization": "Community Partners International — Bangladesh Mission",
-        "plain_address": "Cox's Bazar Central Warehouse, Cox's Bazar, Bangladesh",
-        "map_location_url": "https://www.google.com/maps?q=21.4333,92.0167",
-        "contact_details": {
-          "phone_mobile": null,
-          "email": "cpi.bangladesh@cpintl.org"
-        }
-      },
-      {
-        "id": "CPI-L4-002",
-        "office_category": "Program Site Office",
         "name": "CPI Health Post (UID-418)",
         "organization": "Community Partners International — Bangladesh Mission",
-        "plain_address": "Ukhiya Refugee Camp Network, Cox's Bazar, Bangladesh",
+        "plain_address": "Camp 1 West, Block: B, FDMN Camp, Cox's Bazar, Bangladesh",
         "map_location_url": "https://www.google.com/maps?q=21.21361055,92.1507723",
         "geo_coordinates": {
           "latitude": 21.21361055,
           "longitude": 92.1507723
         },
         "contact_details": {
-          "phone_mobile": null,
-          "email": "cpi.bangladesh@cpintl.org"
+          "phone_mobile": "+880 1814-347936",
+          "mobile_assignment": "Pharmacy Supervisor",
+          "email": "hossain@cpi-ypsa.org"
         }
       },
       {
@@ -104,11 +77,16 @@
         "office_category": "Program Site Office",
         "name": "CPI Health Outreach Office - Camp 01 West",
         "organization": "Community Partners International — CPI-YPSA Joint Program",
-        "plain_address": "Camp 01 West, Block: B, PalongKhali, Ukhiya, Cox's Bazar- 4750",
+        "plain_address": "Camp 01 West, Block: B, FDMN Camp, Ukhiya, Cox's Bazar- 4750",
         "map_location_url": "https://www.google.com/maps?q=21.21357074,92.15084974",
         "geo_coordinates": {
           "latitude": 21.21357074,
           "longitude": 92.15084974
+        },
+        "contact_details": {
+          "phone_mobile": "+880 1750-392837",
+          "mobile_assignment": "Community Health Program Officer",
+          "email": "resvey@cpi-ypsa.org"
         }
       },
       {
@@ -116,30 +94,18 @@
         "office_category": "Program Site Office",
         "name": "CPI Health Outreach Office - Camp 04",
         "organization": "Community Partners International — CPI-YPSA Joint Program",
-        "plain_address": "Camp 04, Block: C, PalongKhali, Ukhiya, Cox's Bazar- 4750",
+        "plain_address": "Camp 04, Block: C, FDMN Camp, Ukhiya, Cox's Bazar- 4750",
         "map_location_url": "https://www.google.com/maps?q=21.20893874,92.1455123",
         "geo_coordinates": {
           "latitude": 21.20893874,
           "longitude": 92.1455123
+        },
+        "contact_details": {
+          "phone_mobile": "+880 1750-392837",
+          "mobile_assignment": "Sexual and Reproductive Health Program Officer",
+          "email": "ruma@cpi-ypsa.org"
         }
         
-      },
-      {
-        "id": "CPI-L4-005",
-        "office_category": "Program Site Office",
-        "name": "250 Bed District Sadar Hospital, Cox's Bazar (CPI Supported)",
-        "organization": "Community Partners International — Health System Strengthening (HSS) Program",
-        "plain_address": "250 Bed District Sadar Hospital, Cox's Bazar, Bangladesh",
-        "map_location_url": "https://www.google.com/maps?q=21.44091571,91.97660079",
-        "geo_coordinates": {
-          "latitude": 21.44091571,
-          "longitude": 91.97660079
-        },
-        "description": "CPI Supported Tertiary Health Facility running Health System Strengthening (HSS) operations.",
-        "contact_details": {
-          "phone_mobile": null,
-          "email": "cpi.bangladesh@cpintl.org"
-        }
       }
     ]
   }

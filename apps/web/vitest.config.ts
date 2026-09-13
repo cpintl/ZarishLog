@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
-    setupFiles: [],
+    setupFiles: ["./vitest.setup.ts"],
     include: ["lib/**/*.test.ts", "lib/**/*.test.tsx", "hooks/**/*.test.ts", "hooks/**/*.test.tsx"],
     clearMocks: true,
     fakeTimers: {

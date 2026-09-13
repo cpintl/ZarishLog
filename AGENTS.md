@@ -56,7 +56,7 @@ cd apps/api && sqlc generate
 
 Config: `apps/api/sqlc.yaml`. Generated files (`*.sql.go`, `models.go`, `querier.go`) are checked in — commit them.
 
-Schema migrations live in `packages/data-models/sql/migrations/` and are numbered sequentially (001–006). Apply in filename order.
+Schema migrations live in `packages/data-models/sql/migrations/` and are numbered sequentially (001–007). Apply in filename order.
 
 ## API conventions
 

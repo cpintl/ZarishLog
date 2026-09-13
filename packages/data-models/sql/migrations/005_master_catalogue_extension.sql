@@ -193,6 +193,14 @@ BEGIN
         WITH CHECK (org_id = app.current_org_id()::uuid)
     ');
   END IF;
-  -- entity_attributes (has no org_id directly; relies on entity join — skip org_isolation)
+  -- entity_attributes (no org_id directly; relies on entity join)
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'entity_attributes') THEN
+    DROP POLICY IF EXISTS org_isolation ON entity_attributes;
+    EXECUTE format('
+      CREATE POLICY org_isolation ON entity_attributes
+        USING (entity_id IN (SELECT e.id FROM entities e WHERE e.org_id = app.current_org_id()::uuid))
+        WITH CHECK (entity_id IN (SELECT e.id FROM entities e WHERE e.org_id = app.current_org_id()::uuid))
+    ');
+  END IF;
 END;
 $$;

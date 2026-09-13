@@ -742,7 +742,7 @@ CREATE INDEX idx_stock_snapshots_org_created ON stock_snapshots(org_id, created_
 CREATE INDEX idx_suppliers_org_created ON suppliers(org_id, created_at DESC);
 CREATE INDEX idx_audit_log_org_timestamp ON audit_log(org_id, timestamp DESC);
 CREATE INDEX idx_data_change_log_org_timestamp ON data_change_log(org_id, change_timestamp DESC);
-CREATE INDEX idx_sync_log_org_created ON sync_log(org_id, created_at DESC);
+CREATE INDEX idx_sync_log_org_created ON sync_log(org_id, started_at DESC);
 
 -- Index on (product_id, warehouse_id) for stock_levels
 CREATE INDEX idx_stock_levels_product_warehouse ON stock_levels(product_id, warehouse_id);

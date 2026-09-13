@@ -15,7 +15,8 @@ export default async function StatusPage() {
   const version = await fetchJson(`${apiUrl}/api/v1/version`);
   const products = await fetchJson(`${apiUrl}/api/v1/products`);
 
-  const isHealthy = health?.status === "healthy";
+  const isHealthy = health?.data?.status === "healthy";
+  const dbConnected = health?.data?.db === "connected";
   const productCount = products?.data?.length ?? 0;
 
   return (
@@ -37,13 +38,13 @@ export default async function StatusPage() {
         </div>
 
         {/* Database */}
-        <div className={`rounded-lg border p-4 ${health?.db === "connected" ? "border-green-200 bg-green-50" : "border-yellow-200 bg-yellow-50"}`}>
+        <div className={`rounded-lg border p-4 ${dbConnected ? "border-green-200 bg-green-50" : "border-yellow-200 bg-yellow-50"}`}>
           <div className="flex items-center justify-between">
             <h2 className="font-medium">Database</h2>
-            <span className={`h-3 w-3 rounded-full ${health?.db === "connected" ? "bg-green-500" : "bg-yellow-500"}`} />
+            <span className={`h-3 w-3 rounded-full ${dbConnected ? "bg-green-500" : "bg-yellow-500"}`} />
           </div>
           <p className="mt-2 text-sm text-slate-600">
-            {health?.db === "connected" ? "Connected" : "Disconnected"}
+            {dbConnected ? "Connected" : "Disconnected"}
           </p>
           <p className="text-xs text-slate-400">PostgreSQL 18</p>
         </div>

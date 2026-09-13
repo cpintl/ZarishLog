@@ -6,12 +6,34 @@
 
 | Abbreviation | Expansion |
 |---|---|
-| CPI | Center for Peace and Integrity |
-| CPI-BD | CPI Bangladesh Country Office |
-| CPI-CXB | CPI Cox's Bazar Project Office |
-| CPI-DHK | CPI Dhaka Project Office |
-| CPI-MM | CPI Myanmar Country Office |
-| CPI-YGN | CPI Yangon Project Office |
+| CPI | Community Partners International |
+| CPI-BD | Community Partners International Bangladesh Mission |
+| CPIL | Community Partners International Limited |
+| YPSA | Young Power in Social Action |
+| RTMI | Research Training and Management International |
+| Friendship | Friendship NGO |
+| FIVDB | Friends in Village Development Bangladesh |
+| MoH&FW | Ministry of Health and Family Welfare |
+| CXB-DSH | Cox's Bazar District Sadar Hospital |
+| CXB-CS | Cox's Bazar Civil Surgeon |
+| RHU | Refugee Health Unit |
+| RRRC | Refugee Relief Repatriation Commissioner |
+| WHO | World Health Organization |
+| CXB-HS | Cox's Bazar Health Sector |
+| UNHCR |  |
+| UNFPA |  |
+| UNICEF |  |
+| UNDP |  |
+| IOM |  |
+| SRH-WG | Sexual and Reproductive Health Working Group |
+| CHW-WG | Community Health Working Group |
+| IPC-TWG | Infection Prevention and Control Working Group |
+
+
+
+
+
+
 
 ### Technical & Database
 
@@ -32,6 +54,23 @@
 | UNSPSC | United Nations Standard Products and Services Code |
 | UoM | Unit of Measure |
 | UUID | Universally Unique Identifier |
+| CAPA | Corrective and Preventive Action |
+| DGDA | Directorate General of Drug Administration (Bangladesh drug regulator) |
+| DNC | Directorate of Narcotics Control (Bangladesh controlled-substance regulator) |
+| NBR | National Board of Revenue (Bangladesh customs/tax) |
+| WHO PQ | WHO Prequalification of Medicines Programme |
+| OOS | Out of Specification |
+| OOT | Out of Trend |
+
+### Regulatory & Compliance
+
+| Abbreviation | Expansion |
+|---|---|
+| CRITICAL | Complaint severity: suspected harm, falsification, contamination, wrong product, controlled-product diversion, or widespread quality risk (immediate escalation required) |
+| MAJOR | Complaint severity: material quality/labeling/traceability failure without immediate harm |
+| MINOR | Complaint severity: localized or cosmetic issue with no material product-risk |
+| MOCK | Annual mock-recall exercise testing traceability of a batch end-to-end |
+| ACTUAL | Real recall of distributed product from the market or field |
 
 ### Logistics & Supply Chain
 
@@ -103,6 +142,19 @@
 | Justification Code | MSF Order Reason | P (Recurring), M (Campaign), E (Emergency), F (Forecast), A (Asset), S (Special) |
 | Custodian | Asset Holder, Responsible Person | `users` table FK on assets |
 | UoM | Unit of Measure | `units_of_measure` table |
+| Regulatory Approval | Licence, Permit, Registration, Certificate of analysis | `regulatory_approvals` table |
+| Deviation | Incident, Non-conformance, Quality Event | `deviations` table |
+| CAPA | Corrective/Preventive Action, Improvement Action | `capa_actions` table |
+| Temperature Excursion | Cold-chain breach, freeze event, OOS temperature | `temperature_excursions` table |
+| Controlled Stock | Narcotic/Controlled-Substance Register, CD Register | `controlled_stock_register` table |
+| Donation | In-kind Gift, Humanitarian Consignment | `donations` + `donation_line_items` |
+| Complaint | Customer Complaint, Quality Complaint, Product Complaint | `complaints` table |
+| Recall | Market Withdrawal, Product Retrieval, Mock Recall Exercise | `recalls` + `recall_line_items` |
+| Waybill | Dispatch Note, Delivery Note, Bill of Lading | `dispatch_waybills` table |
+| Delivery Confirmation | Proof of Delivery, POD, Receiving Confirmation | `delivery_confirmations` table |
+| Emergency Plan | Business Continuity Plan, Disaster Response Plan | `emergency_plans` table |
+| Change Control | Change Management, Modification Request | `change_controls` table |
+| Short-Expiry Review | Near-Expiry Review, Expiry Risk Review | `short_expiry_reviews` table |
 
 ## Organization Hierarchy (Standard)
 

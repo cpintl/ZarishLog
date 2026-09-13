@@ -59,12 +59,18 @@ code .vscode/zarishlog.code-snippets
 
 ### Step 2: Fill Out Your Organization Details
 
-Edit `config/organization.csv`:
+Edit `config/metadata/organization.csv`:
 
 ```csv
-org_name,org_code,level_1_name,level_2_name,level_3_name,level_4_name
-Center for Peace and Integrity,CPI,Global HQ,Country Office,Project Office,Program Site
+name,code,level,parent_code
+Community Partners International (CPI) HQ,CPI,1,
+Bangladesh Country Office - Bangladesh,CPI-BD,2,CPI
+Cox's Bazar Project Office - Bangladesh,CPI-BD-CXB,3,CPI-BD
 ```
+
+Each row is one site in your hierarchy. `level` is 1 (global) to 4 (program site);
+`parent_code` links a site to its parent (blank for the global level). Departments
+and programs live in `config/metadata/departments.csv` and `programs.csv`.
 
 ### Step 3: Load Your Product Catalogue
 

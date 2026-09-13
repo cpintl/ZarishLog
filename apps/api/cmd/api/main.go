@@ -5,16 +5,16 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/cpintl/zarishlog-api/internal/config"
-	"github.com/cpintl/zarishlog-api/internal/database"
-	"github.com/cpintl/zarishlog-api/internal/handler"
-	"github.com/cpintl/zarishlog-api/internal/middleware"
+	"github.com/cpintl/ZarishLog/apps/api/internal/config"
+	"github.com/cpintl/ZarishLog/apps/api/internal/database"
+	"github.com/cpintl/ZarishLog/apps/api/internal/handler"
+	"github.com/cpintl/ZarishLog/apps/api/internal/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 var (
-	Version    = "0.3.0-dev"
+	Version    = "1.0.0"
 	CommitHash = "unknown"
 	BuildTime  = "unknown"
 )
@@ -127,6 +127,135 @@ func main() {
 				qa.POST("/checklists", handler.CreateChecklistTemplate(db))
 				qa.GET("/checklists", handler.ListChecklistTemplates(db))
 				qa.GET("/checklists/:id", handler.GetChecklistTemplate(db))
+			}
+
+			regulatory := protected.Group("/policy/regulatory-approvals")
+			regulatory.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				regulatory.POST("", handler.CreateRegulatoryApproval(db))
+				regulatory.GET("", handler.ListRegulatoryApprovals(db))
+				regulatory.GET("/expiring", handler.ListExpiringRegulatoryApprovals(db))
+				regulatory.GET("/:id", handler.GetRegulatoryApproval(db))
+			}
+
+			deviations := protected.Group("/policy/deviations")
+			deviations.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				deviations.POST("", handler.CreateDeviation(db))
+				deviations.GET("", handler.ListDeviations(db))
+				deviations.GET("/:id", handler.GetDeviation(db))
+			}
+
+			capa := protected.Group("/policy/capa")
+			capa.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				capa.POST("", handler.CreateCAPAAction(db))
+				capa.GET("", handler.ListCAPAActions(db))
+				capa.GET("/:id", handler.GetCAPAAction(db))
+				capa.POST("/:id/effectiveness", handler.VerifyCAPAEffectiveness(db))
+			}
+
+			training := protected.Group("/policy/training")
+			training.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				training.POST("", handler.CreateTrainingRecord(db))
+				training.GET("", handler.ListTrainingRecords(db))
+			}
+
+			tempMon := protected.Group("/temperature-monitoring")
+			tempMon.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "logistics_officer", "quality_officer"))
+			{
+				tempMon.POST("", handler.CreateTemperatureMonitoringEntry(db))
+				tempMon.GET("", handler.ListTemperatureMonitoringEntries(db))
+			}
+
+			tempExc := protected.Group("/temperature-excursions")
+			tempExc.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				tempExc.POST("", handler.CreateTemperatureExcursion(db))
+				tempExc.GET("", handler.ListTemperatureExcursions(db))
+				tempExc.GET("/:id", handler.GetTemperatureExcursion(db))
+				tempExc.POST("/:id/disposition", handler.UpdateTemperatureExcursionDisposition(db))
+			}
+
+			stockReleases := protected.Group("/stock-releases")
+			stockReleases.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				stockReleases.POST("", handler.CreateStockReleaseRecord(db))
+				stockReleases.GET("", handler.ListStockReleaseRecords(db))
+				stockReleases.GET("/:id", handler.GetStockReleaseRecord(db))
+			}
+
+			controlledStock := protected.Group("/controlled-stock")
+			controlledStock.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist"))
+			{
+				controlledStock.POST("", handler.CreateControlledStockRegisterEntry(db))
+				controlledStock.GET("", handler.ListControlledStockRegister(db))
+				controlledStock.GET("/:id", handler.GetControlledStockRegisterEntry(db))
+			}
+
+			donations := protected.Group("/donations")
+			donations.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				donations.POST("", handler.CreateDonation(db))
+				donations.GET("", handler.ListDonations(db))
+				donations.GET("/:id", handler.GetDonation(db))
+				donations.POST("/:id/decision", handler.UpdateDonationDecision(db))
+			}
+
+			complaints := protected.Group("/complaints")
+			complaints.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				complaints.POST("", handler.CreateComplaint(db))
+				complaints.GET("", handler.ListComplaints(db))
+				complaints.GET("/:id", handler.GetComplaint(db))
+			}
+
+			recalls := protected.Group("/recalls")
+			recalls.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist", "quality_officer"))
+			{
+				recalls.POST("", handler.CreateRecall(db))
+				recalls.GET("", handler.ListRecalls(db))
+				recalls.GET("/:id", handler.GetRecall(db))
+			}
+
+			waybills := protected.Group("/dispatch-waybills")
+			waybills.Use(middleware.RequireRole("admin", "warehouse_manager", "logistics_officer"))
+			{
+				waybills.POST("", handler.CreateDispatchWaybill(db))
+				waybills.GET("", handler.ListDispatchWaybills(db))
+				waybills.GET("/:id", handler.GetDispatchWaybill(db))
+			}
+
+			deliveryConfirm := protected.Group("/delivery-confirmations")
+			deliveryConfirm.Use(middleware.RequireRole("admin", "warehouse_manager", "logistics_officer"))
+			{
+				deliveryConfirm.POST("", handler.CreateDeliveryConfirmation(db))
+				deliveryConfirm.GET("", handler.ListDeliveryConfirmations(db))
+				deliveryConfirm.GET("/:id", handler.GetDeliveryConfirmation(db))
+			}
+
+			shortExpiry := protected.Group("/short-expiry-reviews")
+			shortExpiry.Use(middleware.RequireRole("admin", "warehouse_manager", "pharmacist"))
+			{
+				shortExpiry.POST("", handler.CreateShortExpiryReview(db))
+				shortExpiry.GET("", handler.ListShortExpiryReviews(db))
+			}
+
+			emergencyPlans := protected.Group("/emergency-plans")
+			emergencyPlans.Use(middleware.RequireRole("admin", "warehouse_manager"))
+			{
+				emergencyPlans.POST("", handler.CreateEmergencyPlan(db))
+				emergencyPlans.GET("", handler.ListEmergencyPlans(db))
+				emergencyPlans.GET("/:id", handler.GetEmergencyPlan(db))
+			}
+
+			changeControls := protected.Group("/change-controls")
+			changeControls.Use(middleware.RequireRole("admin", "warehouse_manager", "quality_officer"))
+			{
+				changeControls.POST("", handler.CreateChangeControl(db))
+				changeControls.GET("", handler.ListChangeControls(db))
+				changeControls.GET("/:id", handler.GetChangeControl(db))
 			}
 			assets := protected.Group("/assets")
 			assets.Use(middleware.RequireRole("admin", "warehouse_manager", "logistics_officer"))
