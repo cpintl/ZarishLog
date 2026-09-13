@@ -6,11 +6,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func ListWarehouses(db *sqlx.DB) gin.HandlerFunc {
+func ListWarehouses(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
 		params := pagination.FromQuery(c)
 
@@ -31,10 +31,11 @@ func ListWarehouses(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetWarehouse(db *sqlx.DB) gin.HandlerFunc {
+func GetWarehouse(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
-		id := c.Param("id")
+		id := c.Param("warehouse_id")
 		var wh model.Warehouse
 		err := db.Get(&wh, `SELECT * FROM warehouses WHERE id = $1 AND org_id = $2`, id, orgID)
 		if err != nil {
@@ -45,8 +46,9 @@ func GetWarehouse(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateWarehouse(db *sqlx.DB) gin.HandlerFunc {
+func CreateWarehouse(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var wh model.Warehouse
 		if errs := validator.BindAndValidate(c, &wh); errs != nil {
 			response.Validation(c, errs)
@@ -72,10 +74,11 @@ func CreateWarehouse(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateWarehouse(db *sqlx.DB) gin.HandlerFunc {
+func UpdateWarehouse(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
-		id := c.Param("id")
+		id := c.Param("warehouse_id")
 
 		var wh model.Warehouse
 		if errs := validator.BindAndValidate(c, &wh); errs != nil {
@@ -98,10 +101,11 @@ func UpdateWarehouse(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteWarehouse(db *sqlx.DB) gin.HandlerFunc {
+func DeleteWarehouse(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
-		id := c.Param("id")
+		id := c.Param("warehouse_id")
 		_, err := db.Exec(`DELETE FROM warehouses WHERE id = $1 AND org_id = $2`, id, orgID)
 		if err != nil {
 			response.InternalError(c, "failed to delete warehouse")

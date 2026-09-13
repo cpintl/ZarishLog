@@ -9,7 +9,6 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/pagination"
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 type ImportRow struct {
@@ -23,9 +22,9 @@ type ImportRow struct {
 }
 
 type ImportResult struct {
-	Imported int            `json:"imported"`
-	Skipped  int            `json:"skipped"`
-	Errors   []ImportError  `json:"errors,omitempty"`
+	Imported int           `json:"imported"`
+	Skipped  int           `json:"skipped"`
+	Errors   []ImportError `json:"errors,omitempty"`
 }
 
 type ImportError struct {
@@ -34,8 +33,9 @@ type ImportError struct {
 	Error string `json:"error"`
 }
 
-func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
+func ImportProducts(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
 		userID := c.GetString("user_id")
 
@@ -120,13 +120,13 @@ func ImportProducts(db *sqlx.DB) gin.HandlerFunc {
 				continue
 			}
 
-var exists int
-		if err := tx.Get(&exists, `SELECT COUNT(*) FROM products WHERE sku = $1 AND org_id = $2`, sku, orgID); err != nil {
-			result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("lookup error: %v", err)})
-			result.Skipped++
-			continue
-		}
-		if exists > 0 {
+			var exists int
+			if err := tx.Get(&exists, `SELECT COUNT(*) FROM products WHERE sku = $1 AND org_id = $2`, sku, orgID); err != nil {
+				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("lookup error: %v", err)})
+				result.Skipped++
+				continue
+			}
+			if exists > 0 {
 				result.Errors = append(result.Errors, ImportError{Row: line, Field: "sku", Error: fmt.Sprintf("duplicate SKU: %s", sku)})
 				result.Skipped++
 				continue
@@ -187,8 +187,9 @@ var exists int
 	}
 }
 
-func SearchProducts(db *sqlx.DB) gin.HandlerFunc {
+func SearchProducts(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
 		q := strings.TrimSpace(c.Query("q"))
 		params := pagination.FromQuery(c)
@@ -207,12 +208,12 @@ func SearchProducts(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		type SearchProduct struct {
-			ID       string  `json:"id" db:"id"`
-			SKU      string  `json:"sku" db:"sku"`
-			Name     string  `json:"name" db:"name"`
-			ItemType string  `json:"item_type" db:"item_type"`
-			Brand    string  `json:"brand" db:"brand"`
-			Status   string  `json:"status" db:"status"`
+			ID       string `json:"id" db:"id"`
+			SKU      string `json:"sku" db:"sku"`
+			Name     string `json:"name" db:"name"`
+			ItemType string `json:"item_type" db:"item_type"`
+			Brand    string `json:"brand" db:"brand"`
+			Status   string `json:"status" db:"status"`
 		}
 
 		var products []SearchProduct

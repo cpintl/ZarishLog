@@ -45,7 +45,6 @@ func main() {
 	r.Use(middleware.ErrorHandler())
 	r.Use(gin.Logger())
 	r.Use(middleware.CORS())
-	r.Use(middleware.Tenant())
 
 	api := r.Group("/api/v1")
 	{
@@ -54,6 +53,7 @@ func main() {
 
 		protected := api.Group("")
 		protected.Use(middleware.Auth(cfg))
+		protected.Use(middleware.Tenant(db))
 		protected.Use(middleware.Audit(db))
 
 		{
@@ -81,11 +81,11 @@ func main() {
 			{
 				warehouses.GET("", handler.ListWarehouses(db))
 				warehouses.POST("", handler.CreateWarehouse(db))
-				warehouses.GET("/:id", handler.GetWarehouse(db))
-				warehouses.PUT("/:id", handler.UpdateWarehouse(db))
-				warehouses.DELETE("/:id", handler.DeleteWarehouse(db))
-				warehouses.GET("/:id/locations", handler.ListLocations(db))
-				warehouses.GET("/:id/locations/tree", handler.ListLocationTree(db))
+				warehouses.GET("/:warehouse_id", handler.GetWarehouse(db))
+				warehouses.PUT("/:warehouse_id", handler.UpdateWarehouse(db))
+				warehouses.DELETE("/:warehouse_id", handler.DeleteWarehouse(db))
+				warehouses.GET("/:warehouse_id/locations", handler.ListLocations(db))
+				warehouses.GET("/:warehouse_id/locations/tree", handler.ListLocationTree(db))
 				warehouses.GET("/:warehouse_id/locations/:id", handler.GetLocation(db))
 				warehouses.POST("/:warehouse_id/locations", handler.CreateLocation(db))
 				warehouses.PUT("/:warehouse_id/locations/:id", handler.UpdateLocation(db))

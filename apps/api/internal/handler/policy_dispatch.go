@@ -8,13 +8,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §16 — Dispatch waybills and delivery confirmation
 
-func CreateDispatchWaybill(db *sqlx.DB) gin.HandlerFunc {
+func CreateDispatchWaybill(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                string  `json:"org_id" validate:"required,uuid7"`
 			WaybillNumber        string  `json:"waybill_number" validate:"required,max=100"`
@@ -39,6 +39,7 @@ func CreateDispatchWaybill(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -69,8 +70,9 @@ func CreateDispatchWaybill(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDispatchWaybill(db *sqlx.DB) gin.HandlerFunc {
+func GetDispatchWaybill(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var waybill model.DispatchWaybill
 		err := db.Get(&waybill, `SELECT * FROM dispatch_waybills WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -82,8 +84,9 @@ func GetDispatchWaybill(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListDispatchWaybills(db *sqlx.DB) gin.HandlerFunc {
+func ListDispatchWaybills(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -111,8 +114,9 @@ func ListDispatchWaybills(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateDeliveryConfirmation(db *sqlx.DB) gin.HandlerFunc {
+func CreateDeliveryConfirmation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                 string  `json:"org_id" validate:"required,uuid7"`
 			WaybillID             string  `json:"waybill_id" validate:"required,uuid7"`
@@ -136,6 +140,7 @@ func CreateDeliveryConfirmation(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		confirmedDate := req.ConfirmedDate
 		if confirmedDate == "" {
@@ -163,8 +168,9 @@ func CreateDeliveryConfirmation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDeliveryConfirmation(db *sqlx.DB) gin.HandlerFunc {
+func GetDeliveryConfirmation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var confirmation model.DeliveryConfirmation
 		err := db.Get(&confirmation, `SELECT * FROM delivery_confirmations WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -176,8 +182,9 @@ func GetDeliveryConfirmation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListDeliveryConfirmations(db *sqlx.DB) gin.HandlerFunc {
+func ListDeliveryConfirmations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int

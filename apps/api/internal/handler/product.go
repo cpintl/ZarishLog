@@ -8,11 +8,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func ListProducts(db *sqlx.DB) gin.HandlerFunc {
+func ListProducts(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
 		params := pagination.FromQuery(c)
 
@@ -35,8 +35,9 @@ func ListProducts(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetProduct(db *sqlx.DB) gin.HandlerFunc {
+func GetProduct(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		orgID := c.GetString("org_id")
 
@@ -52,8 +53,9 @@ func GetProduct(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
+func CreateProduct(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var product model.Product
 		if errs := validator.BindAndValidate(c, &product); errs != nil {
 			response.Validation(c, errs)
@@ -91,8 +93,9 @@ func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
+func UpdateProduct(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var product model.Product
 		if errs := validator.BindAndValidate(c, &product); errs != nil {
@@ -129,8 +132,9 @@ func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteProduct(db *sqlx.DB) gin.HandlerFunc {
+func DeleteProduct(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		query := `UPDATE products SET status = 'inactive', updated_by = $1 WHERE id = $2 AND org_id = $3`
 		_, err := db.Exec(query, c.GetString("user_id"), id, c.GetString("org_id"))

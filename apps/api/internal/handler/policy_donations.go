@@ -8,7 +8,6 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §11.3 — Donation registry and acceptance/rejection workflow
@@ -26,8 +25,9 @@ type donationLineItemReq struct {
 	Notes                    *string `json:"notes"`
 }
 
-func CreateDonation(db *sqlx.DB) gin.HandlerFunc {
+func CreateDonation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                   string                `json:"org_id" validate:"required,uuid7"`
 			DonationNumber          string                `json:"donation_number" validate:"required,max=100"`
@@ -49,6 +49,7 @@ func CreateDonation(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -103,8 +104,9 @@ func CreateDonation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDonation(db *sqlx.DB) gin.HandlerFunc {
+func GetDonation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var donation model.Donation
@@ -129,8 +131,9 @@ func GetDonation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListDonations(db *sqlx.DB) gin.HandlerFunc {
+func ListDonations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -161,8 +164,9 @@ func ListDonations(db *sqlx.DB) gin.HandlerFunc {
 // UpdateDonationDecision records the acceptance/rejection/quarantine decision
 // (§11.3). An accepted donation records the certificate number/date; other
 // decisions leave the certificate fields null.
-func UpdateDonationDecision(db *sqlx.DB) gin.HandlerFunc {
+func UpdateDonationDecision(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			Decision              string  `json:"decision" validate:"required,oneof=accepted rejected quarantined pending"`
 			DecisionDate          string  `json:"decision_date" validate:"date"`

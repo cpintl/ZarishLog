@@ -8,13 +8,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §13 — Cold Chain & Environmental Control
 
-func CreateTemperatureMonitoringEntry(db *sqlx.DB) gin.HandlerFunc {
+func CreateTemperatureMonitoringEntry(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID        string   `json:"org_id" validate:"required,uuid7"`
 			WarehouseID  string   `json:"warehouse_id" validate:"required,uuid7"`
@@ -32,6 +32,7 @@ func CreateTemperatureMonitoringEntry(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		recordedAt := req.RecordedAt
 		if recordedAt == "" {
@@ -55,8 +56,9 @@ func CreateTemperatureMonitoringEntry(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListTemperatureMonitoringEntries(db *sqlx.DB) gin.HandlerFunc {
+func ListTemperatureMonitoringEntries(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -84,8 +86,9 @@ func ListTemperatureMonitoringEntries(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateTemperatureExcursion(db *sqlx.DB) gin.HandlerFunc {
+func CreateTemperatureExcursion(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID               string   `json:"org_id" validate:"required,uuid7"`
 			WarehouseID         string   `json:"warehouse_id" validate:"required,uuid7"`
@@ -113,6 +116,7 @@ func CreateTemperatureExcursion(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		startedAt := req.StartedAt
 		if startedAt == "" {
@@ -143,8 +147,9 @@ func CreateTemperatureExcursion(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetTemperatureExcursion(db *sqlx.DB) gin.HandlerFunc {
+func GetTemperatureExcursion(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var excursion model.TemperatureExcursion
 		err := db.Get(&excursion, `SELECT * FROM temperature_excursions WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -156,8 +161,9 @@ func GetTemperatureExcursion(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListTemperatureExcursions(db *sqlx.DB) gin.HandlerFunc {
+func ListTemperatureExcursions(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -188,8 +194,9 @@ func ListTemperatureExcursions(db *sqlx.DB) gin.HandlerFunc {
 // UpdateTemperatureExcursionDisposition records the documented disposition
 // (§13.3): release / restricted use / destruction / return, plus technical
 // advice, root cause, linked CAPA, and end-of-excursion time.
-func UpdateTemperatureExcursionDisposition(db *sqlx.DB) gin.HandlerFunc {
+func UpdateTemperatureExcursionDisposition(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			Disposition     string  `json:"disposition" validate:"required,oneof=pending released restricted_use returned destroyed investigating"`
 			Status          string  `json:"status" validate:"omitempty,oneof=open under_review dispositioned closed"`

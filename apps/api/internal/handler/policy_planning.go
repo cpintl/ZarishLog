@@ -6,13 +6,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §20 — Emergency medical supply plans
 
-func CreateEmergencyPlan(db *sqlx.DB) gin.HandlerFunc {
+func CreateEmergencyPlan(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                  string  `json:"org_id" validate:"required,uuid7"`
 			PlanNumber             string  `json:"plan_number" validate:"required,max=100"`
@@ -44,6 +44,7 @@ func CreateEmergencyPlan(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -72,8 +73,9 @@ func CreateEmergencyPlan(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetEmergencyPlan(db *sqlx.DB) gin.HandlerFunc {
+func GetEmergencyPlan(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var plan model.EmergencyPlan
 		err := db.Get(&plan, `SELECT * FROM emergency_plans WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -85,8 +87,9 @@ func GetEmergencyPlan(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListEmergencyPlans(db *sqlx.DB) gin.HandlerFunc {
+func ListEmergencyPlans(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -116,8 +119,9 @@ func ListEmergencyPlans(db *sqlx.DB) gin.HandlerFunc {
 
 // Policy §27 — Change control
 
-func CreateChangeControl(db *sqlx.DB) gin.HandlerFunc {
+func CreateChangeControl(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                 string  `json:"org_id" validate:"required,uuid7"`
 			ChangeNumber          string  `json:"change_number" validate:"required,max=100"`
@@ -138,6 +142,7 @@ func CreateChangeControl(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -163,8 +168,9 @@ func CreateChangeControl(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetChangeControl(db *sqlx.DB) gin.HandlerFunc {
+func GetChangeControl(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var change model.ChangeControl
 		err := db.Get(&change, `SELECT * FROM change_controls WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -176,8 +182,9 @@ func GetChangeControl(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListChangeControls(db *sqlx.DB) gin.HandlerFunc {
+func ListChangeControls(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int

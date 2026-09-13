@@ -6,11 +6,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func CreateAsset(db *sqlx.DB) gin.HandlerFunc {
+func CreateAsset(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID              string   `json:"org_id" validate:"required,uuid7"`
 			AssetTag           string   `json:"asset_tag" validate:"required,max=100"`
@@ -54,8 +54,9 @@ func CreateAsset(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListAssets(db *sqlx.DB) gin.HandlerFunc {
+func ListAssets(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -86,8 +87,9 @@ func ListAssets(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetAsset(db *sqlx.DB) gin.HandlerFunc {
+func GetAsset(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var asset model.Asset
@@ -128,8 +130,9 @@ func GetAsset(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateAsset(db *sqlx.DB) gin.HandlerFunc {
+func UpdateAsset(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var req struct {
@@ -178,8 +181,9 @@ func UpdateAsset(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteAsset(db *sqlx.DB) gin.HandlerFunc {
+func DeleteAsset(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		result, err := db.Exec(`DELETE FROM assets WHERE id=$1`, id)
@@ -197,12 +201,13 @@ func DeleteAsset(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func TransferCustody(db *sqlx.DB) gin.HandlerFunc {
+func TransferCustody(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		assetID := c.Param("id")
 
 		var req struct {
-			ToUserID string `json:"to_user_id" validate:"required,uuid7"`
+			ToUserID  string `json:"to_user_id" validate:"required,uuid7"`
 			ChangedBy string `json:"changed_by" validate:"required,max=255"`
 		}
 		if errs := validator.BindAndValidate(c, &req); errs != nil {
@@ -248,8 +253,9 @@ func TransferCustody(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateAssetMaintenance(db *sqlx.DB) gin.HandlerFunc {
+func CreateAssetMaintenance(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		assetID := c.Param("id")
 
 		var req struct {
@@ -281,8 +287,9 @@ func CreateAssetMaintenance(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListAssetMaintenance(db *sqlx.DB) gin.HandlerFunc {
+func ListAssetMaintenance(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		assetID := c.Param("id")
 		p := pagination.FromQuery(c)
 

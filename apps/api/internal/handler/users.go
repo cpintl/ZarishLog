@@ -5,7 +5,6 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 type User struct {
@@ -36,15 +35,16 @@ type Permission struct {
 }
 
 type UserRoleAssignment struct {
-	UserID     string `json:"user_id" db:"user_id"`
-	RoleID     string `json:"role_id" db:"role_id" validate:"required,uuid7"`
+	UserID     string  `json:"user_id" db:"user_id"`
+	RoleID     string  `json:"role_id" db:"role_id" validate:"required,uuid7"`
 	OrgLevelID *string `json:"org_level_id" db:"org_level_id" validate:"omitempty,uuid7"`
-	GrantedBy  string `json:"granted_by" db:"granted_by"`
-	RoleName   string `json:"role_name,omitempty" db:"role_name"`
+	GrantedBy  string  `json:"granted_by" db:"granted_by"`
+	RoleName   string  `json:"role_name,omitempty" db:"role_name"`
 }
 
-func ListUsers(db *sqlx.DB) gin.HandlerFunc {
+func ListUsers(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -73,8 +73,9 @@ func ListUsers(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetUser(db *sqlx.DB) gin.HandlerFunc {
+func GetUser(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var u User
@@ -112,8 +113,9 @@ func GetUser(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateUser(db *sqlx.DB) gin.HandlerFunc {
+func CreateUser(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID      string  `json:"org_id" validate:"required,uuid7"`
 			Email      string  `json:"email" validate:"required,email,max=255"`
@@ -150,8 +152,9 @@ func CreateUser(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateUser(db *sqlx.DB) gin.HandlerFunc {
+func UpdateUser(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var req struct {
@@ -191,8 +194,9 @@ func UpdateUser(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeactivateUser(db *sqlx.DB) gin.HandlerFunc {
+func DeactivateUser(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		result, err := db.Exec(`UPDATE users SET is_active=false, updated_at=now() WHERE id=$1`, id)
@@ -210,8 +214,9 @@ func DeactivateUser(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListRoles(db *sqlx.DB) gin.HandlerFunc {
+func ListRoles(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var roles []Role
 		err := db.Select(&roles, `SELECT id, code, name, description, level FROM roles ORDER BY level`)
 		if err != nil {
@@ -225,8 +230,9 @@ func ListRoles(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListPermissions(db *sqlx.DB) gin.HandlerFunc {
+func ListPermissions(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var perms []Permission
 		err := db.Select(&perms, `SELECT id, module, action, description FROM permissions ORDER BY module, action`)
 		if err != nil {
@@ -240,8 +246,9 @@ func ListPermissions(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func AssignUserRole(db *sqlx.DB) gin.HandlerFunc {
+func AssignUserRole(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		userID := c.Param("id")
 
 		var req struct {
@@ -268,8 +275,9 @@ func AssignUserRole(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func RemoveUserRole(db *sqlx.DB) gin.HandlerFunc {
+func RemoveUserRole(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		userID := c.Param("id")
 
 		roleID := c.Query("role_id")

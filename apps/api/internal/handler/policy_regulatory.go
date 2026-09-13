@@ -9,13 +9,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §8 — Regulatory & Legal Compliance (Bangladesh DGDA/DNC matrix)
 
-func CreateRegulatoryApproval(db *sqlx.DB) gin.HandlerFunc {
+func CreateRegulatoryApproval(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID            string  `json:"org_id" validate:"required,uuid7"`
 			ScopeType        string  `json:"scope_type" validate:"required,oneof=warehouse product product_category supplier organization"`
@@ -38,6 +38,7 @@ func CreateRegulatoryApproval(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -66,8 +67,9 @@ func CreateRegulatoryApproval(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListRegulatoryApprovals(db *sqlx.DB) gin.HandlerFunc {
+func ListRegulatoryApprovals(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -95,8 +97,9 @@ func ListRegulatoryApprovals(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetRegulatoryApproval(db *sqlx.DB) gin.HandlerFunc {
+func GetRegulatoryApproval(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var approval model.RegulatoryApproval
 		err := db.Get(&approval, `SELECT * FROM regulatory_approvals WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -108,8 +111,9 @@ func GetRegulatoryApproval(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListExpiringRegulatoryApprovals(db *sqlx.DB) gin.HandlerFunc {
+func ListExpiringRegulatoryApprovals(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		daysStr := c.DefaultQuery("days", "60")
 		var days int
 		if _, err := fmt.Sscanf(daysStr, "%d", &days); err != nil || days < 1 {

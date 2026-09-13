@@ -16,12 +16,12 @@ import (
 )
 
 var (
-	testOrgID   = "00000000-0000-7000-8000-000000000101"
-	testUserID  = "00000000-0000-7000-8000-000000000102"
-	testWH1     = "00000000-0000-7000-8000-000000000111"
-	testWH2     = "00000000-0000-7000-8000-000000000112"
-	testWH3     = "00000000-0000-7000-8000-000000000113"
-	testBaseWH  = time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+	testOrgID  = "00000000-0000-7000-8000-000000000101"
+	testUserID = "00000000-0000-7000-8000-000000000102"
+	testWH1    = "00000000-0000-7000-8000-000000000111"
+	testWH2    = "00000000-0000-7000-8000-000000000112"
+	testWH3    = "00000000-0000-7000-8000-000000000113"
+	testBaseWH = time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
 )
 
 func setupWarehouseRouter(db *sqlx.DB) *gin.Engine {
@@ -33,10 +33,10 @@ func setupWarehouseRouter(db *sqlx.DB) *gin.Engine {
 		c.Next()
 	})
 	r.GET("/api/v1/warehouses", ListWarehouses(db))
-	r.GET("/api/v1/warehouses/:id", GetWarehouse(db))
+	r.GET("/api/v1/warehouses/:warehouse_id", GetWarehouse(db))
 	r.POST("/api/v1/warehouses", CreateWarehouse(db))
-	r.PUT("/api/v1/warehouses/:id", UpdateWarehouse(db))
-	r.DELETE("/api/v1/warehouses/:id", DeleteWarehouse(db))
+	r.PUT("/api/v1/warehouses/:warehouse_id", UpdateWarehouse(db))
+	r.DELETE("/api/v1/warehouses/:warehouse_id", DeleteWarehouse(db))
 	return r
 }
 

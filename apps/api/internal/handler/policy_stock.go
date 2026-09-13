@@ -8,13 +8,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §12 / §14 — Quality release and controlled-product registers
 
-func CreateStockReleaseRecord(db *sqlx.DB) gin.HandlerFunc {
+func CreateStockReleaseRecord(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID               string  `json:"org_id" validate:"required,uuid7"`
 			ReleaseNumber       string  `json:"release_number" validate:"required,max=100"`
@@ -35,6 +35,7 @@ func CreateStockReleaseRecord(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		decisionDate := req.DecisionDate
 		if decisionDate == "" {
@@ -58,8 +59,9 @@ func CreateStockReleaseRecord(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetStockReleaseRecord(db *sqlx.DB) gin.HandlerFunc {
+func GetStockReleaseRecord(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var record model.StockReleaseRecord
 		err := db.Get(&record, `SELECT * FROM stock_release_records WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -71,8 +73,9 @@ func GetStockReleaseRecord(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListStockReleaseRecords(db *sqlx.DB) gin.HandlerFunc {
+func ListStockReleaseRecords(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -100,8 +103,9 @@ func ListStockReleaseRecords(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateControlledStockRegisterEntry(db *sqlx.DB) gin.HandlerFunc {
+func CreateControlledStockRegisterEntry(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID               string  `json:"org_id" validate:"required,uuid7"`
 			ProductID           string  `json:"product_id" validate:"required,uuid7"`
@@ -123,6 +127,7 @@ func CreateControlledStockRegisterEntry(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		registerDate := req.RegisterDate
 		if registerDate == "" {
@@ -147,8 +152,9 @@ func CreateControlledStockRegisterEntry(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetControlledStockRegisterEntry(db *sqlx.DB) gin.HandlerFunc {
+func GetControlledStockRegisterEntry(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var entry model.ControlledStockRegisterEntry
 		err := db.Get(&entry, `SELECT * FROM controlled_stock_register WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -160,8 +166,9 @@ func GetControlledStockRegisterEntry(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListControlledStockRegister(db *sqlx.DB) gin.HandlerFunc {
+func ListControlledStockRegister(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -189,8 +196,9 @@ func ListControlledStockRegister(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateShortExpiryReview(db *sqlx.DB) gin.HandlerFunc {
+func CreateShortExpiryReview(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                    string  `json:"org_id" validate:"required,uuid7"`
 			ReviewDate               string  `json:"review_date" validate:"date"`
@@ -213,6 +221,7 @@ func CreateShortExpiryReview(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		reviewDate := req.ReviewDate
 		if reviewDate == "" {
@@ -237,8 +246,9 @@ func CreateShortExpiryReview(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListShortExpiryReviews(db *sqlx.DB) gin.HandlerFunc {
+func ListShortExpiryReviews(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int

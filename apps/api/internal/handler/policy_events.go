@@ -8,13 +8,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §17 — Complaints, recalls (incl. mock recall) and falsified-product triage
 
-func CreateComplaint(db *sqlx.DB) gin.HandlerFunc {
+func CreateComplaint(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                      string  `json:"org_id" validate:"required,uuid7"`
 			ComplaintNumber            string  `json:"complaint_number" validate:"required,max=100"`
@@ -39,6 +39,7 @@ func CreateComplaint(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -69,8 +70,9 @@ func CreateComplaint(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetComplaint(db *sqlx.DB) gin.HandlerFunc {
+func GetComplaint(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var complaint model.Complaint
 		err := db.Get(&complaint, `SELECT * FROM complaints WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -82,8 +84,9 @@ func GetComplaint(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListComplaints(db *sqlx.DB) gin.HandlerFunc {
+func ListComplaints(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -123,8 +126,9 @@ type recallLineItemReq struct {
 	Notes              *string `json:"notes"`
 }
 
-func CreateRecall(db *sqlx.DB) gin.HandlerFunc {
+func CreateRecall(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID           string              `json:"org_id" validate:"required,uuid7"`
 			RecallNumber    string              `json:"recall_number" validate:"required,max=100"`
@@ -146,6 +150,7 @@ func CreateRecall(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -202,8 +207,9 @@ func CreateRecall(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetRecall(db *sqlx.DB) gin.HandlerFunc {
+func GetRecall(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var recall model.Recall
@@ -228,8 +234,9 @@ func GetRecall(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListRecalls(db *sqlx.DB) gin.HandlerFunc {
+func ListRecalls(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int

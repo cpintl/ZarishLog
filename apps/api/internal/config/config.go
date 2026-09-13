@@ -24,7 +24,7 @@ type Config struct {
 
 func Load() *Config {
 	return &Config{
-		DatabaseURL:       getEnv("DATABASE_URL", "postgresql://zarishlog:zarishlog_dev_password@localhost:5432/zarishlog?sslmode=disable"),
+		DatabaseURL:       getEnv("DATABASE_URL", "postgresql://zarishlog_app:zarishlog_app_dev_password@localhost:5432/zarishlog?sslmode=disable"),
 		APIPort:           getEnv("API_PORT", "8080"),
 		APIHost:           getEnv("API_HOST", "0.0.0.0"),
 		OIDCIssuer:        getEnv("OIDC_ISSUER", "http://localhost:8180/realms/zarishlog"),

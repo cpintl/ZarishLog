@@ -8,13 +8,13 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
 // Policy §7 — QMS: Deviations, CAPA, Training & Competency
 
-func CreateDeviation(db *sqlx.DB) gin.HandlerFunc {
+func CreateDeviation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID              string  `json:"org_id" validate:"required,uuid7"`
 			DeviationNumber    string  `json:"deviation_number" validate:"required,max=100"`
@@ -43,6 +43,7 @@ func CreateDeviation(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -73,8 +74,9 @@ func CreateDeviation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListDeviations(db *sqlx.DB) gin.HandlerFunc {
+func ListDeviations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -102,8 +104,9 @@ func ListDeviations(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDeviation(db *sqlx.DB) gin.HandlerFunc {
+func GetDeviation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var deviation model.Deviation
 		err := db.Get(&deviation, `SELECT * FROM deviations WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -115,8 +118,9 @@ func GetDeviation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateCAPAAction(db *sqlx.DB) gin.HandlerFunc {
+func CreateCAPAAction(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID            string  `json:"org_id" validate:"required,uuid7"`
 			CAPANumber       string  `json:"capa_number" validate:"required,max=100"`
@@ -135,6 +139,7 @@ func CreateCAPAAction(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -158,8 +163,9 @@ func CreateCAPAAction(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListCAPAActions(db *sqlx.DB) gin.HandlerFunc {
+func ListCAPAActions(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -187,8 +193,9 @@ func ListCAPAActions(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetCAPAAction(db *sqlx.DB) gin.HandlerFunc {
+func GetCAPAAction(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var action model.CAPAAction
 		err := db.Get(&action, `SELECT * FROM capa_actions WHERE id=$1`, c.Param("id"))
 		if err != nil {
@@ -201,8 +208,9 @@ func GetCAPAAction(db *sqlx.DB) gin.HandlerFunc {
 }
 
 // VerifyCAPAEffectiveness records the effectiveness check and closes the CAPA.
-func VerifyCAPAEffectiveness(db *sqlx.DB) gin.HandlerFunc {
+func VerifyCAPAEffectiveness(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			EffectivenessCheck string `json:"effectiveness_check" validate:"required"`
 			VerifiedBy         string `json:"verified_by" validate:"required,max=255"`
@@ -226,8 +234,9 @@ func VerifyCAPAEffectiveness(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateTrainingRecord(db *sqlx.DB) gin.HandlerFunc {
+func CreateTrainingRecord(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID                string  `json:"org_id" validate:"required,uuid7"`
 			UserID               *string `json:"user_id" validate:"opt_uuid7"`
@@ -247,6 +256,7 @@ func CreateTrainingRecord(db *sqlx.DB) gin.HandlerFunc {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		var id string
 		err := db.QueryRowx(
@@ -266,8 +276,9 @@ func CreateTrainingRecord(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListTrainingRecords(db *sqlx.DB) gin.HandlerFunc {
+func ListTrainingRecords(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int

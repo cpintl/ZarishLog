@@ -6,11 +6,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func ListUoMs(db *sqlx.DB) gin.HandlerFunc {
+func ListUoMs(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		params := pagination.FromQuery(c)
 
 		var total int
@@ -30,8 +30,9 @@ func ListUoMs(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetUoM(db *sqlx.DB) gin.HandlerFunc {
+func GetUoM(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var uom model.UoM
 		if err := db.Get(&uom, `SELECT * FROM units_of_measure WHERE id = $1`, id); err != nil {
@@ -42,8 +43,9 @@ func GetUoM(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateUoM(db *sqlx.DB) gin.HandlerFunc {
+func CreateUoM(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var uom model.UoM
 		if errs := validator.BindAndValidate(c, &uom); errs != nil {
 			response.Validation(c, errs)
@@ -70,8 +72,9 @@ func CreateUoM(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateUoM(db *sqlx.DB) gin.HandlerFunc {
+func UpdateUoM(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var uom model.UoM
 		if errs := validator.BindAndValidate(c, &uom); errs != nil {
@@ -99,8 +102,9 @@ func UpdateUoM(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteUoM(db *sqlx.DB) gin.HandlerFunc {
+func DeleteUoM(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		_, err := db.Exec(`DELETE FROM units_of_measure WHERE id = $1`, id)
 		if err != nil {

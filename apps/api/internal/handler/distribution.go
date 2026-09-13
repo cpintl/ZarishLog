@@ -6,29 +6,30 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func CreateDistribution(db *sqlx.DB) gin.HandlerFunc {
+func CreateDistribution(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
-			OrgID              string                      `json:"org_id" validate:"required,uuid7"`
-			OrgLevelID         *string                     `json:"org_level_id" validate:"omitempty,uuid7"`
-			ProgramID          *string                     `json:"program_id" validate:"omitempty,uuid7"`
-			DistributionNumber string                      `json:"distribution_number" validate:"required,max=100"`
-			DistributionDate   string                      `json:"distribution_date" validate:"required,date"`
-			Location           string                      `json:"location"`
-			BeneficiaryCount   *int                        `json:"beneficiary_count" validate:"omitempty,min=0"`
-			Status             string                      `json:"status" validate:"omitempty,oneof=draft active completed cancelled"`
-			Notes              string                      `json:"notes"`
-			CreatedBy          string                      `json:"created_by" validate:"required,max=255"`
-			Items              []model.DistributionLineItem `json:"items"`
+			OrgID              string                          `json:"org_id" validate:"required,uuid7"`
+			OrgLevelID         *string                         `json:"org_level_id" validate:"omitempty,uuid7"`
+			ProgramID          *string                         `json:"program_id" validate:"omitempty,uuid7"`
+			DistributionNumber string                          `json:"distribution_number" validate:"required,max=100"`
+			DistributionDate   string                          `json:"distribution_date" validate:"required,date"`
+			Location           string                          `json:"location"`
+			BeneficiaryCount   *int                            `json:"beneficiary_count" validate:"omitempty,min=0"`
+			Status             string                          `json:"status" validate:"omitempty,oneof=draft active completed cancelled"`
+			Notes              string                          `json:"notes"`
+			CreatedBy          string                          `json:"created_by" validate:"required,max=255"`
+			Items              []model.DistributionLineItem    `json:"items"`
 			Beneficiaries      []model.DistributionBeneficiary `json:"beneficiaries"`
 		}
 		if errs := validator.BindAndValidate(c, &req); errs != nil {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -95,8 +96,9 @@ func CreateDistribution(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListDistributions(db *sqlx.DB) gin.HandlerFunc {
+func ListDistributions(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -126,8 +128,9 @@ func ListDistributions(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDistribution(db *sqlx.DB) gin.HandlerFunc {
+func GetDistribution(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var dist model.Distribution

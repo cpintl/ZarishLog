@@ -9,27 +9,28 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func CreateInspection(db *sqlx.DB) gin.HandlerFunc {
+func CreateInspection(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
-			OrgID          string                  `json:"org_id" validate:"required,uuid7"`
-			GRNID          *string                 `json:"grn_id" validate:"omitempty,uuid7"`
-			ProductID      string                  `json:"product_id" validate:"required,uuid7"`
-			BatchID        *string                 `json:"batch_id" validate:"omitempty,uuid7"`
-			InspectionDate string                  `json:"inspection_date" validate:"required,date"`
-			Inspector      string                  `json:"inspector" validate:"required,max=255"`
-			Result         string                  `json:"result" validate:"required,oneof=pass fail quarantine"`
-			Notes          string                  `json:"notes"`
-			CreatedBy      string                  `json:"created_by" validate:"required,max=255"`
+			OrgID          string                    `json:"org_id" validate:"required,uuid7"`
+			GRNID          *string                   `json:"grn_id" validate:"omitempty,uuid7"`
+			ProductID      string                    `json:"product_id" validate:"required,uuid7"`
+			BatchID        *string                   `json:"batch_id" validate:"omitempty,uuid7"`
+			InspectionDate string                    `json:"inspection_date" validate:"required,date"`
+			Inspector      string                    `json:"inspector" validate:"required,max=255"`
+			Result         string                    `json:"result" validate:"required,oneof=pass fail quarantine"`
+			Notes          string                    `json:"notes"`
+			CreatedBy      string                    `json:"created_by" validate:"required,max=255"`
 			Results        []model.QAChecklistResult `json:"results"`
 		}
 		if errs := validator.BindAndValidate(c, &req); errs != nil {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		tx, err := db.Beginx()
 		if err != nil {
@@ -71,8 +72,9 @@ func CreateInspection(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListInspections(db *sqlx.DB) gin.HandlerFunc {
+func ListInspections(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -102,8 +104,9 @@ func ListInspections(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetInspection(db *sqlx.DB) gin.HandlerFunc {
+func GetInspection(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var insp model.QAInspection
@@ -145,23 +148,25 @@ func GetInspection(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateChecklistTemplate(db *sqlx.DB) gin.HandlerFunc {
+func CreateChecklistTemplate(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
-			OrgID       string               `json:"org_id" validate:"required,uuid7"`
-			Code        string               `json:"code" validate:"required,max=50"`
-			Name        string               `json:"name" validate:"required,max=255"`
-			Description string               `json:"description"`
-			Category    string               `json:"category" validate:"required,max=100"`
-			IsMandatory bool                 `json:"is_mandatory"`
-			Status      string               `json:"status" validate:"omitempty,oneof=active inactive draft archived"`
-			CreatedBy   string               `json:"created_by" validate:"required,max=255"`
+			OrgID       string                  `json:"org_id" validate:"required,uuid7"`
+			Code        string                  `json:"code" validate:"required,max=50"`
+			Name        string                  `json:"name" validate:"required,max=255"`
+			Description string                  `json:"description"`
+			Category    string                  `json:"category" validate:"required,max=100"`
+			IsMandatory bool                    `json:"is_mandatory"`
+			Status      string                  `json:"status" validate:"omitempty,oneof=active inactive draft archived"`
+			CreatedBy   string                  `json:"created_by" validate:"required,max=255"`
 			Items       []model.QAChecklistItem `json:"items"`
 		}
 		if errs := validator.BindAndValidate(c, &req); errs != nil {
 			response.Validation(c, errs)
 			return
 		}
+		req.OrgID = c.GetString("org_id")
 
 		status := req.Status
 		if status == "" {
@@ -207,8 +212,9 @@ func CreateChecklistTemplate(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListChecklistTemplates(db *sqlx.DB) gin.HandlerFunc {
+func ListChecklistTemplates(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -237,8 +243,9 @@ func ListChecklistTemplates(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetChecklistTemplate(db *sqlx.DB) gin.HandlerFunc {
+func GetChecklistTemplate(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		var tpl model.QAChecklistTemplate
@@ -267,8 +274,9 @@ func GetChecklistTemplate(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateDisposition(db *sqlx.DB) gin.HandlerFunc {
+func CreateDisposition(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		inspectionID := c.Param("id")
 
 		var req struct {
@@ -304,8 +312,9 @@ func CreateDisposition(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetExpiringStock(db *sqlx.DB) gin.HandlerFunc {
+func GetExpiringStock(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		daysStr := c.DefaultQuery("days", "30")
 		var days int
 		if _, err := fmt.Sscanf(daysStr, "%d", &days); err != nil || days < 1 {

@@ -58,6 +58,18 @@ func TestCreateTransfer(t *testing.T) {
 	mock.ExpectExec(`INSERT INTO transfer_line_items`).
 		WithArgs(testLoc3, testLoc1, testLoc2, float64(50), float64(10.5)).
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE stock_levels SET quantity = quantity \+ \$1, updated_at = now\(\) WHERE id = \(SELECT id FROM stock_levels WHERE org_id=\$2 AND product_id=\$3 AND warehouse_id=\$4 AND location_id IS NOT DISTINCT FROM \$5 AND batch_id IS NOT DISTINCT FROM \$6 ORDER BY updated_at DESC, id LIMIT 1\) AND quantity \+ \$1 >= 0`).
+		WithArgs(-50.0, testOrgID, testLoc1, testWHID, nil, testLoc2).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(`INSERT INTO stock_movements \(org_id, product_id, warehouse_id, location_id, batch_id, movement_type, quantity, ref_doc_type, ref_doc_id, reference, created_by\)`).
+		WithArgs(testOrgID, testLoc1, testWHID, nil, testLoc2, "transfer_out", -50.0, "transfer", testLoc3, "TFR-001", testUserID).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE stock_levels SET quantity = quantity \+ \$1, updated_at = now\(\) WHERE id = \(SELECT id FROM stock_levels WHERE org_id=\$2 AND product_id=\$3 AND warehouse_id=\$4 AND location_id IS NOT DISTINCT FROM \$5 AND batch_id IS NOT DISTINCT FROM \$6 ORDER BY updated_at DESC, id LIMIT 1\) AND quantity \+ \$1 >= 0`).
+		WithArgs(50.0, testOrgID, testLoc1, testLoc1, nil, testLoc2).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(`INSERT INTO stock_movements \(org_id, product_id, warehouse_id, location_id, batch_id, movement_type, quantity, ref_doc_type, ref_doc_id, reference, created_by\)`).
+		WithArgs(testOrgID, testLoc1, testLoc1, nil, testLoc2, "transfer_in", 50.0, "transfer", testLoc3, "TFR-001", testUserID).
+		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
 	req, _ := http.NewRequest("POST", "/api/v1/stock/transfer", strings.NewReader(body))
@@ -132,6 +144,12 @@ func TestCreateAdjustment(t *testing.T) {
 	mock.ExpectExec(`INSERT INTO adjustment_line_items`).
 		WithArgs(testLoc4, testLoc1, nil, nil, float64(100), float64(95), float64(-5), nil, float64(10.0), "5 units damaged").
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE stock_levels SET quantity = quantity \+ \$1, updated_at = now\(\) WHERE id = \(SELECT id FROM stock_levels WHERE org_id=\$2 AND product_id=\$3 AND warehouse_id=\$4 AND location_id IS NOT DISTINCT FROM \$5 AND batch_id IS NOT DISTINCT FROM \$6 ORDER BY updated_at DESC, id LIMIT 1\) AND quantity \+ \$1 >= 0`).
+		WithArgs(-5.0, testOrgID, testLoc1, testWHID, nil, nil).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(`INSERT INTO stock_movements \(org_id, product_id, warehouse_id, location_id, batch_id, movement_type, quantity, ref_doc_type, ref_doc_id, reference, created_by\)`).
+		WithArgs(testOrgID, testLoc1, testWHID, nil, nil, "adjustment_subtract", -5.0, "adjustment", testLoc4, "Damaged goods", testUserID).
+		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
 	req, _ := http.NewRequest("POST", "/api/v1/stock/adjust", strings.NewReader(body))
@@ -148,6 +166,54 @@ func TestCreateAdjustment(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &resp)
 	require.NoError(t, err)
 	assert.Equal(t, testLoc4, resp["data"].(map[string]interface{})["id"])
+
+	require.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestCreateTransferInsufficientStock(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	require.NoError(t, err)
+	defer mockDB.Close()
+
+	db := sqlx.NewDb(mockDB, "sqlmock")
+	router := setupStockRouter(db)
+
+	now := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+	body := `{
+		"transfer": {
+			"from_warehouse_id":"` + testWHID + `",
+			"to_warehouse_id":"` + testLoc1 + `",
+			"transfer_number":"TFR-INSUF",
+			"status":"draft"
+		},
+		"items": [
+			{"product_id":"` + testLoc1 + `","batch_id":"` + testLoc2 + `","quantity":100}
+		]
+	}`
+
+	mock.ExpectBegin()
+	mock.ExpectQuery(`INSERT INTO stock_transfers`).
+		WithArgs(testOrgID, testWHID, testLoc1, "TFR-INSUF", "draft", testUserID, testUserID).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at"}).
+			AddRow(testLoc3, now, now))
+	mock.ExpectExec(`INSERT INTO transfer_line_items`).
+		WithArgs(testLoc3, testLoc1, testLoc2, float64(100), float64(0)).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE stock_levels SET quantity = quantity \+ \$1, updated_at = now\(\) WHERE id = \(SELECT id FROM stock_levels WHERE org_id=\$2 AND product_id=\$3 AND warehouse_id=\$4 AND location_id IS NOT DISTINCT FROM \$5 AND batch_id IS NOT DISTINCT FROM \$6 ORDER BY updated_at DESC, id LIMIT 1\) AND quantity \+ \$1 >= 0`).
+		WithArgs(-100.0, testOrgID, testLoc1, testWHID, nil, testLoc2).
+		WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectQuery(`SELECT COUNT\(\*\) FROM stock_levels WHERE org_id=\$1 AND product_id=\$2 AND warehouse_id=\$3 AND location_id IS NOT DISTINCT FROM \$4 AND batch_id IS NOT DISTINCT FROM \$5`).
+		WithArgs(testOrgID, testLoc1, testWHID, nil, testLoc2).
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
+	mock.ExpectRollback()
+
+	req, _ := http.NewRequest("POST", "/api/v1/stock/transfer", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Contains(t, w.Body.String(), "insufficient stock")
 
 	require.NoError(t, mock.ExpectationsWereMet())
 }

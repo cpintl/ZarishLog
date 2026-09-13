@@ -6,11 +6,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func ListLocations(db *sqlx.DB) gin.HandlerFunc {
+func ListLocations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		whID := c.Param("warehouse_id")
 		params := pagination.FromQuery(c)
 
@@ -31,8 +31,9 @@ func ListLocations(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetLocation(db *sqlx.DB) gin.HandlerFunc {
+func GetLocation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var loc model.Location
 		err := db.Get(&loc, `SELECT * FROM locations WHERE id = $1`, id)
@@ -44,8 +45,9 @@ func GetLocation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateLocation(db *sqlx.DB) gin.HandlerFunc {
+func CreateLocation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var loc model.Location
 		if errs := validator.BindAndValidate(c, &loc); errs != nil {
 			response.Validation(c, errs)
@@ -68,8 +70,9 @@ func CreateLocation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateLocation(db *sqlx.DB) gin.HandlerFunc {
+func UpdateLocation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var loc model.Location
 		if errs := validator.BindAndValidate(c, &loc); errs != nil {
@@ -92,8 +95,9 @@ func UpdateLocation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteLocation(db *sqlx.DB) gin.HandlerFunc {
+func DeleteLocation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		_, err := db.Exec(`DELETE FROM locations WHERE id = $1`, id)
 		if err != nil {
@@ -104,8 +108,9 @@ func DeleteLocation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetLocationConstraints(db *sqlx.DB) gin.HandlerFunc {
+func GetLocationConstraints(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var con model.LocationConstraint
 		err := db.Get(&con, `SELECT * FROM location_constraints WHERE location_id = $1`, id)
@@ -117,8 +122,9 @@ func GetLocationConstraints(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func UpsertLocationConstraints(db *sqlx.DB) gin.HandlerFunc {
+func UpsertLocationConstraints(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 		var con model.LocationConstraint
 		con.LocationID = id
@@ -154,8 +160,9 @@ func UpsertLocationConstraints(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListLocationTree(db *sqlx.DB) gin.HandlerFunc {
+func ListLocationTree(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		whID := c.Param("warehouse_id")
 
 		var locs []model.Location

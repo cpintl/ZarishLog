@@ -6,11 +6,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func ListCategories(db *sqlx.DB) gin.HandlerFunc {
+func ListCategories(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		orgID := c.GetString("org_id")
 		params := pagination.FromQuery(c)
 
@@ -32,8 +32,9 @@ func ListCategories(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateCategory(db *sqlx.DB) gin.HandlerFunc {
+func CreateCategory(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var cat model.ProductCategory
 		if errs := validator.BindAndValidate(c, &cat); errs != nil {
 			response.Validation(c, errs)

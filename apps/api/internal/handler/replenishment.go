@@ -10,11 +10,11 @@ import (
 	"github.com/cpintl/ZarishLog/apps/api/internal/response"
 	"github.com/cpintl/ZarishLog/apps/api/internal/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 )
 
-func CalculateAMC(db *sqlx.DB) gin.HandlerFunc {
+func CalculateAMC(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID       string `json:"org_id" validate:"required,uuid7"`
 			ProductID   string `json:"product_id" validate:"required,uuid7"`
@@ -121,15 +121,15 @@ func CalculateAMC(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		response.Created(c, gin.H{
-			"id": id,
-			"amc_3_months":  nullIfZero(amc3, n3),
-			"amc_6_months":  nullIfZero(amc6, n6),
-			"amc_12_months": nullIfZero(amc12, n12),
+			"id":              id,
+			"amc_3_months":    nullIfZero(amc3, n3),
+			"amc_6_months":    nullIfZero(amc6, n6),
+			"amc_12_months":   nullIfZero(amc12, n12),
 			"max_consumption": nullIfZero(maxConsumption, n12),
-			"std_deviation": nullIfZero(stdDev, n12),
-			"months_3_data": n3,
-			"months_6_data": n6,
-			"months_12_data": n12,
+			"std_deviation":   nullIfZero(stdDev, n12),
+			"months_3_data":   n3,
+			"months_6_data":   n6,
+			"months_12_data":  n12,
 		})
 	}
 }
@@ -141,8 +141,9 @@ func nullIfZero(val float64, n int) interface{} {
 	return val
 }
 
-func ListAMCCalculations(db *sqlx.DB) gin.HandlerFunc {
+func ListAMCCalculations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -173,8 +174,9 @@ func ListAMCCalculations(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func GetLatestAMC(db *sqlx.DB) gin.HandlerFunc {
+func GetLatestAMC(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		productID := c.Query("product_id")
 		warehouseID := c.Query("warehouse_id")
 		if productID == "" || warehouseID == "" {
@@ -201,8 +203,9 @@ func GetLatestAMC(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListReorderRecommendations(db *sqlx.DB) gin.HandlerFunc {
+func ListReorderRecommendations(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -239,8 +242,9 @@ func ListReorderRecommendations(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateReorderRecommendation(db *sqlx.DB) gin.HandlerFunc {
+func CreateReorderRecommendation(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req struct {
 			OrgID              string   `json:"org_id" validate:"required,uuid7"`
 			ProductID          string   `json:"product_id" validate:"required,uuid7"`
@@ -305,8 +309,9 @@ func CreateReorderRecommendation(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func MarkRecommendationReviewed(db *sqlx.DB) gin.HandlerFunc {
+func MarkRecommendationReviewed(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		id := c.Param("id")
 
 		result, err := db.Exec(`UPDATE reorder_recommendations SET reviewed=true WHERE id=$1`, id)
@@ -324,8 +329,9 @@ func MarkRecommendationReviewed(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func ListForecastResults(db *sqlx.DB) gin.HandlerFunc {
+func ListForecastResults(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		p := pagination.FromQuery(c)
 
 		var total int
@@ -355,8 +361,9 @@ func ListForecastResults(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateForecastResult(db *sqlx.DB) gin.HandlerFunc {
+func CreateForecastResult(db DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		db = requestDB(c, db)
 		var req model.ForecastResult
 		if errs := validator.BindAndValidate(c, &req); errs != nil {
 			response.Validation(c, errs)
